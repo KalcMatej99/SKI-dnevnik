@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<head lang="en">
+    <title>SKI Dnevnik</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="../js/base.js"></script>
+</head>
+<body style="background-size: cover;">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">SKI Dnevnik</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="home">Koledar</a></li>
+        <li><a href="teams">Skupine</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          <li class="active"><a href="account"><span class="glyphicon glyphicon-user"></span> Account</a></li>
+        </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <h1 id="fullname">Firstname Lastname</h1>
+    <br>
+    <h4 id="email">Email: email.domain.com</h4>
+    <br>
+    <h4 id="teamsCount">Teams: 0</h4>
+    <h4 id="trainingsCount">Trainings: 0</h4>
+    <br>
+    <button type="button" class="btn btn-danger" onclick="logOut()">Log out</button>
+  </div>
+</body>
+
+<script>
+
+//This functions runs every time the document loads
+$(document).ready(function () {
+  getUser(function() {
+    //Load user data into view
+    loadUserData();
+  });
+  
+});
+
+//This function loads user data
+function loadUserData() {
+  var fullname = document.getElementById("fullname");
+  fullname.innerHTML = user.firstname + " " + user.lastname;
+  var email = document.getElementById("email");
+  email.innerHTML = "Email: "+ user.email;
+
+  $.get("/user/teams", function(teams) {
+    var teamsCount = document.getElementById("teamsCount");
+    teamsCount.innerHTML = "Teams: " + teams.length;
+  });
+  $.get("/user/trainings", function(trainings) {
+    var trainingsCount = document.getElementById("trainingsCount");
+    trainingsCount.innerHTML = "Trainings: " + trainings.length;
+  });
+}
+//This function navigates to index.html and logs out the user
+function logOut() {
+  $.get("/user/logout");
+  window.location.href = "/";
+}
+
+</script>
+
+
+</html>

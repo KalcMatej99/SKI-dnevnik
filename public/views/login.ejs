@@ -1,0 +1,96 @@
+<!--
+  Author: Matej Kalc
+
+  login.html is needed to log the user.
+  It can navigate to index.html, home.html and register.html
+
+-->
+
+<!DOCTYPE html>
+<head lang="en">
+    <title>SKI Dnevnik</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="../js/baseUserAuthentication.js"></script>
+</head>
+<body background="../img/backgroundLogin.jpg" style="background-size: cover;" onload="onLoad()">
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index">SKI Dnevnik</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="registration"><span class="glyphicon glyphicon-log-in"></span> Registracija</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+        <h2 style="color: white">Dobrodošel!</h2>
+        <h3 style="color: white">Vpiši svoje podatke za login.</h3>
+        <form>
+            <div class="form-group">
+            <label style="color: white" for="usr">Email:</label>
+            <input type="text" class="form-control" id="usrEmail" style="width:400px">
+            </div>
+            <div class="form-group">
+            <label style="color: white" for="pwd">Password:</label>
+            <input type="password" class="form-control" id="pwd" style="width:400px">
+            </div>
+            <button id="loginButton" type="button" class="btn btn-primary">Log In</button>
+        </form>
+    </div>
+  </body>
+
+<script>
+
+//This function is called every time the page appears
+function onLoad() {
+  //When login button is clicked a new user is logged
+  document.getElementById("loginButton").addEventListener("click", login);
+}
+
+//This function logs a user
+function login() {
+  
+  var usrEmailInput = document.getElementById("usrEmail");
+  var passwordInput = document.getElementById("pwd");
+
+  //If data is missing it is alerted
+  if(usrEmailInput.value == "" || passwordInput.value == "") {
+    alert("Mankajo podatki");
+    return;
+  }
+  var password = passwordInput.value;
+  var email = usrEmailInput.value;
+
+  //Check if password is valid
+  if(!isPasswordValid(password)) {
+    alert("Geslo mora biti dolgo najmanj 8 črk in največ 20 črk.");
+    return;
+  }
+
+  //Check if email is valid
+  if(!isEmailValid(email)) {
+    alert("Nepravilen email");
+    return;
+  }
+
+  //Log in user
+  $.post('/user/login', {email:email, password: password}, function(err) {
+    if(err) {
+      alert(err);
+    } else {
+
+      //Navigate to home.html
+      location.href = "home";
+    }
+  });
+}
+
+</script>
+
+
+  </html>

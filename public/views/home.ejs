@@ -1,0 +1,91 @@
+<!--
+
+  Author: Matej Kalc
+
+  home.html is needed the view the calendar and general information for the user.
+  It can navigate to teams.html, account.html.
+
+-->
+
+
+<!DOCTYPE html>
+<head lang="en">
+    <title>SKI Dnevnik</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link type="text/css" href='../fullcalendar/packages/core/main.css' rel='stylesheet' />
+    <link type="text/css" href='../fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="../fullcalendar/packages/core/main.js"></script>
+    <script src="../fullcalendar/packages/daygrid/main.js"></script>
+    <script src="../js/base.js"></script>
+
+</head>
+<body style="background-size: cover;" onLoad = "onLoad()">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">SKI Dnevnik</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Koledar</a></li>
+        <li><a href="teams">Skupine</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          <li><a href="account"><span class="glyphicon glyphicon-user"></span> Account</a></li>
+        </ul>
+    </div>
+  </nav>
+  <div class="container">
+      <div id='calendar'></div>
+    </div>
+</body>
+
+<script>
+
+var calendar;
+
+//This function is called every time the page appears
+function onLoad() {
+  //Get current user
+  getUser(function() {
+    //Prepare calendar
+    prepareCalendar();
+
+    //Load data in calendar
+    loadTrainingsAndRacesinCalendar();
+  });
+}
+
+//This function prepares the calendar
+function prepareCalendar() {
+  var calendarEl = document.getElementById('calendar');
+
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    plugins: [ 'dayGrid' ]
+  });
+
+  calendar.render();
+}
+
+//This function loads data (trainings and races) for the calendar
+function loadTrainingsAndRacesinCalendar() {
+  $.get("/user/trainings", function(trainings) {
+
+    trainings.forEach(training => {
+      var event = {
+              title: training.name,
+              start: training.date,
+              allDay: true
+            };
+      calendar.addEvent(event);
+    });
+    
+  })
+}
+
+</script>
+
+</html>

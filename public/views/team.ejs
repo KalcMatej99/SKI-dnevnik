@@ -1,0 +1,211 @@
+<!--
+
+  Author: Matej Kalc
+
+  team.html is needed the view a specific team.
+  It can navigate to home.html, account.html and teams.html.
+
+-->
+
+<!DOCTYPE html>
+<head lang="en">
+    <title>SKI Dnevnik</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="../js/base.js"></script>
+</head>
+<body style="background-size: cover;">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">SKI Dnevnik</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="home">Koledar</a></li>
+        <li class="active"><a href="teams">Skupine</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          <li><a href="account"><span class="glyphicon glyphicon-user"></span> Account</a></li>
+        </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <h1 id="teamName">Ime skupine</h1>
+    <div id="teamsList"class="list-group">
+        <a class="list-group-item">
+            <h4 class="list-group-item-text">Treningi: <h4 id="trainingsNumber">0</h4></h4> 
+          </a>
+        <a class="list-group-item">
+            <h4 class="list-group-item-text">Tekmovalci: <h4 id="racersNumber">0</h4></h4> 
+         </a>
+        <br>
+    </div>
+    <h3>Treningi</h3>
+    <div class="row">
+      <button data-toggle="modal" data-target="#newTrainingModal"
+      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
+      <button onclick="removeAllTrainings()" class="col-sm-2 btn btn-danger">Izbrisi vse</button>
+    </div>
+    <div class="modal fade" id="newTrainingModal" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Nov trening</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="team">Ime treninga:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="trainingName" name="trainingName">
+                  </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Lokacija:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="trainingLocation" placeholder="" name="trainingLocation">
+                    </div>
+                  </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Datum:</label>
+                  <div class="col-sm-10">
+                    <input type="date" name="trainingDate" id="trainingDate">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Opis:</label>
+                  <div class="col-sm-10">
+                    <textarea rows="4" cols="50" id="trainingDescription"></textarea>
+                  </div>
+                </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="saveNewTraining()" data-dismiss="modal">Shrani</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <div id="trainingsList"class="list-group">
+      <br>
+    </div>
+  </div>
+</body>
+
+<script>
+
+var teamid;
+
+$(document).ready(function () {
+
+  //Get teamid from url as parameter
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  teamid = url.searchParams.get("teamid");
+
+  getUser(function() {
+    //Load user data
+    setDateToToday();
+    setMaxDateToToday();
+    loadTrainings(teamid);
+    loadNumberOfRacers(teamid);
+  });
+  
+});
+
+//This function loads the trainings in the page
+function loadTrainings(teamid) {
+  trainingsList.innerHTML = "<br>";
+  $.get("/team/trainings", {id: teamid}, function(trainings) {
+    var trainingsNumber = document.getElementById("trainingsNumber");
+    trainingsNumber.innerHTML = trainings.length;
+    var trainingsList = document.getElementById("trainingsList");
+    trainings.forEach(training => {
+      trainingsList.innerHTML += '<a id="listItem' + training.id + '" href="#" onclick="navigateToTraining(' + training.id + ')" class="clearfix list-group-item">\
+            <h2 class="list-group-item-heading"> ' + training.name + ' </h2>\
+            <span class="pull-right"> \
+              <button type="button" class="btn btn-danger" onclick="removeTraining(' + training.id + '); event.stopPropagation();">Zbriši</button>\
+              </span>\
+            <h4 class="list-group-item-text">' + training.location + ' - ' + training.date + '</h4> \
+            <h4 class="list-group-item-text">' + training.description + '</h4> \
+          </a>\
+          <br>';
+    });
+  });
+}
+
+//This function writes the number of racers in the page
+function loadNumberOfRacers(teamid) {
+  $.get("/team/data", {id: teamid}, function(data) {
+    var teamName = document.getElementById("teamName");
+    teamName.innerHTML = data["name"];
+    var racersNumber = document.getElementById("racersNumber");
+    racersNumber.innerHTML = data["numberofracers"];
+  });
+}
+
+//This function is needed to navigate to training.ejs
+function navigateToTraining(trainingid) {
+  window.href.location = "training?trainingid=" + trainingid;
+}
+
+function removeTraining(trainingid) {
+  $.post("/training/delete", {id: trainingid}, function(err){
+    if(err){
+      alert(err);
+      return;
+    } else {
+      var listItem = document.getElementById("listItem" + trainingid);
+      listItem.parentNode.removeChild(listItem);
+    }
+  });
+}
+
+//This function saves new trainings in db and displays them
+function saveNewTraining() {
+  var trainingName = document.getElementById("trainingName").value;
+  var trainingLocation = document.getElementById("trainingLocation").value;
+  var trainingDate = document.getElementById("trainingDate").value;
+  var trainingDescription = document.getElementById("trainingDescription").value;
+  document.getElementById("trainingName").value = "";
+  document.getElementById("trainingLocation").value = "";
+  document.getElementById("trainingDate").value = "";
+  document.getElementById("trainingDescription").value = "";
+
+  //Check if data is missing
+  if(trainingName == "" || trainingLocation == "" || trainingDate == "" || trainingDescription == "") {
+    alert("Prosim izpopolni vse zazeljene podatke");
+    return;
+  }
+
+  //Post server save new team
+  $.post("/training/save", {name: trainingName, location: trainingLocation, date: trainingDate, 
+    description: trainingDescription, teamid: teamid, weather:null}, function(err) {
+    if(err) {
+      alert(err);
+    } else {
+      //Load teams
+      loadTrainings(teamid);
+    }
+  });
+}
+
+function setDateToToday(){
+  var today = new Date();
+  document.getElementById("trainingDate").value = today;
+}
+function setMaxDateToToday(){
+  var today = new Date();
+  document.getElementById("trainingDate").max = today;
+}
+
+</script>
+</html>

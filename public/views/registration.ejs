@@ -1,0 +1,105 @@
+<!--
+  Author: Matej Kalc
+
+  Registration.html is needed to register the new user.
+  It can navigate to index.html, home.html and login.html
+
+-->
+
+<!DOCTYPE html>
+<head lang="en">
+    <title>SKI Dnevnik</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="../js/baseUserAuthentication.js"></script>
+</head>
+<body background="../img/backgroundRegistracija.jpg" style="background-size: cover;" onload="onLoad()">
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index">SKI Dnevnik</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+        <h2>Registracija novega trenerja</h2>
+        <h3>Spodnji podatki so potrebni za boljšo uporabo spletne strani.</h3>
+        <form>
+            <div class="form-group">
+            <label for="usr">Ime:</label>
+            <input type="text" class="form-control" id="usrName" style="width:400px">
+            </div>
+            <div class="form-group">
+            <label for="usr">Priimek:</label>
+            <input type="text" class="form-control" id="usrSurname" style="width:400px">
+            </div>
+            <div class="form-group">
+            <label for="usr">Email:</label>
+            <input type="text" class="form-control" id="usrEmail" style="width:400px">
+            </div>
+            <div class="form-group">
+            <label for="pwd">Password:</label>
+            <input type="password" class="form-control" id="pwd" style="width:400px">
+            </div>
+            <button id="registrationButton" type="button" class="btn btn-primary">Registracija</button>
+        </form>
+    </div>
+  </body>
+<script>
+
+//This function is called every time the page appears
+function onLoad() {
+  //When register button is clicked a new user is registered
+  document.getElementById("registrationButton").addEventListener("click", registerNewUser);
+}
+
+//This function registers a new user
+function registerNewUser() {
+  var usrNameInput = document.getElementById("usrName");
+  var usrSurnameInput = document.getElementById("usrSurname");
+  var usrEmailInput = document.getElementById("usrEmail");
+  var passwordInput = document.getElementById("pwd");
+
+  //If data is missing it is alerted
+  if(usrNameInput.value == "" || usrSurnameInput.value == "" || usrEmailInput.value == "" || passwordInput.value == "") {
+    alert("Mankajo podatki.");
+    return;
+  }
+  var username = usrNameInput.value;
+  var usersurname = usrSurnameInput.value;
+  var password = passwordInput.value;
+  var email = usrEmailInput.value;
+
+  //Check if password is valid
+  if(!isPasswordValid(password)) {
+    alert("Geslo mora biti dolgo najmanj 8 črk in največ 20 črk.");
+    return;
+  }
+
+  //Check if email is valid
+  if(!isEmailValid(email)) {
+    alert("Nepravilen email.");
+    return;
+  }
+
+  $.post('/user/register', {username: username, usersurname: usersurname, email:email, password: password}, function(err) {
+    if(err) {
+      alert(err);
+    } else {
+      location.href = "home";
+    }
+  });
+
+}
+
+
+
+</script>
+
+  </html>
