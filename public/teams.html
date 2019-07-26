@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="../js/base.js"></script>
+    <script src="./javascripts/base.js"></script>
 </head>
 <body style="background-size: cover;" onLoad = "onLoad()">
   <nav class="navbar navbar-inverse">
@@ -24,11 +24,11 @@
         <a class="navbar-brand" href="#">SKI Dnevnik</a>
       </div>
       <ul class="nav navbar-nav">
-        <li><a href="home">Koledar</a></li>
+        <li><a href="home.html">Koledar</a></li>
         <li class="active"><a>Skupine</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-          <li><a href="account"><span class="glyphicon glyphicon-user"></span> Account</a></li>
+          <li><a href="account.html"><span class="glyphicon glyphicon-user"></span> Account</a></li>
         </ul>
     </div>
   </nav>
@@ -115,7 +115,7 @@ function getTeams() {
 
 //This function is needed to navigate to team.ejs
 function navigateToTeam(teamid) {
-  window.location.href = "team?teamid=" + teamid;
+  window.location.href = "team.html?teamid=" + teamid;
 }
 
 //This function saves a new team

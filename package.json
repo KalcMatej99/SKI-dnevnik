@@ -7,6 +7,7 @@
         "@fullcalendar/core": "^4.2.0",
         "@fullcalendar/daygrid": "^4.2.0",
         "consolidate": "^0.15.1",
+        "cookie-parser": "^1.4.4",
         "ejs": "^2.6.2",
         "express": "4.17.1",
         "express-session": "1.16.2",
@@ -15,11 +16,12 @@
         "jquery": "^3.4.1",
         "latest-version": "^5.1.0",
         "moment": "^2.24.0",
+        "morgan": "^1.9.1",
         "pg": "^7.11.0",
         "swig": "^1.4.2"
     },
     "scripts": {
-        "start": "node server.js"
+        "start": "node ./bin/www"
     },
     "devDependencies": {
         "eslint": "^6.0.1"
