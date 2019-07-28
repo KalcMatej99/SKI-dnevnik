@@ -1,0 +1,122 @@
+<!--
+
+  Author: Matej Kalc
+
+  racer.html is needed the view a specific racer.
+  It can navigate to home.html, account.html and teams.html.
+
+-->
+
+<!DOCTYPE html>
+<head lang="en">
+    <title>SKI Dnevnik</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="./javascripts/base.js"></script>
+</head>
+<body style="background-size: cover;">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">SKI Dnevnik</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="home.html">Koledar</a></li>
+        <li class="active"><a href="teams.html">Skupine</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          <li><a href="account.html"><span class="glyphicon glyphicon-user"></span> Account</a></li>
+        </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <h1 id="racerName">Ime tekmovalca</h1>
+    <div id="racerList"class="list-group">
+        <a class="list-group-item">
+          <h4 class="list-group-item-text"><h4 id="racerGenderAndBirth"></h4></h4> 
+        </a>
+        <a class="list-group-item">
+            <h4 class="list-group-item-text"><h4 id="racerTeam"></h4></h4> 
+        </a>
+        <a class="list-group-item">
+          <h4 class="list-group-item-text">Treningi: <h4 id="trainingsNumber">0</h4></h4> 
+        </a>
+        <br>
+    </div>
+    <h3>Treningi</h3>
+    <div id="trainingsList"class="list-group">
+      <br>
+    </div>
+  </div>
+</body>
+
+<script>
+
+var teamid;
+var racerid;
+var racer;
+var trainings;
+
+$(document).ready(function () {
+
+  //Get teamid from url as parameter
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  racerid = url.searchParams.get("racerid");
+
+  console.log(racerid);
+
+  getUser(function() {
+    //Load user data
+    loadRacer();
+    loadTrainings();
+  });
+  
+});
+
+function loadRacer() {
+    $.get("/racer/data", {id: racerid}, function(data) {
+        racer = data;
+        
+        document.getElementById("racerName").innerHTML = racer.firstname + " " + racer.lastname;
+        document.getElementById("racerGenderAndBirth").innerHTML = (racer.gender == 1 ? "M" : "F") + " - " + parseDate(racer.birth);
+
+        $.get("/team/data", {id: racer.teamid}, function(data) {
+            document.getElementById("racerTeam").innerHTML = data.name;
+        });
+    });
+}
+
+//This function loads the trainings in the page
+function loadTrainings() {
+  $.get("/racer/trainings", {id: racerid}, function(trainingsArray) {
+    trainings = trainingsArray;
+    displayTrainings();
+  });
+}
+function displayTrainings() {
+  var trainingsNumber = document.getElementById("trainingsNumber");
+  trainingsNumber.innerHTML = trainings.length;
+  var trainingsList = document.getElementById("trainingsList");
+  trainingsList.innerHTML = "<br>";
+  console.log(trainings);
+  trainings.forEach(training => {
+      trainingsList.innerHTML += '<a id="listItem' + training.id + '" href="#" onclick="navigateToTraining(' + training.id + ')" class="clearfix list-group-item">\
+          <h2 class="list-group-item-heading"> ' + training.name + ' </h2>\
+          <h4 class="list-group-item-text">' + training.location + ' - ' + parseDate(training.startdate) + '</h4> \
+          <h4 class="list-group-item-text">' + training.description + '</h4> \
+        </a>\
+        <br>';
+  });
+}
+
+//This function is needed to navigate to training.html
+function navigateToTraining(trainingid) {
+  window.location.href = "training.html?trainingid=" + trainingid;
+}
+
+</script>
+</html>

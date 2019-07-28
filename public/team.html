@@ -273,9 +273,31 @@ function loadNumberOfRacers(teamid) {
   });
 }
 
-//This function is needed to navigate to training.ejs
+//This function is needed to navigate to training.html
 function navigateToTraining(trainingid) {
   window.href.location = "training.html?trainingid=" + trainingid;
+}
+
+function navigateToRacer(racerid) {
+    window.location.href = "racer.html?racerid=" + racerid;
+}
+
+function removeRacer(racerid) {
+    $.post("/racer/delete", {id: racerid}, function(err){
+        if(err){
+            alert(err);
+        } else {
+            loadRacers(teamid);
+        }
+    });
+}
+
+function removeAllTrainings(trainings) {
+    trainings.forEach(training => {
+        removeTraining(training.id);
+    });
+    trainings = [];
+    displayTrainings();
 }
 
 function removeTraining(trainingid) {
@@ -380,7 +402,7 @@ function displayRacers() {
   racersList.innerHTML = "<br>";
   racers.forEach(racer => {
     var gender = racer.gender == 1 ? "M" : "F";
-    racersList.innerHTML += '<a id="racersListItem' + racer.id + '" class="clearfix list-group-item">\
+    racersList.innerHTML += '<a id="racersListItem' + racer.id + '" href="#" onclick="navigateToRacer(' + racer.id + ')" class="clearfix list-group-item">\
           <h2 class="list-group-item-heading"> ' + racer.firstname + " " + racer.lastname + ' </h2>\
           <span class="pull-right"> \
             <button type="button" class="btn btn-danger" onclick="removeRacer(' + racer.id + '); event.stopPropagation();">Zbriši</button>\
@@ -390,24 +412,6 @@ function displayRacers() {
         </a>\
         <br>';
   });
-}
-
-function removeRacer(racerid) {
-  $.post("/racer/delete", {id: racerid}, function(err){
-    if(err){
-      alert(err);
-    } else {
-      loadRacers(teamid);
-    }
-  })
-}
-
-function removeAllTrainings() {
-  trainings.forEach(training => {
-    removeTraining(training.id);
-  });
-  trainings = [];
-  displayTrainings();
 }
 
 function typeOfTrainingChanged() {

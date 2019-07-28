@@ -25,6 +25,26 @@ router.get("/data", function(req, res) {
     });
 });
 
+router.get("/trainings", function(req, res) {
+    var id = req.query.id;
+
+    clientDB.getRacer(id, function(err, racer){
+        if(err) {
+            alert(err);
+            res.sendStatus(500);
+        } else {
+            clientDB.getTrainingsOfTeam(racer.teamid, function(err, trainings){
+                if(err) {
+                    alert(err);
+                    res.sendStatus(500);
+                } else {
+                    res.send(trainings);
+                }
+            });
+        }
+    });
+});
+
 router.post("/save", function(req, res) {
     var firstname = req.body.firstname;
     var lastname = req.body.lastname;
