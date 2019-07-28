@@ -26,3 +26,9 @@ function getUser(callback) {
         callback();
     }
 }
+
+//This function returns a stringof year, month and day
+function parseDate(dateString) {
+    var date = new Date(dateString);
+    return date.getDate() + "." + date.getMonth() + "." + date.getFullYear();
+}

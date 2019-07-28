@@ -199,7 +199,7 @@ function loadTrainings(teamid) {
             <span class="pull-right"> \
               <button type="button" class="btn btn-danger" onclick="removeTraining(' + training.id + '); event.stopPropagation();">Zbriši</button>\
               </span>\
-            <h4 class="list-group-item-text">' + training.location + ' - ' + training.date + '</h4> \
+            <h4 class="list-group-item-text">' + training.location + ' - ' + parseDate(training.date) + '</h4> \
             <h4 class="list-group-item-text">' + training.description + '</h4> \
           </a>\
           <br>';
@@ -327,7 +327,7 @@ function loadRacers(teamid) {
             <span class="pull-right"> \
               <button type="button" class="btn btn-danger" onclick="removeRacer(' + racer.id + '); event.stopPropagation();">Zbriši</button>\
               </span>\
-            <h4 class="list-group-item-text">' + gender + ' - ' + racer.birth + '</h4> \
+            <h4 class="list-group-item-text">' + gender + ' - ' + parseDate(racer.birth) + '</h4> \
             <h4 class="list-group-item-text">' + racer.description + '</h4> \
           </a>\
           <br>';
