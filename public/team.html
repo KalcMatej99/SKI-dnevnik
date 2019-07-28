@@ -75,12 +75,10 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2">Spol:</label>
                     <div class="col-sm-10">
-                      <div class="checkbox">
-                        <label><input type="checkbox" name="remember" id="racerMaleCheckbox"> M</label>
-                      </div>
-                      <div class="checkbox">
-                        <label><input type="checkbox" name="remember" id="racerFemaleCheckbox"> F</label>
-                      </div>
+                      <select id="racerGender">
+                        <option value="1">M</option>
+                        <option value="2">F</option>
+                      </select>
                     </div>
                   </div>
                 <div class="form-group">
@@ -278,22 +276,12 @@ function saveNewRacer() {
   var racerLastname = document.getElementById("racerLastname").value;
   var racerBirth = document.getElementById("racerBirth").value;
   var racerDescription = document.getElementById("racerDescription").value;
-  var maleCheckbox = document.getElementById("racerMaleCheckbox").checked;
-  var femaleCheckbox = document.getElementById("racerFemaleCheckbox").checked;
-  var racerGender;
-
-  if(maleCheckbox) {
-    racerGender = 1;
-  }
-  if(femaleCheckbox) {
-    racerGender = 2;
-  }
+  var racerGender = document.getElementById("racerGender").options[document.getElementById("racerGender").selectedIndex].name;
   document.getElementById("racerFirstname").value = "";
   document.getElementById("racerLastname").value = "";
   document.getElementById("racerBirth").value = new Date();
   document.getElementById("racerDescription").value = "";
-  document.getElementById("racerMaleCheckbox").checked = true;
-  document.getElementById("racerFemaleCheckbox").checked = false;
+  document.getElementById("racerGender").selected = document.getElementById("racerGender").options[0];
 
   //Check if data is missing
   if(racerFirstname == "" || racerLastname == "" || racerBirth == "" || racerGender == "") {
@@ -302,7 +290,6 @@ function saveNewRacer() {
   }
 
   //Post server save new team
-    console.log(racerFirstname);
   $.post("/racer/save", {firstname: racerFirstname, lastname: racerLastname, 
     birth: racerBirth, description: racerDescription, 
     gender: racerGender, teamid: teamid}, function(err) {
@@ -316,10 +303,11 @@ function saveNewRacer() {
 }
 
 function loadRacers(teamid) {
+  var racersList = document.getElementById("racersList");
+  racersList.innerHTML = "<br>";
   $.get("/team/racers", {id: teamid}, function(racers){
     var racersNumber = document.getElementById("racersNumber");
     racersNumber.innerHTML = racers.length;
-    var racersList = document.getElementById("racersList");
     racers.forEach(racer => {
       var gender = racer.gender == 1 ? "M" : "F";
       racersList.innerHTML += '<a id="racersListItem' + racer.id + '" class="clearfix list-group-item">\
@@ -342,8 +330,8 @@ function removeRacer(racerid) {
     } else {
       var listItem = document.getElementById("racersListItem" + racerid);
       listItem.parentNode.removeChild(listItem);
-      var racersNumber = document.getElementById("racersNumber");
-      racersNumber.innerHTML =- 1;
+      
+      loadRacers();
     }
   })
 }

@@ -22,7 +22,6 @@ post:
 */
 
 router.get("/data", function(req, res){
-
     var id = req.query.id;
 
     clientDB.getTeam(id, function(err, team) {
