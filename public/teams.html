@@ -56,14 +56,6 @@
                       <input type="text" class="form-control" id="teamName" placeholder="Napisi ime Skupine" name="teamName">
                     </div>
                   </div>
-                  
-                  <br>
-                  <div class="form-group">
-                      <label class="control-label col-sm-2" for="team">Stevilo tekmovalcev:</label>
-                      <div class="col-sm-10">
-                        <input type="number" class="form-control" id="numberOfRacers" placeholder="Število tekmovalcev" name="teamName">
-                      </div>
-                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -105,7 +97,6 @@ function getTeams() {
               <button type="button" class="btn btn-danger" onclick="removeTeam(' + team.id + '); event.stopPropagation();">Zbriši</button>\
               </span>\
             <h4 class="list-group-item-text">Treningi: ' + trainings.length + '</h4> \
-            <h4 class="list-group-item-text">Tekmovalci: ' + team.numberofracers + '</h4> \
           </a>\
           <br>';
       });
@@ -121,24 +112,16 @@ function navigateToTeam(teamid) {
 //This function saves a new team
 function saveNewTeam() {
   var teamName = document.getElementById("teamName").value;
-  var numberOfRacers = document.getElementById("numberOfRacers").value;
   document.getElementById("teamName").value = "";
-  document.getElementById("numberOfRacers").value = "";
 
   //Check if data is missing
-  if(teamName == "" || numberOfRacers == "") {
+  if(teamName == "") {
     alert("Prosim izpopolni vse zazeljene podatke");
     return;
   }
 
-  //Number of racers needs to be posotive
-  if(numberOfRacers <= 0) {
-    alert("Število tekmovalcev mora biti realno pozitivno število");
-    return;
-  }
-
   //Post server save new team
-  $.post("/team/save", {name: teamName, numberOfRacers: numberOfRacers, userid: user.id}, function(err) {
+  $.post("/team/save", {name: teamName, userid: user.id}, function(err) {
     if(err) {
       alert(err);
     } else {

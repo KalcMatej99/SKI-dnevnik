@@ -43,6 +43,70 @@
          </a>
         <br>
     </div>
+    <h3>Tekmovalci</h3><div class="row">
+      <button data-toggle="modal" data-target="#newRacerModal"
+      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
+    </div>
+    <div class="modal fade" id="newRacerModal" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Nov tekmovalec</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="team">Ime tekmovalca:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="racerFirstname">
+                  </div>
+                </div>
+                <br>
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="team">Priimek tekmovalca:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="racerLastname">
+                  </div>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Spol:</label>
+                    <div class="col-sm-10">
+                      <div class="checkbox">
+                        <label><input type="checkbox" name="remember" id="racerMaleCheckbox"> M</label>
+                      </div>
+                      <div class="checkbox">
+                        <label><input type="checkbox" name="remember" id="racerFemaleCheckbox"> F</label>
+                      </div>
+                    </div>
+                  </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Datum rojstva:</label>
+                  <div class="col-sm-10">
+                    <input type="date" id="racerBirth">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Opis:</label>
+                  <div class="col-sm-10">
+                    <textarea rows="4" cols="50" id="racerDescription" placeholder="Napisi napake tekmovalca, opis je opcijski"></textarea>
+                  </div>
+                </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="saveNewRacer()" data-dismiss="modal">Shrani</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <div id="racersList"class="list-group">
+      <br>
+    </div>
     <h3>Treningi</h3>
     <div class="row">
       <button data-toggle="modal" data-target="#newTrainingModal"
@@ -116,6 +180,7 @@ $(document).ready(function () {
     setDateToToday();
     setMaxDateToToday();
     loadTrainings(teamid);
+    loadRacers(teamid);
     loadNumberOfRacers(teamid);
   });
   
@@ -147,8 +212,6 @@ function loadNumberOfRacers(teamid) {
   $.get("/team/data", {id: teamid}, function(data) {
     var teamName = document.getElementById("teamName");
     teamName.innerHTML = data["name"];
-    var racersNumber = document.getElementById("racersNumber");
-    racersNumber.innerHTML = data["numberofracers"];
   });
 }
 
@@ -198,14 +261,93 @@ function saveNewTraining() {
   });
 }
 
+//Nastavi datum v modal za nov traning na danasnji datum
 function setDateToToday(){
   var today = new Date();
   document.getElementById("trainingDate").value = today;
 }
+
+//Nastavi max datum v modal za nov traning na danasnji datum
 function setMaxDateToToday(){
   var today = new Date();
   document.getElementById("trainingDate").max = today;
 }
+
+function saveNewRacer() {
+  var racerFirstname = document.getElementById("racerFirstname").value;
+  var racerLastname = document.getElementById("racerLastname").value;
+  var racerBirth = document.getElementById("racerBirth").value;
+  var racerDescription = document.getElementById("racerDescription").value;
+  var maleCheckbox = document.getElementById("racerMaleCheckbox").checked;
+  var femaleCheckbox = document.getElementById("racerFemaleCheckbox").checked;
+  var racerGender;
+
+  if(maleCheckbox) {
+    racerGender = 1;
+  }
+  if(femaleCheckbox) {
+    racerGender = 2;
+  }
+  document.getElementById("racerFirstname").value = "";
+  document.getElementById("racerLastname").value = "";
+  document.getElementById("racerBirth").value = new Date();
+  document.getElementById("racerDescription").value = "";
+  document.getElementById("racerMaleCheckbox").checked = true;
+  document.getElementById("racerFemaleCheckbox").checked = false;
+
+  //Check if data is missing
+  if(racerFirstname == "" || racerLastname == "" || racerBirth == "" || racerGender == "") {
+    alert("Prosim izpopolni vse zazeljene podatke");
+    return;
+  }
+
+  //Post server save new team
+    console.log(racerFirstname);
+  $.post("/racer/save", {firstname: racerFirstname, lastname: racerLastname, 
+    birth: racerBirth, description: racerDescription, 
+    gender: racerGender, teamid: teamid}, function(err) {
+    if(err) {
+      alert(err);
+    } else {
+      //Load teams
+      loadRacers(teamid);
+    }
+  });
+}
+
+function loadRacers(teamid) {
+  $.get("/team/racers", {id: teamid}, function(racers){
+    var racersNumber = document.getElementById("racersNumber");
+    racersNumber.innerHTML = racers.length;
+    var racersList = document.getElementById("racersList");
+    racers.forEach(racer => {
+      var gender = racer.gender == 1 ? "M" : "F";
+      racersList.innerHTML += '<a id="racersListItem' + racer.id + '" class="clearfix list-group-item">\
+            <h2 class="list-group-item-heading"> ' + racer.firstname + " " + racer.lastname + ' </h2>\
+            <span class="pull-right"> \
+              <button type="button" class="btn btn-danger" onclick="removeRacer(' + racer.id + '); event.stopPropagation();">Zbriši</button>\
+              </span>\
+            <h4 class="list-group-item-text">' + gender + ' - ' + racer.birth + '</h4> \
+            <h4 class="list-group-item-text">' + racer.description + '</h4> \
+          </a>\
+          <br>';
+    });
+  }); 
+}
+
+function removeRacer(racerid) {
+  $.post("/racer/delete", {id: racerid}, function(err){
+    if(err){
+      alert(err);
+    } else {
+      var listItem = document.getElementById("racersListItem" + racerid);
+      listItem.parentNode.removeChild(listItem);
+      var racersNumber = document.getElementById("racersNumber");
+      racersNumber.innerHTML =- 1;
+    }
+  })
+}
+
 
 </script>
 </html>

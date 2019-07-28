@@ -12,12 +12,13 @@ router.get('/', function(req, res, next) {
 /team
 
 get:
-/data(body: id) - Sends data of a specific team
-/trainings(body: teamid) - Sends all trainings for a specific team
+    /data(body: id) - Sends data of a specific team
+    /trainings(body: teamid) - Sends all trainings for a specific team
+    /racers(body: id) - Sends data of racers of team
 
 post:
-/save(body: name, numberOfRacers, userid) - Saves new team, sends error if occures
-/delete(body: id) - Delete the team from db, sends error if occures
+    /save(body: name, numberOfRacers, userid) - Saves new team, sends error if occures
+    /delete(body: id) - Delete the team from db, sends error if occures
 */
 
 router.get("/data", function(req, res){
@@ -44,6 +45,20 @@ router.get("/trainings", function(req, res){
             res.status(500).send(null);
         } else {
             res.send(trainings);
+        }
+    });
+});
+
+router.get("/racers", function(req, res){
+
+    var id = req.query.id;
+
+    clientDB.getRacersOfTeam(id, function(err, racers) {
+        if(err) {
+            console.log(err);
+            res.status(500).send(null);
+        } else {
+            res.send(racers);
         }
     });
 });
