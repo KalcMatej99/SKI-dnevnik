@@ -77,8 +77,8 @@ function loadTrainingsAndRacesinCalendar() {
     trainings.forEach(training => {
       var event = {
               title: training.name,
-              start: training.date,
-              allDay: true
+              start: training.startdate,
+              end: training.endate
             };
       calendar.addEvent(event);
     });

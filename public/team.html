@@ -128,17 +128,33 @@
                     <input type="text" class="form-control" id="trainingName" name="trainingName">
                   </div>
                 </div>
-                <br>
                 <div class="form-group">
-                    <label class="control-label col-sm-2">Lokacija:</label>
-                    <div class="col-sm-10">
-                      <input type="text" class="form-control" id="trainingLocation" placeholder="" name="trainingLocation">
-                    </div>
-                  </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Datum:</label>
+                  <label class="control-label col-sm-2">Disciplina:</label>
                   <div class="col-sm-10">
-                    <input type="date" name="trainingDate" id="trainingDate">
+                    <select id="trainingDiscipline">
+                      <option value="1">Slalom</option>
+                      <option value="2">Veleslalom</option>
+                      <option value="3">SuperG</option>
+                      <option value="4">Smuk</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Lokacija:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="trainingLocation" placeholder="" name="trainingLocation">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Ura začetka:</label>
+                  <div class="col-sm-10">
+                    <input type="datetime-local" name="trainingStartDate" id="trainingStartDate">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Ura konca:</label>
+                  <div class="col-sm-10">
+                    <input type="datetime-local" name="trainingEndDate" id="trainingEndDate">
                   </div>
                 </div>
                 <div class="form-group">
@@ -158,6 +174,27 @@
                       <option value="5">Snežno</option>
                       <option value="6">Megleno</option>
                     </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Tip:</label>
+                  <div class="col-sm-10">
+                    <select id="trainingType" onchange="typeOfTrainingChanged()">
+                      <option value="1">Prosto</option>
+                      <option value="2">Postavitve</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" hidden="true" id="formGroupNumberofTracks">
+                  <label class="control-label col-sm-2">Št vrat:</label>
+                  <div class="col-sm-10">
+                      <input type="number" class="form-control" id="trainingNumberOfSkiGates" value="0">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Št prog:</label>
+                  <div class="col-sm-10">
+                      <input type="number" class="form-control" id="trainingNumberOfTracks" value="0">
                   </div>
                 </div>
                 <div class="form-group">
@@ -196,8 +233,6 @@ $(document).ready(function () {
 
   getUser(function() {
     //Load user data
-    setDateToToday();
-    setMaxDateToToday();
     loadTrainings(teamid);
     loadRacers(teamid);
     loadNumberOfRacers(teamid);
@@ -223,7 +258,7 @@ function displayTrainings() {
           <span class="pull-right"> \
             <button type="button" class="btn btn-danger" onclick="removeTraining(' + training.id + '); event.stopPropagation();">Zbriši</button>\
             </span>\
-          <h4 class="list-group-item-text">' + training.location + ' - ' + parseDate(training.date) + '</h4> \
+          <h4 class="list-group-item-text">' + training.location + ' - ' + parseDate(training.startdate) + '</h4> \
           <h4 class="list-group-item-text">' + training.description + '</h4> \
         </a>\
         <br>';
@@ -258,27 +293,38 @@ function removeTraining(trainingid) {
 function saveNewTraining() {
   var trainingName = document.getElementById("trainingName").value;
   var trainingLocation = document.getElementById("trainingLocation").value;
-  var trainingDate = document.getElementById("trainingDate").value;
+  var trainingStartDate = document.getElementById("trainingStartDate").value;
+  var trainingEndDate = document.getElementById("trainingEndDate").value;
   var trainingTemperature = document.getElementById("trainingTemperature").value;
-  var trainingWeather = document.getElementById("trainingWeather").value;
+  var trainingWeather = document.getElementById("trainingWeather").options[document.getElementById("trainingWeather").selectedIndex].value;
   var trainingDescription = document.getElementById("trainingDescription").value;
+  var trainingType = document.getElementById("trainingType").options[document.getElementById("trainingType").selectedIndex].value;
+  var trainingNumberOfTracks = document.getElementById("trainingNumberOfTracks").value;
+  var trainingNumberOfSkiGates = document.getElementById("trainingNumberOfSkiGates").value;
+  var trainingType = document.getElementById("trainingDiscipline").options[document.getElementById("trainingDiscipline").selectedIndex].value;
+  
   document.getElementById("trainingName").value = "";
   document.getElementById("trainingLocation").value = "";
-  document.getElementById("trainingDate").value = "";
-  document.getElementById("trainingTemperature").value = "0";
+  document.getElementById("trainingStartDate").value = new Date();
+  document.getElementById("trainingEndDate").value = new Date();
+  document.getElementById("trainingTemperature").value = 0;
   document.getElementById("trainingWeather").selectedIndex = 0;
   document.getElementById("trainingDescription").value = "";
+  document.getElementById("trainingDiscipline").selectedIndex = 0;
+  document.getElementById("trainingNumberOfSkiGates").value = 0;
+  document.getElementById("trainingNumberOfTracks").value = 0;
+  document.getElementById("trainingType").selectedIndex = 0;
 
   //Check if data is missing
-  if(trainingName == "" || trainingLocation == "" || trainingDate == "") {
+  if(trainingName == "" || trainingLocation == "") {
     alert("Prosim izpopolni vse zazeljene podatke");
     return;
   }
 
   //Post server save new team
-  $.post("/training/save", {name: trainingName, location: trainingLocation, date: trainingDate, 
-    description: trainingDescription, teamid: teamid, weather:trainingWeather, 
-    temperature: trainingTemperature}, function(err) {
+  $.post("/training/save", {name: trainingName, location: trainingLocation, startDate: trainingStartDate, endDate:trainingEndDate,
+    description: trainingDescription, teamid: teamid, weather:trainingWeather, type: trainingType, numberOfTracks: trainingNumberOfTracks,
+    numberOfSkiGates: trainingNumberOfSkiGates, temperature: trainingTemperature}, function(err) {
     if(err) {
       alert(err);
     } else {
@@ -286,18 +332,6 @@ function saveNewTraining() {
       loadTrainings(teamid);
     }
   });
-}
-
-//Nastavi datum v modal za nov traning na danasnji datum
-function setDateToToday(){
-  var today = new Date();
-  document.getElementById("trainingDate").value = today;
-}
-
-//Nastavi max datum v modal za nov traning na danasnji datum
-function setMaxDateToToday(){
-  var today = new Date();
-  document.getElementById("trainingDate").max = today;
 }
 
 function saveNewRacer() {
@@ -376,6 +410,9 @@ function removeAllTrainings() {
   displayTrainings();
 }
 
+function typeOfTrainingChanged() {
+  document.getElementById("formGroupNumberofTracks").hidden = (document.getElementById("trainingType").selectedIndex != 1);
+}
 
 </script>
 </html>

@@ -36,13 +36,23 @@ router.get("/data", function(req, res){
 router.post("/save", function(req, res){
     var name = req.body.name;
     var location = req.body.location;
-    var date = req.body.date;
+    var startDate = req.body.startDate;
+    var endDate = req.body.endDate;
     var description = req.body.description;
     var teamid = req.body.teamid;
     var weather = req.body.weather;
     var temperature = req.body.temperature;
+    var type = req.body.type;
+    var discipline = req.body.discipline;
+    var numberOfTracks = req.body.numberOfTracks;
+    var numberOfSkiGates = req.body.numberOfSkiGates;
+    var isRacingTrack = req.body.isRacingTrack;
 
-    clientDB.client.query("INSERT INTO public.training(name, location, date, description, teamid, temperature, weather) values($1, $2, $3, $4, $5, $6, $7) RETURNING *", [name, location, date, description, teamid, temperature, weather])
+    clientDB.client.query("INSERT INTO public.training(name, location, startdate, enddate, \
+        description, teamid, temperature, weather, type, discipline, numberoftracks, \
+        numberofskigates, isracingtrack) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *", [name,
+             location, startDate, endDate, description, teamid, temperature, weather, type, discipline,
+            numberOfTracks, numberOfSkiGates, isRacingTrack])
     .then(() => {
         res.send(null);
         })
