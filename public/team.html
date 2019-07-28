@@ -363,10 +363,7 @@ function removeRacer(racerid) {
     if(err){
       alert(err);
     } else {
-      var listItem = document.getElementById("racersListItem" + racerid);
-      listItem.parentNode.removeChild(listItem);
-      
-      loadRacers();
+      loadRacers(teamid);
     }
   })
 }
