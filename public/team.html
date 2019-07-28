@@ -142,6 +142,25 @@
                   </div>
                 </div>
                 <div class="form-group">
+                  <label class="control-label col-sm-2">Temperatura:</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="trainingTemperature" value="0" name="trainingTemperature">
+                    °C</div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Vreme:</label>
+                  <div class="col-sm-10">
+                    <select id="trainingWeather">
+                      <option value="1">Sončno</option>
+                      <option value="2">Oblačno</option>
+                      <option value="3">Deževno</option>
+                      <option value="4">Vetrovno</option>
+                      <option value="5">Snežno</option>
+                      <option value="6">Megleno</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
                   <label class="control-label col-sm-2">Opis:</label>
                   <div class="col-sm-10">
                     <textarea rows="4" cols="50" id="trainingDescription"></textarea>
@@ -165,6 +184,8 @@
 <script>
 
 var teamid;
+var trainings;
+var racers;
 
 $(document).ready(function () {
 
@@ -186,22 +207,26 @@ $(document).ready(function () {
 
 //This function loads the trainings in the page
 function loadTrainings(teamid) {
+  $.get("/team/trainings", {id: teamid}, function(trainingsArray) {
+    trainings = trainingsArray;
+    displayTrainings();
+  });
+}
+function displayTrainings() {
+  var trainingsNumber = document.getElementById("trainingsNumber");
+  trainingsNumber.innerHTML = trainings.length;
+  var trainingsList = document.getElementById("trainingsList");
   trainingsList.innerHTML = "<br>";
-  $.get("/team/trainings", {id: teamid}, function(trainings) {
-    var trainingsNumber = document.getElementById("trainingsNumber");
-    trainingsNumber.innerHTML = trainings.length;
-    var trainingsList = document.getElementById("trainingsList");
-    trainings.forEach(training => {
+  trainings.forEach(training => {
       trainingsList.innerHTML += '<a id="listItem' + training.id + '" href="#" onclick="navigateToTraining(' + training.id + ')" class="clearfix list-group-item">\
-            <h2 class="list-group-item-heading"> ' + training.name + ' </h2>\
-            <span class="pull-right"> \
-              <button type="button" class="btn btn-danger" onclick="removeTraining(' + training.id + '); event.stopPropagation();">Zbriši</button>\
-              </span>\
-            <h4 class="list-group-item-text">' + training.location + ' - ' + parseDate(training.date) + '</h4> \
-            <h4 class="list-group-item-text">' + training.description + '</h4> \
-          </a>\
-          <br>';
-    });
+          <h2 class="list-group-item-heading"> ' + training.name + ' </h2>\
+          <span class="pull-right"> \
+            <button type="button" class="btn btn-danger" onclick="removeTraining(' + training.id + '); event.stopPropagation();">Zbriši</button>\
+            </span>\
+          <h4 class="list-group-item-text">' + training.location + ' - ' + parseDate(training.date) + '</h4> \
+          <h4 class="list-group-item-text">' + training.description + '</h4> \
+        </a>\
+        <br>';
   });
 }
 
@@ -224,8 +249,7 @@ function removeTraining(trainingid) {
       alert(err);
       return;
     } else {
-      var listItem = document.getElementById("listItem" + trainingid);
-      listItem.parentNode.removeChild(listItem);
+      displayTrainings();
     }
   });
 }
@@ -235,21 +259,26 @@ function saveNewTraining() {
   var trainingName = document.getElementById("trainingName").value;
   var trainingLocation = document.getElementById("trainingLocation").value;
   var trainingDate = document.getElementById("trainingDate").value;
+  var trainingTemperature = document.getElementById("trainingTemperature").value;
+  var trainingWeather = document.getElementById("trainingWeather").value;
   var trainingDescription = document.getElementById("trainingDescription").value;
   document.getElementById("trainingName").value = "";
   document.getElementById("trainingLocation").value = "";
   document.getElementById("trainingDate").value = "";
+  document.getElementById("trainingTemperature").value = "0";
+  document.getElementById("trainingWeather").selectedIndex = 0;
   document.getElementById("trainingDescription").value = "";
 
   //Check if data is missing
-  if(trainingName == "" || trainingLocation == "" || trainingDate == "" || trainingDescription == "") {
+  if(trainingName == "" || trainingLocation == "" || trainingDate == "") {
     alert("Prosim izpopolni vse zazeljene podatke");
     return;
   }
 
   //Post server save new team
   $.post("/training/save", {name: trainingName, location: trainingLocation, date: trainingDate, 
-    description: trainingDescription, teamid: teamid, weather:null}, function(err) {
+    description: trainingDescription, teamid: teamid, weather:trainingWeather, 
+    temperature: trainingTemperature}, function(err) {
     if(err) {
       alert(err);
     } else {
@@ -303,24 +332,30 @@ function saveNewRacer() {
 }
 
 function loadRacers(teamid) {
+  $.get("/team/racers", {id: teamid}, function(racersArray){
+    racers = racersArray;
+    
+    displayRacers();
+  }); 
+}
+
+function displayRacers() {
+  var racersNumber = document.getElementById("racersNumber");
+  racersNumber.innerHTML = racers.length;
   var racersList = document.getElementById("racersList");
   racersList.innerHTML = "<br>";
-  $.get("/team/racers", {id: teamid}, function(racers){
-    var racersNumber = document.getElementById("racersNumber");
-    racersNumber.innerHTML = racers.length;
-    racers.forEach(racer => {
-      var gender = racer.gender == 1 ? "M" : "F";
-      racersList.innerHTML += '<a id="racersListItem' + racer.id + '" class="clearfix list-group-item">\
-            <h2 class="list-group-item-heading"> ' + racer.firstname + " " + racer.lastname + ' </h2>\
-            <span class="pull-right"> \
-              <button type="button" class="btn btn-danger" onclick="removeRacer(' + racer.id + '); event.stopPropagation();">Zbriši</button>\
-              </span>\
-            <h4 class="list-group-item-text">' + gender + ' - ' + parseDate(racer.birth) + '</h4> \
-            <h4 class="list-group-item-text">' + racer.description + '</h4> \
-          </a>\
-          <br>';
-    });
-  }); 
+  racers.forEach(racer => {
+    var gender = racer.gender == 1 ? "M" : "F";
+    racersList.innerHTML += '<a id="racersListItem' + racer.id + '" class="clearfix list-group-item">\
+          <h2 class="list-group-item-heading"> ' + racer.firstname + " " + racer.lastname + ' </h2>\
+          <span class="pull-right"> \
+            <button type="button" class="btn btn-danger" onclick="removeRacer(' + racer.id + '); event.stopPropagation();">Zbriši</button>\
+            </span>\
+          <h4 class="list-group-item-text">' + gender + ' - ' + parseDate(racer.birth) + '</h4> \
+          <h4 class="list-group-item-text">' + racer.description + '</h4> \
+        </a>\
+        <br>';
+  });
 }
 
 function removeRacer(racerid) {
@@ -334,6 +369,14 @@ function removeRacer(racerid) {
       loadRacers();
     }
   })
+}
+
+function removeAllTrainings() {
+  trainings.forEach(training => {
+    removeTraining(training.id);
+  });
+  trainings = [];
+  displayTrainings();
 }
 
 

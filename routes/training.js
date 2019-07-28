@@ -39,8 +39,10 @@ router.post("/save", function(req, res){
     var date = req.body.date;
     var description = req.body.description;
     var teamid = req.body.teamid;
+    var weather = req.body.weather;
+    var temperature = req.body.temperature;
 
-    clientDB.client.query("INSERT INTO public.training(name, location, date, description, teamid) values($1, $2, $3, $4, $5) RETURNING *", [name, location, date, description, teamid])
+    clientDB.client.query("INSERT INTO public.training(name, location, date, description, teamid, temperature, weather) values($1, $2, $3, $4, $5, $6, $7) RETURNING *", [name, location, date, description, teamid, temperature, weather])
     .then(() => {
         res.send(null);
         })
