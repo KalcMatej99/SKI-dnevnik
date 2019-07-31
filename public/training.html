@@ -1,0 +1,103 @@
+<!--
+
+  Author: Matej Kalc
+
+  training.html is needed the view a specific training.
+  It can navigate to home.html, account.html and teams.html.
+
+-->
+
+<!DOCTYPE html>
+<head lang="en">
+    <title>SKI Dnevnik</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="./javascripts/base.js"></script>
+</head>
+<body style="background-size: cover;">
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">SKI Dnevnik</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="home.html">Koledar</a></li>
+        <li class="active"><a href="teams.html">Skupine</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+          <li><a href="account.html"><span class="glyphicon glyphicon-user"></span> Account</a></li>
+        </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <h1 id="trainingName">Ime treninga</h1>
+    <h5 id="teamName">Ime skupine</h5>
+    <div id="trainingList"class="list-group">
+        <a class="list-group-item">
+            <h4 class="list-group-item-text" id="trainingLocation-Weather-Temperature"></h4> 
+        </a>
+        <a class="list-group-item">
+          <h4 class="list-group-item-text" id="trainingStartAndEndDate"></h4> 
+        </a>
+        <a class="list-group-item">
+          <h4 class="list-group-item-text" id="trainingTypeAndDiscipline"></h4> 
+        </a>
+        <a class="list-group-item">
+          <h4 class="list-group-item-text" id="trainingNumberOfTracks"></h4> 
+        </a>
+        <a class="list-group-item">
+          <h4 class="list-group-item-text" id="trainingNumberOfSkiGates"></h4> 
+        </a>
+    </div>
+  </div>
+</body>
+
+<script>
+
+var teamid;
+var trainingid;
+var training;
+
+$(document).ready(function () {
+
+  //Get teamid from url as parameter
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  trainingid = url.searchParams.get("trainingid");
+
+  getUser(function() {
+    //Load user data
+    loadTraining();
+  });
+  
+});
+
+function loadTraining() {
+    $.get("/training/data", {id: trainingid}, function(data) {
+        training = data;
+
+        $.get("/team/data", {id: training.teamid}, function(data) {
+            document.getElementById("teamName").innerHTML = data.name;
+        });
+        
+        document.getElementById("trainingName").innerHTML = training.name;
+        var locWeathTempText = training.location;
+        if(training.weather) {
+          locWeathTempText += " - " + getWeatherStringFromIndex(training.weather);
+        }
+        if(training.temperature) {
+          locWeathTempText += " - " + training.temperature + "C";
+        }
+        document.getElementById("trainingLocation-Weather-Temperature").innerHTML = locWeathTempText;
+
+        document.getElementById("trainingStartAndEndDate").innerHTML = training.startdate + " - " + training.enddate;
+        document.getElementById("trainingTypeAndDiscipline").innerHTML = training.type + " - " + training.discipline;
+        document.getElementById("trainingNumberOfTracks").innerHTML = "Število prog: " + (training.tracks ? training.tracks : "Ne znan podatek");
+        document.getElementById("trainingNumberOfSkiGates").innerHTML = "Število količkov: " + (training.skigates ? training.skigates : "Ne znan podatek");
+    });
+}
+</script>
+</html>

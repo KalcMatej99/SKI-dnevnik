@@ -32,3 +32,15 @@ function parseDate(dateString) {
     var date = new Date(dateString);
     return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
 }
+
+function getWeatherStringFromIndex(index) {
+    switch(index){
+        case 1: return "Sončno";
+        case 2: return "Oblačno";
+        case 3: return "Deževno";
+        case 4: return "Vetrovno";
+        case 5: return "Snežno";
+        case 6: return "Megleno";
+        default: return "Neznano vreme";
+    }
+}
