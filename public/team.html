@@ -107,7 +107,7 @@
     </div>
     <h3>Treningi</h3>
     <div class="row">
-      <button data-toggle="modal" data-target="#newTrainingModal"
+      <button onclick="newTrainingButtonClicked()" data-toggle="modal" data-target="#newTrainingModal"
       class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
       <button onclick="removeAllTrainings()" class="col-sm-2 btn btn-danger">Izbrisi vse</button>
     </div>
@@ -416,6 +416,12 @@ function displayRacers() {
 
 function typeOfTrainingChanged() {
   document.getElementById("formGroupNumberofTracks").hidden = (document.getElementById("trainingType").selectedIndex != 1);
+}
+
+function newTrainingButtonClicked() {
+  document.getElementById("trainingName").value = "Trening " + (trainings.length + 1);
+  document.getElementById("trainingStartDate").value = new Date().toJSON().slice(0,19);
+  document.getElementById("trainingEndDate").value = new Date().toJSON().slice(0,19);
 }
 
 </script>

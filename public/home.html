@@ -78,7 +78,8 @@ function loadTrainingsAndRacesinCalendar() {
       var event = {
               title: training.name,
               start: training.startdate,
-              end: training.endate
+              end: training.endate,
+              url: '/training.html?trainingid=' + training.id
             };
       calendar.addEvent(event);
     });
