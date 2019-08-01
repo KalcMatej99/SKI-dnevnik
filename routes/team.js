@@ -15,6 +15,7 @@ get:
     /data(body: id) - Sends data of a specific team
     /trainings(body: teamid) - Sends all trainings for a specific team
     /racers(body: id) - Sends data of racers of team
+    /races(body: id) - Sends data of races of team
 
 post:
     /save(body: name, numberOfRacers, userid) - Saves new team, sends error if occures
@@ -58,6 +59,20 @@ router.get("/racers", function(req, res){
             res.status(500).send(null);
         } else {
             res.send(racers);
+        }
+    });
+});
+
+router.get("/races", function(req, res){
+
+    var id = req.query.id;
+
+    clientDB.getRacesOfTeam(id, function(err, races) {
+        if(err) {
+            console.log(err);
+            res.status(500).send(null);
+        } else {
+            res.send(races);
         }
     });
 });

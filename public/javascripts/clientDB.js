@@ -69,9 +69,32 @@ module.exports.getTrainingsOfTeam = function(teamID, callback) {
   });
 };
 
+module.exports.getRacesOfTeam = function(teamID, callback) {
+  
+  client.query("SELECT * FROM public.race WHERE teamid = $1", [teamID])
+  .then(res2 => {
+    callback(null, res2.rows);
+    })
+  .catch(e => {
+    callback(e, null);
+  });
+};
+
+
 module.exports.getTraining = function(id, callback) {
   
   client.query("SELECT * FROM public.training WHERE id = $1", [id])
+  .then(res2 => {
+    callback(null, res2.rows[0]);
+    })
+  .catch(e => {
+    callback(e, null);
+  });
+};
+
+module.exports.getRace = function(id, callback) {
+  
+  client.query("SELECT * FROM public.race WHERE id = $1", [id])
   .then(res2 => {
     callback(null, res2.rows[0]);
     })
@@ -104,6 +127,16 @@ module.exports.getMistake = function(id, callback) {
 
 module.exports.getRacersOfTeam = function(id, callback) {
   client.query("SELECT * FROM public.racer WHERE teamid = $1", [id])
+  .then(res2 => {
+    callback(null, res2.rows);
+    })
+  .catch(e => {
+    callback(e, null);
+  });
+};
+
+module.exports.getRacesOfTeam = function(id, callback) {
+  client.query("SELECT * FROM public.race WHERE teamid = $1", [id])
   .then(res2 => {
     callback(null, res2.rows);
     })

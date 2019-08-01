@@ -84,7 +84,19 @@ function loadTrainingsAndRacesinCalendar() {
       calendar.addEvent(event);
     });
     
-  })
+  });
+  $.get("/user/races", function(races) {
+
+    races.forEach(race => {
+      var event = {
+              title: race.name,
+              start: race.date,
+              url: '/race.html?raceid=' + race.id
+            };
+      calendar.addEvent(event);
+    });
+
+  });
 }
 
 </script>

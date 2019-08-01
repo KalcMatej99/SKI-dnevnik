@@ -215,6 +215,94 @@
     <div id="trainingsList"class="list-group">
       <br>
     </div>
+    <h3>Tekme</h3>
+    <div class="row">
+      <button onclick="newRaceButtonClicked()" data-toggle="modal" data-target="#newRaceModal"
+      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
+    </div>
+    <div class="modal fade" id="newRaceModal" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Nova tekma</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="team">Ime tekme:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="raceName" name="raceName">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Disciplina:</label>
+                  <div class="col-sm-10">
+                    <select id="raceDiscipline">
+                      <option value="1">Slalom</option>
+                      <option value="2">Veleslalom</option>
+                      <option value="3">SuperG</option>
+                      <option value="4">Smuk</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Lokacija:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="raceLocation" placeholder="" name="raceLocation">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Datum:</label>
+                  <div class="col-sm-10">
+                    <input type="date" id="raceDate">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Temperatura:</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="raceTemperature" value="0" name="raceTemperature">
+                    °C</div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Vreme:</label>
+                  <div class="col-sm-10">
+                    <select id="raceWeather">
+                      <option value="1">Sončno</option>
+                      <option value="2">Oblačno</option>
+                      <option value="3">Deževno</option>
+                      <option value="4">Vetrovno</option>
+                      <option value="5">Snežno</option>
+                      <option value="6">Megleno</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group" hidden="true" id="formGroupNumberofTracks">
+                  <label class="control-label col-sm-2">Št vrat:</label>
+                  <div class="col-sm-10">
+                      <input type="number" class="form-control" id="raceNumberOfSkiGates" value="0">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Opis:</label>
+                  <div class="col-sm-10">
+                    <textarea rows="4" cols="50" id="raceDescription"></textarea>
+                  </div>
+                </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="saveNewRace()" data-dismiss="modal">Shrani</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <div id="racesList"class="list-group">
+      <br>
+    </div>
   </div>
 </body>
 
@@ -233,15 +321,16 @@ $(document).ready(function () {
 
   getUser(function() {
     //Load user data
-    loadTrainings(teamid);
-    loadRacers(teamid);
-    loadNumberOfRacers(teamid);
+    loadTrainings();
+    loadRacers();
+    loadNumberOfRacers();
+    loadRaces();
   });
   
 });
 
 //This function loads the trainings in the page
-function loadTrainings(teamid) {
+function loadTrainings() {
   $.get("/team/trainings", {id: teamid}, function(trainingsArray) {
     trainings = trainingsArray;
     displayTrainings();
@@ -266,7 +355,7 @@ function displayTrainings() {
 }
 
 //This function writes the number of racers in the page
-function loadNumberOfRacers(teamid) {
+function loadNumberOfRacers() {
   $.get("/team/data", {id: teamid}, function(data) {
     var teamName = document.getElementById("teamName");
     teamName.innerHTML = data["name"];
@@ -282,12 +371,26 @@ function navigateToRacer(racerid) {
     window.location.href = "racer.html?racerid=" + racerid;
 }
 
+function navigateToRace(raceid) {
+    window.location.href = "race.html?raceid=" + raceid;
+}
+
 function removeRacer(racerid) {
     $.post("/racer/delete", {id: racerid}, function(err){
         if(err){
             alert(err);
         } else {
-            loadRacers(teamid);
+            loadRacers();
+        }
+    });
+}
+
+function removeRace(raceid) {
+    $.post("/race/delete", {id: raceid}, function(err){
+        if(err){
+            alert(err);
+        } else {
+            loadRaces();
         }
     });
 }
@@ -426,6 +529,70 @@ function newTrainingButtonClicked() {
 
 function newRacerButtonClicked() {
   document.getElementById("racerBirth").value = new Date().toDateInputValue();
+}
+
+function loadRaces() {
+  $.get("/team/races", {id: teamid}, function(racesArray) {
+    races = racesArray;
+    displayRaces();
+  });
+}
+
+function newRaceButtonClicked() {
+  document.getElementById("raceName").value = "Tekma " + (races.length + 1);
+  document.getElementById("raceDate").value = new Date().toDateInputValue();
+}
+
+function displayRaces() {
+  var racesList = document.getElementById("racesList");
+  racesList.innerHTML = "<br>";
+  races.forEach(race => {
+      racesList.innerHTML += '<a id="listItem' + race.id + '" href="#" onclick="navigateToRace(' + race.id + ')" class="clearfix list-group-item">\
+          <h2 class="list-group-item-heading"> ' + race.name + ' </h2>\
+          <span class="pull-right"> \
+            <button type="button" class="btn btn-danger" onclick="removeRace(' + race.id + '); event.stopPropagation();">Zbriši</button>\
+            </span>\
+          <h4 class="list-group-item-text">' + (race.location ? (race.location + " - ") : "") + parseDate(race.date) + '</h4> \
+        </a>\
+        <br>';
+  });
+}
+
+function saveNewRace() {
+  var raceName = document.getElementById("raceName").value;
+  var raceLocation = document.getElementById("raceLocation").value;
+  var raceDate = document.getElementById("raceDate").value;
+  var raceTemperature = document.getElementById("raceTemperature").value;
+  var raceWeather = document.getElementById("raceWeather").options[document.getElementById("raceWeather").selectedIndex].value;
+  var raceDescription = document.getElementById("raceDescription").value;
+  var raceNumberOfSkiGates = document.getElementById("raceNumberOfSkiGates").value;
+  var raceDiscipline = document.getElementById("raceDiscipline").options[document.getElementById("raceDiscipline").selectedIndex].value;
+  
+  document.getElementById("raceName").value = "";
+  document.getElementById("raceLocation").value = "";
+  document.getElementById("raceDate").value = new Date();
+  document.getElementById("raceTemperature").value = 0;
+  document.getElementById("raceWeather").selectedIndex = 0;
+  document.getElementById("raceDescription").value = "";
+  document.getElementById("raceDiscipline").selectedIndex = 0;
+  document.getElementById("raceNumberOfSkiGates").value = 0;
+
+  //Check if data is missing
+  if(raceName == "") {
+    alert("Prosim izpopolni vse zazeljene podatke");
+    return;
+  }
+
+  //Post server save new team
+  $.post("/race/save", {name: raceName, location: raceLocation, date: raceDate, description: raceDescription, teamid: teamid, 
+    weather:raceWeather, numberOfSkiGates: raceNumberOfSkiGates, temperature: raceTemperature, discipline: raceDiscipline}, function(err) {
+    if(err) {
+      alert(err);
+    } else {
+      //Load teams
+      loadRaces();
+    }
+  });
 }
 
 </script>

@@ -45,6 +45,24 @@ function getWeatherStringFromIndex(index) {
     }
 }
 
+function getDisciplineStringFromIndex(index) {
+    switch(index){
+        case 1: return "Slalom";
+        case 2: return "Veleslalom";
+        case 3: return "SuperG";
+        case 4: return "Smuk";
+        default: return "Neznana disciplina";
+    }
+}
+
+function getTypeStringFromIndex(index) {
+    switch(index){
+        case 1: return "Prosto";
+        case 2: return "Postavitev";
+        default: return "Neznano";
+    }
+}
+
 Date.prototype.toDateInputValue = (function() {
     var local = new Date(this);
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());

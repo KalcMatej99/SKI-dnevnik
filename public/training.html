@@ -94,7 +94,7 @@ function loadTraining() {
         document.getElementById("trainingLocation-Weather-Temperature").innerHTML = locWeathTempText;
 
         document.getElementById("trainingStartAndEndDate").innerHTML = training.startdate + " - " + training.enddate;
-        document.getElementById("trainingTypeAndDiscipline").innerHTML = training.type + " - " + training.discipline;
+        document.getElementById("trainingTypeAndDiscipline").innerHTML = getTypeStringFromIndex(training.type) + " - " + getDisciplineStringFromIndex(training.discipline);
         document.getElementById("trainingNumberOfTracks").innerHTML = "Število prog: " + (training.tracks ? training.tracks : "Ne znan podatek");
         document.getElementById("trainingNumberOfSkiGates").innerHTML = "Število količkov: " + (training.skigates ? training.skigates : "Ne znan podatek");
     });
