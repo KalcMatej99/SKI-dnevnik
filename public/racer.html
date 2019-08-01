@@ -169,6 +169,9 @@ function displayMistakes() {
   mistakes.forEach(mistake => {
     mistakesList.innerHTML += '<a id="listItem' + mistake.id + '" class="clearfix list-group-item">\
           <h2 class="list-group-item-heading"> ' + mistake.name + ' </h2>\
+          <span class="pull-right"> \
+            <button type="button" class="btn btn-danger" onclick="removeMistake(' + mistake.id + '); event.stopPropagation();">Zbriši</button>\
+            </span>\
           <h4 class="list-group-item-text"> Start: ' + parseDate(mistake.creationdate) + '</h4> \
           <h4 class="list-group-item-text"> Konec:' + (mistake.enddate ? parseDate(mistake.enddate) : "Napaka ni bila še odpravljena") + '</h4> \
         </a>\
@@ -202,6 +205,16 @@ function saveNewMistake() {
       loadMistakes();
     }
   });
+}
+
+function removeMistake(mistakeid) {
+    $.post("/mistake/delete", {id: mistakeid}, function(err){
+        if(err){
+            alert(err);
+        } else {
+            loadMistakes();
+        }
+    });
 }
 
 </script>
