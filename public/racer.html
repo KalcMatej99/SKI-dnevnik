@@ -50,6 +50,46 @@
     <div id="trainingsList"class="list-group">
       <br>
     </div>
+    <h3>Tehnične napake</h3>
+    <div class="row">
+      <button data-toggle="modal" data-target="#newMistakeModal"
+      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
+    </div>
+    <div class="modal fade" id="newMistakeModal" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Nova tehnična napaka</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-2" for="team">Ime/opis napake:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="mistakeName">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Datum začetka:</label>
+                  <div class="col-sm-10">
+                    <input type="date" id="mistakeStartDate">
+                  </div>
+                </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="saveNewMistake()" data-dismiss="modal">Shrani</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    <div id="mistakesList"class="list-group">
+      <br>
+    </div>
   </div>
 </body>
 
@@ -59,6 +99,7 @@ var teamid;
 var racerid;
 var racer;
 var trainings;
+var mistakes;
 
 $(document).ready(function () {
 
@@ -73,6 +114,7 @@ $(document).ready(function () {
     //Load user data
     loadRacer();
     loadTrainings();
+    loadMistakes();
   });
   
 });
@@ -113,9 +155,53 @@ function displayTrainings() {
   });
 }
 
+function loadMistakes() {
+  $.get("/racer/mistakes", {id: racerid}, function(mistakesArray) {
+    mistakes = mistakesArray;
+    displayMistakes();
+  });
+}
+
+function displayMistakes() {
+  var mistakesList = document.getElementById("mistakesList");
+  mistakesList.innerHTML = "<br>";
+  
+  mistakes.forEach(mistake => {
+    mistakesList.innerHTML += '<a id="listItem' + mistake.id + '" class="clearfix list-group-item">\
+          <h2 class="list-group-item-heading"> ' + mistake.name + ' </h2>\
+          <h4 class="list-group-item-text"> Start: ' + parseDate(mistake.creationdate) + '</h4> \
+          <h4 class="list-group-item-text"> Konec:' + (mistake.enddate ? parseDate(mistake.enddate) : "Napaka ni bila še odpravljena") + '</h4> \
+        </a>\
+        <br>';
+  });
+}
+
 //This function is needed to navigate to training.html
 function navigateToTraining(trainingid) {
   window.location.href = "training.html?trainingid=" + trainingid;
+}
+
+function saveNewMistake() {
+  var mistakeName = document.getElementById("mistakeName").value;
+  var mistakeStartDate = document.getElementById("mistakeStartDate").value;
+  
+  document.getElementById("mistakeName").value = "";
+  document.getElementById("mistakeStartDate").value = new Date();
+
+  //Check if data is missing
+  if(mistakeName == "") {
+    alert("Prosim izpopolni vse zazeljene podatke");
+    return;
+  }
+
+  //Post server save new team
+  $.post("/mistake/save", {name: mistakeName, startDate: mistakeStartDate, racerid:racerid}, function(err) {
+    if(err) {
+      alert(err);
+    } else {
+      loadMistakes();
+    }
+  });
 }
 
 </script>

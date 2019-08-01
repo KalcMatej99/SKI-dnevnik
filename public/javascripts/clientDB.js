@@ -91,8 +91,29 @@ module.exports.getRacer = function(id, callback) {
   });
 };
 
+module.exports.getMistake = function(id, callback) {
+  
+  client.query("SELECT * FROM public.mistake WHERE id = $1", [id])
+  .then(res2 => {
+    callback(null, res2.rows[0]);
+    })
+  .catch(e => {
+    callback(e, null);
+  });
+};
+
 module.exports.getRacersOfTeam = function(id, callback) {
   client.query("SELECT * FROM public.racer WHERE teamid = $1", [id])
+  .then(res2 => {
+    callback(null, res2.rows);
+    })
+  .catch(e => {
+    callback(e, null);
+  });
+};
+
+module.exports.getMistakesOfRacer = function(id, callback) {
+  client.query("SELECT * FROM public.mistake WHERE racerid = $1", [id])
   .then(res2 => {
     callback(null, res2.rows);
     })

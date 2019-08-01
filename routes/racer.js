@@ -6,6 +6,7 @@ var router = express.Router();
   /racer
 get:
   /data(body: id) - Sends racer data
+  /mistakes(body: id) - Sends all racers misatkes (open and closed)
 
 post:
   /save(body: firstname, lastname, gender, birth, description, teamid) - Saves racer, sends error if occures
@@ -21,6 +22,19 @@ router.get("/data", function(req, res) {
             res.sendStatus(500);
         } else {
             res.send(racer);
+        }
+    });
+});
+
+router.get("/mistakes", function(req, res) {
+    var id = req.query.id;
+
+    clientDB.getMistakesOfRacer(id, function(err, mistakes){
+        if(err) {
+            alert(err);
+            res.sendStatus(500);
+        } else {
+            res.send(mistakes);
         }
     });
 });
