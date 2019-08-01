@@ -52,7 +52,7 @@
     </div>
     <h3>Tehnične napake</h3>
     <div class="row">
-      <button data-toggle="modal" data-target="#newMistakeModal"
+      <button onclick="newMistakeButtonClicked()" data-toggle="modal" data-target="#newMistakeModal"
       class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
     </div>
     <div class="modal fade" id="newMistakeModal" role="dialog">
@@ -108,8 +108,6 @@ $(document).ready(function () {
   var url = new URL(url_string);
   racerid = url.searchParams.get("racerid");
 
-  console.log(racerid);
-
   getUser(function() {
     //Load user data
     loadRacer();
@@ -144,7 +142,6 @@ function displayTrainings() {
   trainingsNumber.innerHTML = trainings.length;
   var trainingsList = document.getElementById("trainingsList");
   trainingsList.innerHTML = "<br>";
-  console.log(trainings);
   trainings.forEach(training => {
       trainingsList.innerHTML += '<a id="listItem' + training.id + '" href="#" onclick="navigateToTraining(' + training.id + ')" class="clearfix list-group-item">\
           <h2 class="list-group-item-heading"> ' + training.name + ' </h2>\
@@ -215,6 +212,10 @@ function removeMistake(mistakeid) {
             loadMistakes();
         }
     });
+}
+
+function newMistakeButtonClicked() {
+  document.getElementById("mistakeStartDate").value = new Date().toDateInputValue();
 }
 
 </script>

@@ -44,7 +44,7 @@
         <br>
     </div>
     <h3>Tekmovalci</h3><div class="row">
-      <button data-toggle="modal" data-target="#newRacerModal"
+      <button onclick="newRacerButtonClicked()" data-toggle="modal" data-target="#newRacerModal"
       class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
     </div>
     <div class="modal fade" id="newRacerModal" role="dialog">
@@ -422,6 +422,10 @@ function newTrainingButtonClicked() {
   document.getElementById("trainingName").value = "Trening " + (trainings.length + 1);
   document.getElementById("trainingStartDate").value = new Date().toJSON().slice(0,19);
   document.getElementById("trainingEndDate").value = new Date().toJSON().slice(0,19);
+}
+
+function newRacerButtonClicked() {
+  document.getElementById("racerBirth").value = new Date().toDateInputValue();
 }
 
 </script>
