@@ -68,10 +68,18 @@ $(document).ready(function () {
   var url = new URL(url_string);
   trainingid = url.searchParams.get("trainingid");
 
-  getUser(function() {
-    //Load user data
-    loadTraining();
+  checkIfTrainingExists(trainingid, function(exists) {
+    if(exists) {
+      getUser(function() {
+        //Load user data
+        loadTraining();
+      });
+    } else {
+      navigateToNotFound();
+    }
   });
+
+  
   
 });
 

@@ -65,9 +65,15 @@ $(document).ready(function () {
   var url = new URL(url_string);
   raceid = url.searchParams.get("raceid");
 
-  getUser(function() {
-    //Load user data
-    loadRace();
+  checkIfRaceExists(raceid, function(exists) {
+    if(exists) {
+      getUser(function() {
+        //Load user data
+        loadRace();
+      });
+    } else {
+      navigateToNotFound();
+    }
   });
   
 });

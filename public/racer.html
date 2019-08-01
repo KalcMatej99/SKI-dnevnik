@@ -108,11 +108,17 @@ $(document).ready(function () {
   var url = new URL(url_string);
   racerid = url.searchParams.get("racerid");
 
-  getUser(function() {
-    //Load user data
-    loadRacer();
-    loadTrainings();
-    loadMistakes();
+  checkIfRacerExists(racerid, function(exists) {
+    if(exists) {
+      getUser(function() {
+        //Load user data
+        loadRacer();
+        loadTrainings();
+        loadMistakes();
+      });
+    } else {
+      navigateToNotFound();
+    }
   });
   
 });

@@ -319,15 +319,24 @@ $(document).ready(function () {
   var url = new URL(url_string);
   teamid = url.searchParams.get("teamid");
 
-  getUser(function() {
-    //Load user data
-    loadTrainings();
-    loadRacers();
-    loadNumberOfRacers();
-    loadRaces();
+  checkIfTeamExists(teamid, function(exists) {
+    console.log(exists);
+    if(exists) {
+      getUser(function() {
+        //Load user data
+        loadTrainings();
+        loadRacers();
+        loadNumberOfRacers();
+        loadRaces();
+      });
+    } else {
+      navigateToNotFound();
+    }
+    
   });
-  
 });
+
+
 
 //This function loads the trainings in the page
 function loadTrainings() {

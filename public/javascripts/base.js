@@ -68,3 +68,48 @@ Date.prototype.toDateInputValue = (function() {
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
     return local.toJSON().slice(0,10);
 });
+
+function checkIfTeamExists(id, callback) {
+    $.get("/team/data", {id: id}, function(team) {
+        if(team){
+            callback(true);
+        } else {
+            callback(false);
+        }
+    });
+}
+
+function checkIfTrainingExists(id, callback) {
+    $.get("/training/data", {id: id}, function(tr) {
+        if(tr){
+            callback(true);
+        } else {
+            callback(false);
+        }
+    });
+}
+
+function checkIfRaceExists(id, callback) {
+    $.get("/race/data", {id: id}, function(tr) {
+        if(tr){
+            callback(true);
+        } else {
+            callback(false);
+        }
+    });
+}
+
+function checkIfRacerExists(id, callback) {
+    $.get("/racer/data", {id: id}, function(tr) {
+        if(tr){
+            callback(true);
+        } else {
+            callback(false);
+        }
+    });
+}
+
+
+function navigateToNotFound() {
+    window.location.href = "notFound.html";
+}
