@@ -39,13 +39,21 @@
     </div>
   </nav>
   <div class="container">
-      <div id='calendar'></div>
+      <div class="row">
+          <form>
+            <input type="checkbox" onclick="showTrainingsAndRacesChecked()" id="showTrainings" checked> Prikaži treninge<br>
+            <input type="checkbox" onclick="showTrainingsAndRacesChecked()" id="showRaces" checked> Prikaži tekme<br>
+          </form>
+          <div id='calendar'></div>
+      </div>
     </div>
 </body>
 
 <script>
 
 var calendar;
+var canLoadTrainings = true;
+var canLoadRaces = true;
 
 //This function is called every time the page appears
 function onLoad() {
@@ -72,31 +80,50 @@ function prepareCalendar() {
 
 //This function loads data (trainings and races) for the calendar
 function loadTrainingsAndRacesinCalendar() {
-  $.get("/user/trainings", function(trainings) {
 
-    trainings.forEach(training => {
-      var event = {
-              title: training.name,
-              start: training.startdate,
-              end: training.endate,
-              url: '/training.html?trainingid=' + training.id
-            };
-      calendar.addEvent(event);
+  var events = calendar.getEvents();
+  var len = events.length;
+  for (var i = 0; i < len; i++) { 
+    events[i].remove(); 
+  } 
+
+  if(canLoadTrainings) {
+    $.get("/user/trainings", function(trainings) {
+
+      trainings.forEach(training => {
+        var event = {
+                title: training.name,
+                start: training.startdate,
+                end: training.endate,
+                url: '/training.html?trainingid=' + training.id
+              };
+        calendar.addEvent(event);
+      });
+
     });
-    
-  });
-  $.get("/user/races", function(races) {
+  }
+  
+  if(canLoadRaces) {
+    $.get("/user/races", function(races) {
 
-    races.forEach(race => {
-      var event = {
-              title: race.name,
-              start: race.date,
-              url: '/race.html?raceid=' + race.id
-            };
-      calendar.addEvent(event);
+      races.forEach(race => {
+        var event = {
+                title: race.name,
+                start: race.date,
+                url: '/race.html?raceid=' + race.id
+              };
+        calendar.addEvent(event);
+      });
     });
+  }
+}
 
-  });
+function showTrainingsAndRacesChecked() {
+  var isCheckedTr = document.getElementById("showTrainings").checked;
+  canLoadTrainings = isCheckedTr;
+  var isCheckedRc = document.getElementById("showRaces").checked;
+  canLoadRaces = isCheckedRc;
+  loadTrainingsAndRacesinCalendar();
 }
 
 </script>

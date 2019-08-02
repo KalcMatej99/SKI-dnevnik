@@ -256,7 +256,6 @@ function endMistake() {
 
   console.log(currentEndMistakeid + " " + mistakeEndDate);
 
-  //Post server save new team
   $.post("/mistake/addEndDate", {id: currentEndMistakeid, endDate: mistakeEndDate}, function(err) {
     if(err) {
       alert(err);
