@@ -481,12 +481,12 @@ function saveNewRacer() {
       alert(err);
     } else {
       //Load teams
-      loadRacers(teamid);
+      loadRacers();
     }
   });
 }
 
-function loadRacers(teamid) {
+function loadRacers() {
   $.get("/team/racers", {id: teamid}, function(racersArray){
     racers = racersArray;
     

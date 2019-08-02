@@ -10,6 +10,7 @@ get:
 post:
   /save(body: firstname, lastname, gender, birth, description, teamid) - Saves racer, sends error if occures
   /delete(body: id) - Deletes racer, if exists
+  /update(body)
 */
 
 router.get("/data", function(req, res) {
@@ -43,6 +44,36 @@ router.post("/delete", function(req, res){
     var id = req.body.id;
 
     clientDB.client.query("DELETE FROM public.mistake WHERE id = $1", [id])
+    .then(() => {
+        res.send(null);
+        })
+    .catch(e => {
+        console.log(e.stack);
+        res.sendStatus(500);
+    });
+});
+
+router.post("/update", function(req, res){
+    var id = req.body.id;
+    var name = req.body.name;
+    var startDate = req.body.startDate;
+    var endDate = req.body.endDate;
+    var racerid = req.body.racerid;
+
+    clientDB.client.query("UPDATE public.mistake SET name = $1, creationdate = $2, enddate = $3, racerid = $4 WHERE id = $5", [name, startDate, endDate, racerid, id])
+    .then(() => {
+        res.send(null);
+        })
+    .catch(e => {
+        console.log(e.stack);
+        res.sendStatus(500);
+    });
+});
+router.post("/addEndDate", function(req, res){
+    var id = req.body.id;
+    var endDate = req.body.endDate;
+    
+    clientDB.client.query("UPDATE public.mistake SET enddate = '" + endDate + "' WHERE id = '" + id + "'")
     .then(() => {
         res.send(null);
         })
