@@ -135,6 +135,12 @@ router.post("/login", function(req, res){
   var email = req.body.email;
   var password = req.body.password;
 
+  if(!isPasswordValid(password) || !isEmailValid(email)) {
+    res.send("Password or email not valid");
+    res.end();
+    return;
+  }
+
   clientDB.client.query("SELECT * FROM public.user WHERE email = $1 AND password = $2", [email, password])
   .then(res2 => {
     if(res2.rows.length > 0) {
