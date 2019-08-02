@@ -371,19 +371,6 @@ function loadNumberOfRacers() {
   });
 }
 
-//This function is needed to navigate to training.html
-function navigateToTraining(trainingid) {
-  window.location.href = "training.html?trainingid=" + trainingid;
-}
-
-function navigateToRacer(racerid) {
-    window.location.href = "racer.html?racerid=" + racerid;
-}
-
-function navigateToRace(raceid) {
-    window.location.href = "race.html?raceid=" + raceid;
-}
-
 function removeRacer(racerid) {
     $.post("/racer/delete", {id: racerid}, function(err){
         if(err){

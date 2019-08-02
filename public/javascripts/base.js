@@ -69,6 +69,12 @@ Date.prototype.toDateInputValue = (function() {
     return local.toJSON().slice(0,10);
 });
 
+/*
+
+    CHECK IF EXISTS
+
+*/
+
 function checkIfTeamExists(id, callback) {
     $.get("/team/data", {id: id}, function(team) {
         if(team){
@@ -109,7 +115,31 @@ function checkIfRacerExists(id, callback) {
     });
 }
 
+/*
+
+    NAVIGATION
+
+*/
+
 
 function navigateToNotFound() {
     window.location.href = "notFound.html";
+}
+
+//This function is needed to navigate to training.html
+function navigateToTraining(trainingid) {
+    window.location.href = "training.html?trainingid=" + trainingid;
+}
+
+//This function is needed to navigate to training.html
+function navigateToTraining(trainingid) {
+    window.location.href = "training.html?trainingid=" + trainingid;
+}
+
+function navigateToRacer(racerid) {
+    window.location.href = "racer.html?racerid=" + racerid;
+}
+
+function navigateToRace(raceid) {
+    window.location.href = "race.html?raceid=" + raceid;
 }
