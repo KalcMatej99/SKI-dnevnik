@@ -52,6 +52,9 @@
           <h4 class="list-group-item-text" id="trainingNumberOfSkiGates"></h4> 
         </a>
     </div>
+    <h2>Prisotni na treningu</h2>
+    <div id="racersList"class="list-group">
+  </div>
   </div>
 </body>
 
@@ -73,6 +76,7 @@ $(document).ready(function () {
       getUser(function() {
         //Load user data
         loadTraining();
+        loadTrainingApperances();
       });
     } else {
       navigateToNotFound();
@@ -106,6 +110,22 @@ function loadTraining() {
         document.getElementById("trainingNumberOfTracks").innerHTML = "Število prog: " + (training.tracks ? training.tracks : "Ne znan podatek");
         document.getElementById("trainingNumberOfSkiGates").innerHTML = "Število količkov: " + (training.skigates ? training.skigates : "Ne znan podatek");
     });
+}
+
+function loadTrainingApperances() {
+  $.get("/training/apperances", {id: trainingid}, function(data) {
+    apperances = data;
+    var racersList = document.getElementById("racersList");
+    racersList.innerHTML = "";
+
+    apperances.forEach(apperance => {
+        $.get("/racer/data", {id: apperance.racerid}, function(data){
+          racersList.innerHTML += '<a class="list-group-item"> \
+            <h4 class="list-group-item-text">' + data.firstname + " " + data.lastname + '</h4> \
+            </a>';
+        });
+    });
+  });
 }
 </script>
 </html>

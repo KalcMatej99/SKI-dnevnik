@@ -154,3 +154,24 @@ module.exports.getMistakesOfRacer = function(id, callback) {
     callback(e, null);
   });
 };
+
+module.exports.getApperancesOfTraining = function(id, callback) {
+  client.query("SELECT * FROM public.trainingapperance WHERE trainingid = $1", [id])
+  .then(res2 => {
+    callback(null, res2.rows);
+    })
+  .catch(e => {
+    callback(e, null);
+  });
+};
+
+module.exports.getApperancesOfRacer = function(id, callback) {
+  client.query("SELECT * FROM public.trainingapperance WHERE racerid = $1", [id])
+  .then(res2 => {
+    callback(null, res2.rows);
+    })
+  .catch(e => {
+    callback(e, null);
+  });
+};
+

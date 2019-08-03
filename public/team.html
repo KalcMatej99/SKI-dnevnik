@@ -34,15 +34,6 @@
   </nav>
   <div class="container">
     <h1 id="teamName">Ime skupine</h1>
-    <div id="teamsList"class="list-group">
-        <a class="list-group-item">
-            <h4 class="list-group-item-text">Treningi: <h4 id="trainingsNumber">0</h4></h4> 
-          </a>
-        <a class="list-group-item">
-            <h4 class="list-group-item-text">Tekmovalci: <h4 id="racersNumber">0</h4></h4> 
-         </a>
-        <br>
-    </div>
     <h3>Tekmovalci</h3><div class="row">
       <button onclick="newRacerButtonClicked()" data-toggle="modal" data-target="#newRacerModal"
       class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
@@ -206,7 +197,7 @@
               </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="saveNewTraining()" data-dismiss="modal">Shrani</button>
+            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#newTrainingPresenceModal" onclick="nextbuttonNewTrainingClicked()" data-dismiss="modal">Naprej</button>
           </div>
         </div>
         
@@ -215,6 +206,32 @@
     <div id="trainingsList"class="list-group">
       <br>
     </div>
+    <div class="modal fade" id="newTrainingPresenceModal" role="dialog">
+        <div class="modal-dialog">
+        
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Nov trening</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div id="racersPresenceList"class="list-group">
+                        <a class="list-group-item">
+                          <input type="checkbox"> Matej <br>
+                        </a>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" onclick="saveNewTraining()" data-dismiss="modal">Shrani</button>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
     <h3>Tekme</h3>
     <div class="row">
       <button onclick="newRaceButtonClicked()" data-toggle="modal" data-target="#newRaceModal"
@@ -320,7 +337,6 @@ $(document).ready(function () {
   teamid = url.searchParams.get("teamid");
 
   checkIfTeamExists(teamid, function(exists) {
-    console.log(exists);
     if(exists) {
       getUser(function() {
         //Load user data
@@ -346,8 +362,6 @@ function loadTrainings() {
   });
 }
 function displayTrainings() {
-  var trainingsNumber = document.getElementById("trainingsNumber");
-  trainingsNumber.innerHTML = trainings.length;
   var trainingsList = document.getElementById("trainingsList");
   trainingsList.innerHTML = "<br>";
   trainings.forEach(training => {
@@ -445,12 +459,12 @@ function saveNewTraining() {
   //Post server save new team
   $.post("/training/save", {name: trainingName, location: trainingLocation, startDate: trainingStartDate, endDate:trainingEndDate,
     description: trainingDescription, teamid: teamid, weather:trainingWeather, type: trainingType, numberOfTracks: trainingNumberOfTracks,
-    numberOfSkiGates: trainingNumberOfSkiGates, temperature: trainingTemperature}, function(err) {
+    numberOfSkiGates: trainingNumberOfSkiGates, temperature: trainingTemperature, presenceOfTraining: presenceOnNewTraining, numberOfElementsInPresenceOfTraining: presenceOnNewTraining.length}, function(err) {
     if(err) {
       alert(err);
     } else {
       //Load teams
-      loadTrainings(teamid);
+      loadTrainings();
     }
   });
 }
@@ -495,8 +509,6 @@ function loadRacers() {
 }
 
 function displayRacers() {
-  var racersNumber = document.getElementById("racersNumber");
-  racersNumber.innerHTML = racers.length;
   var racersList = document.getElementById("racersList");
   racersList.innerHTML = "<br>";
   racers.forEach(racer => {
@@ -587,6 +599,28 @@ function saveNewRace() {
     } else {
       //Load teams
       loadRaces();
+    }
+  });
+}
+
+var presenceOnNewTraining = [];
+
+function nextbuttonNewTrainingClicked() {
+  presenceOnNewTraining = [];
+  var racersList = document.getElementById("racersPresenceList");
+  racersList.innerHTML = "";
+  racers.forEach(racer => {
+    racersList.innerHTML += '<a class="list-group-item"> \
+                          <input type="checkbox" onclick="checkPresencesForNewTraining()" id="racerPresenceCheckboxId' + racer.id + '"> ' + racer.firstname + " " + racer.lastname + ' <br> \
+                        </a>';
+  });
+}
+
+function checkPresencesForNewTraining() {
+  presenceOnNewTraining = [];
+  racers.forEach(racer => {
+    if(document.getElementById("racerPresenceCheckboxId" + racer.id).checked) {
+      presenceOnNewTraining.push(racer.id);
     }
   });
 }

@@ -39,22 +39,16 @@ router.get("/mistakes", function(req, res) {
     });
 });
 
-router.get("/trainings", function(req, res) {
+router.get("/trainings/apperances", function(req, res){
+
     var id = req.query.id;
 
-    clientDB.getRacer(id, function(err, racer){
+    clientDB.getApperancesOfRacer(id, function(err, apperances) {
         if(err) {
-            alert(err);
-            res.sendStatus(500);
+            console.log(err);
+            res.status(500).send(null);
         } else {
-            clientDB.getTrainingsOfTeam(racer.teamid, function(err, trainings){
-                if(err) {
-                    alert(err);
-                    res.sendStatus(500);
-                } else {
-                    res.send(trainings);
-                }
-            });
+            res.send(apperances);
         }
     });
 });

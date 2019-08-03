@@ -41,9 +41,6 @@
         <a class="list-group-item">
             <h4 class="list-group-item-text"><h4 id="racerTeam"></h4></h4> 
         </a>
-        <a class="list-group-item">
-          <h4 class="list-group-item-text">Treningi: <h4 id="trainingsNumber">0</h4></h4> 
-        </a>
         <br>
     </div>
     <h3>Treningi</h3>
@@ -166,15 +163,19 @@ function loadRacer() {
 
 //This function loads the trainings in the page
 function loadTrainings() {
-  $.get("/racer/trainings", {id: racerid}, function(trainingsArray) {
-    trainings = trainingsArray;
-    displayTrainings();
+  trainings = [];
+  $.get("/racer/trainings/apperances", {id: racerid}, function(apperances) {
+
+    apperances.forEach(apperance => {
+      $.get("/training/data", {id: apperance.trainingid}, function(data) {
+        trainings.push(data);
+        displayTrainings();
+      });
+    });
   });
 }
 
 function displayTrainings() {
-  var trainingsNumber = document.getElementById("trainingsNumber");
-  trainingsNumber.innerHTML = trainings.length;
   var trainingsList = document.getElementById("trainingsList");
   trainingsList.innerHTML = "<br>";
   trainings.forEach(training => {
