@@ -47,6 +47,57 @@
     <div id="trainingsList"class="list-group">
       <br>
     </div>
+    <h3 id="racesApperancesLabel">Tekme</h3>
+    <div class="row">
+      <button onclick="newRaceApperanceButtonClicked()" data-toggle="modal" data-target="#newRaceApperanceModal"
+      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
+    </div>
+    <div id="racesApperancesList"class="list-group">
+      <br>
+    </div>
+    <div class="modal fade" id="newRaceApperanceModal" role="dialog">
+      <div class="modal-dialog">
+      
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Udeležba na tekmo</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                  
+                <div class="form-group">
+                    <label class="control-label col-sm-2">Tekma</label>
+                    <div class="col-sm-10">
+                        <select id="selectRace"></select>
+                    </div>
+                  </div>
+                <div class="form-group">
+                  <label class="control-label col-sm-2">Kako je šla tekma?</label>
+                  <div class="col-sm-10">
+                      <select id="racePlacementType" onchange="typeOfRacePlacementChanged()">
+                        <option value="1">FIN</option>
+                        <option value="2">DNF</option>
+                        <option value="3">DNS</option>
+                      </select>
+                  </div>
+                </div>
+                <div class="form-group" id="racePlacementFormGroup">
+                  <label class="control-label col-sm-2">Uvrstitev:</label>
+                  <div class="col-sm-10">
+                    <input type="number" id="racePlacement">
+                  </div>
+                </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" onclick="saveNewRaceApperance()" data-dismiss="modal">Shrani</button>
+          </div>
+        </div>
+        
+      </div>
+    </div>
     <h3 id="misatkesLabel">Tehnične napake</h3>
     <div class="row">
       <button onclick="newMistakeButtonClicked()" data-toggle="modal" data-target="#newMistakeModal"
@@ -123,6 +174,8 @@ var racerid;
 var racer;
 var trainings;
 var mistakes;
+var races;
+var apperances;
 
 var currentEndMistakeid;
 
@@ -133,17 +186,18 @@ $(document).ready(function () {
   var url = new URL(url_string);
   racerid = url.searchParams.get("racerid");
 
-  checkIfRacerExists(racerid, function(exists) {
-    if(exists) {
-      getUser(function() {
-        //Load user data
-        loadRacer();
-        loadTrainings();
-        loadMistakes();
-      });
-    } else {
-      navigateToNotFound();
-    }
+  getUser(function() {
+    checkIfRacerExists(racerid, function(exists) {
+      if(exists) {
+          //Load user data
+          loadRacer();
+          loadTrainings();
+          loadRaces();
+          loadMistakes();
+      } else {
+        navigateToNotFound();
+      }
+    });
   });
   
 });
@@ -177,6 +231,22 @@ function loadTrainings() {
   });
 }
 
+function loadRaces() {
+  $.get("/racer/races/apperances", {id: racerid}, function(apperancesArray) {
+    apperances = apperancesArray;
+    var racesApperancesLabel = document.getElementById("racesApperancesLabel");
+    racesApperancesLabel.innerHTML = "Tekme(" + apperances.length + ")";
+    
+    races = [];
+    apperances.forEach(apperance => {
+      $.get("/race/data", {id: apperance.raceid}, function(data) {
+        races.push(data);
+        displayRaces();
+      });
+    });
+  });
+}
+
 function displayTrainings() {
   var trainingsList = document.getElementById("trainingsList");
   trainingsList.innerHTML = "<br>";
@@ -184,7 +254,23 @@ function displayTrainings() {
       trainingsList.innerHTML += '<a id="listItem' + training.id + '" class="clearfix list-group-item">\
           <h2 class="list-group-item-heading"> ' + training.name + ' </h2>\
           <h4 class="list-group-item-text">' + training.location + ' - ' + parseDate(training.startdate) + '</h4> \
-          <h4 class="list-group-item-text">' + training.description + '</h4> \
+        </a>\
+        <br>';
+  });
+}
+function displayRaces() {
+  var racesApperancesList = document.getElementById("racesApperancesList");
+  racesApperancesList.innerHTML = "<br>";
+  races.forEach(race => {
+    var apperancesOfRacer = apperances.filter(function(apperance) {
+      return apperance.raceid == race.id;
+    });
+    var apperanceOfRacer = apperancesOfRacer[0];
+    var placemenetText = (apperanceOfRacer.placementtype == 1) ? apperanceOfRacer.placement : parsePlacementTypeToText(apperanceOfRacer.placementType);
+    racesApperancesList.innerHTML += '<a id="listItem' + race.id + '" class="clearfix list-group-item">\
+          <h2 class="list-group-item-heading"> ' + race.name + ' </h2>\
+          <h4 class="list-group-item-text">' + placemenetText + '. mesto</h4> \
+          <h4 class="list-group-item-text">' + race.location + ' - ' + parseDate(race.date) + '</h4> \
         </a>\
         <br>';
   });
@@ -274,6 +360,41 @@ function endMistake() {
 }
 function endMistakeClicked(mistakeid) {
   currentEndMistakeid = mistakeid;
+}
+
+function newRaceApperanceButtonClicked() {
+  var selectRace = document.getElementById("selectRace");
+  selectRace.options = [];
+
+  $.get("/team/races", {id: racer.teamid}, function(races){
+    races.forEach(race => {
+      selectRace.options[selectRace.options.length] = new Option(race.name, race.id);
+    });
+  })
+}
+
+function typeOfRacePlacementChanged() {
+  var selectPlacementType = document.getElementById("racePlacementType");
+  document.getElementById("racePlacementFormGroup").hidden = selectPlacementType.options[selectPlacementType.selectedIndex].value != 1;
+}
+
+function saveNewRaceApperance() {
+  var raceid = document.getElementById("selectRace").options[document.getElementById("selectRace").selectedIndex].value;
+  var racePlacementType = document.getElementById("racePlacementType").options[document.getElementById("racePlacementType").selectedIndex].value;
+  var racePlacement = document.getElementById("racePlacement").value;
+  
+  document.getElementById("selectRace").selectedIndex = 0;
+  document.getElementById("racePlacementType").selectedIndex = 0;
+  document.getElementById("racePlacement").value = "";
+
+  //Post server save new team
+  $.post("/raceApperance/save", {raceid: raceid, racerid: racerid, placement: racePlacement, placementType: racePlacementType}, function(err) {
+    if(err) {
+      alert(err);
+    } else {
+      loadRaces();
+    }
+  });
 }
 
 </script>

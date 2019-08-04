@@ -63,6 +63,15 @@ function getTypeStringFromIndex(index) {
     }
 }
 
+function parsePlacementTypeToText(type) {
+    switch(type){
+        case 1: return "FIN";
+        case 1: return "DNF";
+        case 1: return "DNS";
+        default: return "Neznano";
+    }
+}
+
 Date.prototype.toDateInputValue = (function() {
     var local = new Date(this);
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());

@@ -43,7 +43,21 @@ router.get("/trainings/apperances", function(req, res){
 
     var id = req.query.id;
 
-    clientDB.getApperancesOfRacer(id, req.session.user.id, function(err, apperances) {
+    clientDB.getTrainingApperancesOfRacer(id, req.session.user.id, function(err, apperances) {
+        if(err) {
+            console.log(err);
+            res.status(500).send(null);
+        } else {
+            res.send(apperances);
+        }
+    });
+});
+
+router.get("/races/apperances", function(req, res){
+
+    var id = req.query.id;
+
+    clientDB.getRaceApperancesOfRacer(id, req.session.user.id, function(err, apperances) {
         if(err) {
             console.log(err);
             res.status(500).send(null);

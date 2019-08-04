@@ -232,8 +232,24 @@ module.exports.getApperancesOfTraining = function(id, useridAccess, callback) {
   });
 };
 
-module.exports.getApperancesOfRacer = function(id, useridAccess, callback) {
+module.exports.getTrainingApperancesOfRacer = function(id, useridAccess, callback) {
   client.query("SELECT * FROM public.trainingapperance WHERE racerid = $1", [id])
+  .then(res2 => {
+    var objects = res2.rows;
+    objects.forEach(object => {
+      if(!checkIfAccessToData(object, useridAccess)) {
+        objects.splice(objects.indexOf(object), 1);
+      }
+    });
+    callback((objects.length == 0 && res2.rows.length > 0) ? "No access to data" : null, objects);
+    })
+  .catch(e => {
+    callback(e, null);
+  });
+};
+
+module.exports.getRaceApperancesOfRacer = function(id, useridAccess, callback) {
+  client.query("SELECT * FROM public.raceapperance WHERE racerid = $1", [id])
   .then(res2 => {
     var objects = res2.rows;
     objects.forEach(object => {

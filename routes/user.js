@@ -113,9 +113,9 @@ router.post("/register", function(req, res){
     }
 
     clientDB.client.query("SELECT * FROM public.user WHERE email = $1", [email]).then(res2 => {
-      if(res2.rowsCount == 0) {
+      if(res2.rows.length == 0) {
 
-      clientDB.client.query("INSERT INTO public.user(firstname, lastname, email, password) values($1, $2, $3, $4) RETURNING *", [username, usersurname, email, password])
+        clientDB.client.query("INSERT INTO public.user(firstname, lastname, email, password) values($1, $2, $3, $4) RETURNING *", [username, usersurname, email, password])
         .then(res3 => {
             req.session.user = res3.rows[0];
             res.send(null);
