@@ -16,12 +16,12 @@ post:
 router.get("/data", function(req, res) {
     var id = req.query.id;
 
-    clientDB.getMistake(id, function(err, racer){
+    clientDB.getMistake(id, req.session.user.id, function(err, mistake){
         if(err) {
             alert(err);
             res.sendStatus(500);
         } else {
-            res.send(racer);
+            res.send(mistake);
         }
     });
 });
@@ -31,7 +31,7 @@ router.post("/save", function(req, res) {
     var startDate = req.body.startDate;
     var racerid = req.body.racerid;
 
-    clientDB.client.query("INSERT INTO public.mistake(name, creationdate, racerid) values($1, $2, $3)", [name, startDate, racerid])
+    clientDB.client.query("INSERT INTO public.mistake(name, creationdate, racerid, createdby) values($1, $2, $3, $4)", [name, startDate, racerid, req.session.user.id])
     .then(res2 => {
         res.end();
     })

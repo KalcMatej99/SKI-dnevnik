@@ -16,7 +16,7 @@ post:
 router.get("/data", function(req, res) {
     var id = req.query.id;
 
-    clientDB.getRacer(id, function(err, racer){
+    clientDB.getRacer(id, req.session.user.id, function(err, racer){
         if(err) {
             alert(err);
             res.sendStatus(500);
@@ -29,7 +29,7 @@ router.get("/data", function(req, res) {
 router.get("/mistakes", function(req, res) {
     var id = req.query.id;
 
-    clientDB.getMistakesOfRacer(id, function(err, mistakes){
+    clientDB.getMistakesOfRacer(id, req.session.user.id, function(err, mistakes){
         if(err) {
             alert(err);
             res.sendStatus(500);
@@ -43,7 +43,7 @@ router.get("/trainings/apperances", function(req, res){
 
     var id = req.query.id;
 
-    clientDB.getApperancesOfRacer(id, function(err, apperances) {
+    clientDB.getApperancesOfRacer(id, req.session.user.id, function(err, apperances) {
         if(err) {
             console.log(err);
             res.status(500).send(null);
@@ -62,8 +62,8 @@ router.post("/save", function(req, res) {
     var birth = req.body.birth;
 
     clientDB.client.query("INSERT INTO public.racer(firstname, lastname, gender, \
-         description, teamid, birth) values($1, $2, $3, $4, $5, $6)", [firstname, lastname, gender,
-        description, teamid, birth])
+         description, teamid, birth, createdby) values($1, $2, $3, $4, $5, $6, $7)", [firstname, lastname, gender,
+        description, teamid, birth, req.session.user.id])
     .then(res2 => {
         res.end();
     })

@@ -24,7 +24,7 @@ router.get("/data", function(req, res){
 
     var id = req.query.id;
 
-    clientDB.getTraining(id, function(err, training) {
+    clientDB.getTraining(id, req.session.user.id, function(err, training) {
         if(err) {
             console.log(err);
             res.status(500).send(null);
@@ -38,7 +38,7 @@ router.get("/apperances", function(req, res){
 
     var id = req.query.id;
 
-    clientDB.getApperancesOfTraining(id, function(err, apperances) {
+    clientDB.getApperancesOfTraining(id, req.session.user.id, function(err, apperances) {
         if(err) {
             console.log(err);
             res.status(500).send(null);
@@ -67,16 +67,16 @@ router.post("/save", function(req, res){
 
     clientDB.client.query("INSERT INTO public.training(name, location, startdate, enddate, \
         description, teamid, temperature, weather, type, discipline, numberoftracks, \
-        numberofskigates, isracingtrack) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *", [name,
+        numberofskigates, isracingtrack, createdby) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *", [name,
              location, startDate, endDate, description, teamid, temperature, weather, type, discipline,
-            numberOfTracks, numberOfSkiGates, isRacingTrack])
+            numberOfTracks, numberOfSkiGates, isRacingTrack, req.session.user.id])
     .then(res2 => {
 
         var donePresences = 0;
 
         for(var i = 0; i < numberOfElementsInPresenceOfTraining; i++) {
-            clientDB.client.query("INSERT INTO public.trainingapperance(racerid, trainingid) values($1, $2) RETURNING *", [(numberOfElementsInPresenceOfTraining == 1) ? presenceOfTraining : presenceOfTraining[i],
-                res2.rows[0].id])
+            clientDB.client.query("INSERT INTO public.trainingapperance(racerid, trainingid, createdby) values($1, $2, $3) RETURNING *", [(numberOfElementsInPresenceOfTraining == 1) ? presenceOfTraining : presenceOfTraining[i],
+                res2.rows[0].id, req.session.user.id])
             .then(res3 => {
                 donePresences += 1;
 

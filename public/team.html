@@ -34,7 +34,8 @@
   </nav>
   <div class="container">
     <h1 id="teamName">Ime skupine</h1>
-    <h3>Tekmovalci</h3><div class="row">
+    <h3 id="racersLabel">Tekmovalci</h3>
+    <div class="row">
       <button onclick="newRacerButtonClicked()" data-toggle="modal" data-target="#newRacerModal"
       class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
     </div>
@@ -96,11 +97,10 @@
     <div id="racersList"class="list-group">
       <br>
     </div>
-    <h3>Treningi</h3>
+    <h3 id="trainingsLabel">Treningi</h3>
     <div class="row">
       <button onclick="newTrainingButtonClicked()" data-toggle="modal" data-target="#newTrainingModal"
       class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
-      <button onclick="removeAllTrainings()" class="col-sm-2 btn btn-danger">Izbrisi vse</button>
     </div>
     <div class="modal fade" id="newTrainingModal" role="dialog">
       <div class="modal-dialog">
@@ -231,8 +231,7 @@
           
         </div>
       </div>
-
-    <h3>Tekme</h3>
+    <h3 id="racesLabel">Tekme</h3>
     <div class="row">
       <button onclick="newRaceButtonClicked()" data-toggle="modal" data-target="#newRaceModal"
       class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
@@ -361,7 +360,10 @@ function loadTrainings() {
     displayTrainings();
   });
 }
+
 function displayTrainings() {
+  var trainingsLabel = document.getElementById("trainingsLabel");
+  trainingsLabel.innerHTML = "Treningi(" + trainings.length + ")";
   var trainingsList = document.getElementById("trainingsList");
   trainingsList.innerHTML = "<br>";
   trainings.forEach(training => {
@@ -509,6 +511,8 @@ function loadRacers() {
 }
 
 function displayRacers() {
+  var racersLabel = document.getElementById("racersLabel");
+  racersLabel.innerHTML = "Tekmovalci(" + racers.length + ")";
   var racersList = document.getElementById("racersList");
   racersList.innerHTML = "<br>";
   racers.forEach(racer => {
@@ -552,6 +556,8 @@ function newRaceButtonClicked() {
 }
 
 function displayRaces() {
+  var racesLabel = document.getElementById("racesLabel");
+  racesLabel.innerHTML = "Tekme(" + races.length + ")";
   var racesList = document.getElementById("racesList");
   racesList.innerHTML = "<br>";
   races.forEach(race => {

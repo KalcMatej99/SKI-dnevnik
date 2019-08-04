@@ -23,7 +23,7 @@ router.get("/data", function(req, res) {
 router.get("/teams", function(req, res) {
   var user = req.session.user;
 
-  clientDB.getTeamsOfUser(user.id, function(err, teams) {
+  clientDB.getTeamsOfUser(user.id, req.session.user.id, function(err, teams) {
     if(err) {
       console.log(err);
       res.status(500).send(err);
@@ -36,52 +36,56 @@ router.get("/teams", function(req, res) {
 router.get("/trainings", function(req, res) {
   var userid = req.session.user.id;
   var trainings = [];
-  clientDB.getTeamsOfUser(userid, function(err, teams) {
+  clientDB.getTeamsOfUser(userid, req.session.user.id, function(err, teams) {
     if(err) {
+      console.log(err);
       res.status(500).send(null);
-    }
-    var count = teams.length;
-    teams.forEach(team => {
-      clientDB.getTrainingsOfTeam(team.id, function(err, trainingsOfTeam) {
-        if(err) {
-          res.status(500).send(null);
+    } else {
+      var count = teams.length;
+      teams.forEach(team => {
+        clientDB.getTrainingsOfTeam(team.id, req.session.user.id, function(err, trainingsOfTeam) {
+          if(err) {
+            res.status(500).send(null);
+          } else {
+            trainingsOfTeam.forEach( tr => {
+              trainings.push(tr);
+            });
+            count -= 1;
+            if(count == 0) {
+              res.send(trainings);
+            }
         }
-        trainingsOfTeam.forEach( tr => {
-          trainings.push(tr);
         });
-        count -= 1;
-        if(count == 0) {
-          res.send(trainings);
-        }
-      }); 
-    });
-
+      });
+    }
   });
 });
 
 router.get("/races", function(req, res) {
   var userid = req.session.user.id;
   var races = [];
-  clientDB.getTeamsOfUser(userid, function(err, teams) {
+  clientDB.getTeamsOfUser(userid, req.session.user.id, function(err, teams) {
     if(err) {
+      console.log(err);
       res.status(500).send(null);
+    } else {
+      var count = teams.length;
+      teams.forEach(team => {
+        clientDB.getRacesOfTeam(team.id, function(err, racesOfTeam) {
+          if(err) {
+            res.status(500).send(null);
+          } else {
+            racesOfTeam.forEach( tr => {
+              races.push(tr);
+            });
+            count -= 1;
+            if(count == 0) {
+              res.send(races);
+            }
+          }
+        }); 
+      });
     }
-    var count = teams.length;
-    teams.forEach(team => {
-      clientDB.getRacesOfTeam(team.id, function(err, racesOfTeam) {
-        if(err) {
-          res.status(500).send(null);
-        }
-        racesOfTeam.forEach( tr => {
-          races.push(tr);
-        });
-        count -= 1;
-        if(count == 0) {
-          res.send(races);
-        }
-      }); 
-    });
-
   });
 });
   

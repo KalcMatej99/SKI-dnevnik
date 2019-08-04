@@ -43,11 +43,11 @@
         </a>
         <br>
     </div>
-    <h3>Treningi</h3>
+    <h3 id="trainingsLabel">Treningi</h3>
     <div id="trainingsList"class="list-group">
       <br>
     </div>
-    <h3>Tehnične napake</h3>
+    <h3 id="misatkesLabel">Tehnične napake</h3>
     <div class="row">
       <button onclick="newMistakeButtonClicked()" data-toggle="modal" data-target="#newMistakeModal"
       class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
@@ -165,6 +165,8 @@ function loadRacer() {
 function loadTrainings() {
   trainings = [];
   $.get("/racer/trainings/apperances", {id: racerid}, function(apperances) {
+    var trainingsLabel = document.getElementById("trainingsLabel");
+    trainingsLabel.innerHTML = "Treningi(" + apperances.length + ")";
 
     apperances.forEach(apperance => {
       $.get("/training/data", {id: apperance.trainingid}, function(data) {
@@ -196,6 +198,9 @@ function loadMistakes() {
 }
 
 function displayMistakes() {
+  
+  var misatkesLabel = document.getElementById("misatkesLabel");
+  misatkesLabel.innerHTML = "Tehnične napake(" + mistakes.length + ")";
   var mistakesList = document.getElementById("mistakesList");
   mistakesList.innerHTML = "<br>";
   

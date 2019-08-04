@@ -25,7 +25,7 @@ post:
 router.get("/data", function(req, res){
     var id = req.query.id;
 
-    clientDB.getTeam(id, function(err, team) {
+    clientDB.getTeam(id, req.session.user.id, function(err, team) {
         if(err) {
             console.log(err);
             res.status(500).send(null);
@@ -39,7 +39,7 @@ router.get("/trainings", function(req, res){
 
     var id = req.query.id;
 
-    clientDB.getTrainingsOfTeam(id, function(err, trainings) {
+    clientDB.getTrainingsOfTeam(id, req.session.user.id, function(err, trainings) {
         if(err) {
             console.log(err);
             res.status(500).send(null);
@@ -50,10 +50,9 @@ router.get("/trainings", function(req, res){
 });
 
 router.get("/racers", function(req, res){
-
     var id = req.query.id;
 
-    clientDB.getRacersOfTeam(id, function(err, racers) {
+    clientDB.getRacersOfTeam(id, req.session.user.id, function(err, racers) {
         if(err) {
             console.log(err);
             res.status(500).send(null);
@@ -64,10 +63,9 @@ router.get("/racers", function(req, res){
 });
 
 router.get("/races", function(req, res){
-
     var id = req.query.id;
 
-    clientDB.getRacesOfTeam(id, function(err, races) {
+    clientDB.getRacesOfTeam(id, req.session.user.id, function(err, races) {
         if(err) {
             console.log(err);
             res.status(500).send(null);
@@ -82,7 +80,8 @@ router.post("/save", function(req, res){
     var numberOfRacers = req.body.numberOfRacers;
     var trainerid = req.body.userid;
 
-    clientDB.client.query("INSERT INTO public.team(name, userid, numberofracers) values($1, $2, $3) RETURNING *", [name, trainerid, numberOfRacers])
+    clientDB.client.query("INSERT INTO public.team(name, userid, numberofracers, createdby) values($1, $2, $3, $4) RETURNING *", [name, trainerid, 
+        numberOfRacers, req.session.user.id])
     .then(() => {
         res.send(null);
         })

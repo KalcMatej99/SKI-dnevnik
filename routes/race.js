@@ -23,7 +23,7 @@ router.get("/data", function(req, res){
 
     var id = req.query.id;
 
-    clientDB.getRace(id, function(err, training) {
+    clientDB.getRace(id, req.session.user.id, function(err, training) {
         if(err) {
             console.log(err);
             res.status(500).send(null);
@@ -34,7 +34,6 @@ router.get("/data", function(req, res){
 });
 
 router.post("/save", function(req, res){
-    console.log(req.body);
     var name = req.body.name;
     var location = req.body.location;
     var date = req.body.date;
@@ -47,8 +46,8 @@ router.post("/save", function(req, res){
 
     clientDB.client.query("INSERT INTO public.race(name, location, date, \
         description, teamid, temperature, weather, discipline, \
-        numberofskigates) values($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *", [name,
-             location, date, description, teamid, temperature, weather, discipline, numberOfSkiGates])
+        numberofskigates, createdby) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *", [name,
+             location, date, description, teamid, temperature, weather, discipline, numberOfSkiGates, req.session.user.id])
     .then(() => {
         res.send(null);
         })

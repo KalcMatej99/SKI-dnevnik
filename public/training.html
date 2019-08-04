@@ -52,7 +52,7 @@
           <h4 class="list-group-item-text" id="trainingNumberOfSkiGates"></h4> 
         </a>
     </div>
-    <h2>Prisotni na treningu</h2>
+    <h2 id="racersLabel">Prisotni na treningu</h2>
     <div id="racersList"class="list-group">
   </div>
   </div>
@@ -117,6 +117,9 @@ function loadTrainingApperances() {
     apperances = data;
     var racersList = document.getElementById("racersList");
     racersList.innerHTML = "";
+    
+    var racersLabel = document.getElementById("racersLabel");
+    racersLabel.innerHTML = "Prisotni na treningu(" + apperances.length + ")";
 
     apperances.forEach(apperance => {
         $.get("/racer/data", {id: apperance.racerid}, function(data){
