@@ -46,7 +46,7 @@ router.post("/delete", function(req, res){
     clientDB.client.query("DELETE FROM public.trainingapperance WHERE id = $1", [id])
     .then(() => {
         res.send(null);
-        })
+    })
     .catch(e => {
         console.log(e.stack);
         res.sendStatus(500);

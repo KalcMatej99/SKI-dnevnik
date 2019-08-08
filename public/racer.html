@@ -100,7 +100,8 @@ var racer;
 var trainings;
 var mistakes;
 var races;
-var apperances;
+var raceApperances;
+var trainingApperances;
 
 var currentEndMistakeid;
 
@@ -153,7 +154,8 @@ function loadTrainings() {
     $.get("/racer/trainings/apperances", {id: racerid}, function(apperances) {
         var trainingsLabel = document.getElementById("trainingsLabel");
         trainingsLabel.innerHTML = "Treningi(" + apperances.length + ")";
-
+        trainingApperances = apperances;
+        displayTrainings();
         apperances.forEach(apperance => {
             $.get("/training/data", {id: apperance.trainingid}, function(data) {
                 trainings.push(data);
@@ -164,13 +166,14 @@ function loadTrainings() {
 }
 
 function loadRaces() {
+    races = [];
     $.get("/racer/races/apperances", {id: racerid}, function(apperancesArray) {
-        apperances = apperancesArray;
+        raceApperances = apperancesArray;
         var racesApperancesLabel = document.getElementById("racesApperancesLabel");
-        racesApperancesLabel.innerHTML = "Tekme(" + apperances.length + ")";
+        racesApperancesLabel.innerHTML = "Tekme(" + raceApperances.length + ")";
         
-        races = [];
-        apperances.forEach(apperance => {
+        displayRaces();
+        raceApperances.forEach(apperance => {
             $.get("/race/data", {id: apperance.raceid}, function(data) {
                 races.push(data);
                 displayRaces();
@@ -183,11 +186,14 @@ function displayTrainings() {
     var trainingsList = document.getElementById("trainingsList");
     trainingsList.innerHTML = "<br>";
     trainings.forEach(training => {
+        var apperanceid = trainingApperances.filter(apperance => {
+            return training.id == apperance.trainingid;
+        });
         trainingsList.innerHTML += '<div class="card"> \
                         <div class="card-body"> \
                             <h4 class="card-title">' + training.name + '</h4> \
                             <p class="card-text">' + training.location + ' - ' + parseDate(training.date) + '</p> \
-                            <button class="btn btn-danger" type="button" onclick="removeTrainingApperance(' + training.id + ')">Izbriši prisotnost</button> \
+                            <button class="btn btn-danger" type="button" onclick="removeTrainingApperance(' + apperanceid[0].id + ')">Izbriši prisotnost</button> \
                             </div> \
                     </div>';
     });
@@ -196,7 +202,7 @@ function displayRaces() {
     var racesApperancesList = document.getElementById("racesApperancesList");
     racesApperancesList.innerHTML = "<br>";
     races.forEach(race => {
-        var apperancesOfRacer = apperances.filter(function(apperance) {
+        var apperancesOfRacer = raceApperances.filter(function(apperance) {
             return apperance.raceid == race.id;
         });
         var apperanceOfRacer = apperancesOfRacer[0];
@@ -245,6 +251,16 @@ function removeRaceApperance(apperanceid) {
           alert(err);
       } else {
           loadRaces();
+      }
+  });
+}
+
+function removeTrainingApperance(apperanceid) {
+  $.post("/trainingApperance/delete", {id: apperanceid}, function(err){
+      if(err){
+          alert(err);
+      } else {
+          loadTrainings();
       }
   });
 }
