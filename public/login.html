@@ -89,7 +89,6 @@ function login() {
   //Log in user
   $.post('/user/login', {email:email, password: password}, function(err) {
       if(err) {
-        conso
           alert(err);
       } else {
 

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Contact Us - Brand</title>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="#">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="account.html">Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page contact-us-page">
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Nov tekmovalec</h2>
+                </div>
+                <form>
+                    <div class="form-group"><label>Ime</label><input class="form-control" type="text" id="racerFirstname"></div>
+                    <div class="form-group"><label>Priimek</label><input class="form-control" type="text" id="racerLastname"></div>
+                    <div class="form-group"><label>Spol</label><select class="form-control" id="racerGender"><option value="1" selected="">Moški</option><option value="2">Ženska</option></select></div>
+                    <div class="form-group"><label>Datum rojstva</label><input class="form-control" type="date" required="" id="racerBirth"></div>
+                    <div class="form-group">
+                        <input class="btn btn-success btn-block" type="button" onclick="saveNewRacer()" value="Shrani">
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
+        </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
+</body>
+
+<script>
+
+var teamid;
+var canSaveRacer = false;
+
+$(document).ready(function () {
+
+    //Get teamid from url as parameter
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    teamid = url.searchParams.get("teamid");
+    document.getElementById("racerBirth").value = new Date().toDateInputValue();
+
+    getUser(function() {
+        checkIfTeamExists(teamid, function(exists) {
+            if(exists) {
+                canSaveRacer = true;
+            } else {
+                navigateToNotFound();
+            }
+        });
+    });
+
+});
+
+function saveNewRacer() {
+
+    if(!canSaveRacer) {
+        return;
+    }
+  var racerFirstname = document.getElementById("racerFirstname").value;
+  var racerLastname = document.getElementById("racerLastname").value;
+  var racerBirth = document.getElementById("racerBirth").value;
+  var racerGender = document.getElementById("racerGender").options[document.getElementById("racerGender").selectedIndex].value;
+  document.getElementById("racerFirstname").value = "";
+  document.getElementById("racerLastname").value = "";
+  document.getElementById("racerBirth").value = new Date();
+  document.getElementById("racerGender").selected = document.getElementById("racerGender").options[0];
+
+  //Check if data is missing
+  if(racerFirstname == "" || racerLastname == "" || racerBirth == "" || racerGender == "") {
+    alert("Prosim izpopolni vse zazeljene podatke");
+    return;
+  }
+
+  //Post server save new team
+  $.post("/racer/save", {firstname: racerFirstname, lastname: racerLastname, 
+    birth: racerBirth, description: null, 
+    gender: racerGender, teamid: teamid}, function(err) {
+    if(err) {
+      alert(err);
+    } else {
+        window.location.href = "team.html?teamid=" + teamid;
+    }
+  });
+}
+
+</script>
+
+</html>

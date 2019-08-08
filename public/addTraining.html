@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Contact Us - Brand</title>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="./home.html">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./account.html">Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page contact-us-page">
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <h2 class="text-center text-info">Nov trening</h2>
+                <form>
+                    <div class="form-group"><label>Naziv</label><input class="form-control" type="text" id="trainingName"></div>
+                    <div class="form-group"><label>Disciplina</label><select class="form-control" id="trainingDiscipline"><option value="1" selected="">Slalom</option><option value="2" selected="">Velesalom</option><option value="3">SuperG</option><option value="4">Smuk</option></select></div>
+                    <div
+                        class="form-group"><label>Lokacija</label><input class="form-control" type="text" id="trainingLocation"></div>
+            <div class="form-group"><label>Datum</label><input class="form-control" type="date" required="" id="trainingDate"></div>
+            <div class="form-group"><label>Vreme</label><select class="form-control" id="trainingWeather"><option value="1" selected="">Sončno</option><option value="2">Deževno</option><option value="3">Oblačno</option></select></div>
+            <div class="form-group"><label>Temperatura</label><input class="form-control" type="number" value="0" id="trainingTemperature"></div>
+            <div class="form-group"><label>Tip treninga:</label><select class="form-control" id="trainingType" onchange="typeOfTrainingChanged()"><option value="1" selected="">Prosto smučanje</option><option value="2">Smučanje med količki</option></select></div>
+            <div class="form-group"><label>Število prog</label><input class="form-control" type="number" id="trainingNumberOfTracks" value="0"></div>
+            <div class="form-group" id="formGroupNumberofSkiGates" hidden="true"><label>Število vrat v postavitvah</label><input class="form-control" type="number" id="trainingNumberOfSkiGates" value="0"></div>
+            <div class="form-group"><label>Udeležbe</label><div id="racersPresenceList" class="list-group"></div></div>
+            <div class="form-group">
+                <input class="btn btn-success btn-block" type="button" onclick="saveNewTraining()" value="Shrani">
+            </div>
+            </form>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
+        </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
+</body>
+
+<script>
+
+var teamid;
+var canSaveRacer = false;
+var trainings;
+var racers;
+
+$(document).ready(function () {
+
+  //Get teamid from url as parameter
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  teamid = url.searchParams.get("teamid");
+  loadTrainings();
+  document.getElementById("trainingDate").value = new Date().toDateInputValue();
+
+  getUser(function() {
+      checkIfTeamExists(teamid, function(exists) {
+          if(exists) {
+              canSaveRacer = true;
+              loadRacersForPresence();
+          } else {
+              navigateToNotFound();
+          }
+      });
+  });
+});
+
+
+//This function saves new trainings in db and displays them
+function saveNewTraining() {
+  var trainingName = document.getElementById("trainingName").value;
+  var trainingLocation = document.getElementById("trainingLocation").value;
+  var trainingDate = document.getElementById("trainingDate").value;
+  var trainingTemperature = parseInt(document.getElementById("trainingTemperature").value, 10);
+  var trainingWeather = parseInt(document.getElementById("trainingWeather").options[document.getElementById("trainingWeather").selectedIndex].value, 10);
+  var trainingType = parseInt(document.getElementById("trainingType").options[document.getElementById("trainingType").selectedIndex].value, 10);
+  var trainingNumberOfTracks = parseInt(document.getElementById("trainingNumberOfTracks").value, 10);
+  var trainingNumberOfSkiGates = parseInt(document.getElementById("trainingNumberOfSkiGates").value, 10);
+  var trainingDiscipline = parseInt(document.getElementById("trainingDiscipline").options[document.getElementById("trainingDiscipline").selectedIndex].value, 10);
+  
+  document.getElementById("trainingName").value = "";
+  document.getElementById("trainingLocation").value = "";
+  document.getElementById("trainingDate").value = new Date();
+  document.getElementById("trainingTemperature").value = 0;
+  document.getElementById("trainingWeather").selectedIndex = 0;
+  document.getElementById("trainingDiscipline").selectedIndex = 0;
+  document.getElementById("trainingNumberOfSkiGates").value = 0;
+  document.getElementById("trainingNumberOfTracks").value = 0;
+  document.getElementById("trainingType").selectedIndex = 0;
+
+  console.log(trainingNumberOfTracks);
+  console.log(trainingNumberOfSkiGates);
+  console.log(trainingDate);
+  console.log(trainingDiscipline);
+
+  //Check if data is missing
+  if(trainingName == "" || trainingLocation == "") {
+    alert("Prosim izpopolni vse zazeljene podatke");
+    return;
+  }
+
+  //Post server save new team
+  $.post("/training/save", {name: trainingName, location: trainingLocation, date: trainingDate, description: null, teamid: parseInt(teamid, 10), isRacingTrack:trainingType == 2,
+     weather:trainingWeather, type: trainingType, numberOfTracks: trainingNumberOfTracks, numberOfSkiGates: trainingNumberOfSkiGates, discipline: trainingDiscipline,
+     temperature: trainingTemperature, presenceOfTraining: presenceOnNewTraining, numberOfElementsInPresenceOfTraining: presenceOnNewTraining.length},
+      function(err) {
+    if(err) {
+      alert(err);
+    } else {
+        window.location.href = "team.html?teamid=" + teamid;
+    }
+  });
+}
+
+
+function typeOfTrainingChanged() {
+  document.getElementById("formGroupNumberofSkiGates").hidden = (document.getElementById("trainingType").selectedIndex != 1);
+}
+
+var presenceOnNewTraining = [];
+
+function loadRacersForPresence() {
+  presenceOnNewTraining = [];
+  var racersList = document.getElementById("racersPresenceList");
+  racersList.innerHTML = "";
+  $.get("/team/racers", {id: teamid}, function(racersArray) {
+    racers = racersArray;
+    racers.forEach(racer => {
+      racersList.innerHTML += '<a class="list-group-item"> \
+                            <input type="checkbox" onclick="checkPresencesForNewTraining()" id="racerPresenceCheckboxId' + racer.id + '"> ' + racer.firstname + " " + racer.lastname + ' <br> \
+                          </a>';
+    });
+  });
+}
+
+function checkPresencesForNewTraining() {
+  presenceOnNewTraining = [];
+  racers.forEach(racer => {
+    if(document.getElementById("racerPresenceCheckboxId" + racer.id).checked) {
+      presenceOnNewTraining.push(racer.id);
+    }
+  });
+}
+
+//This function loads the trainings in the page
+function loadTrainings() {
+  $.get("/team/trainings", {id: teamid}, function(trainingsArray) {
+    trainings = trainingsArray;
+    document.getElementById("trainingName").value = "Trening " + (trainings.length + 1);
+  });
+}
+</script>
+
+</html>

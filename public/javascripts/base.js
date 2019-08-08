@@ -23,6 +23,8 @@ function getUser(callback) {
             callback();
         });
     } else {
+        location.href = "/";
+        alert("Uporabnik ni bil najden");
         callback();
     }
 }
@@ -152,3 +154,14 @@ function navigateToRacer(racerid) {
 function navigateToRace(raceid) {
     window.location.href = "race.html?raceid=" + raceid;
 }
+
+function navigateToNewRacer(teamid) {
+    window.location.href = "addRacer.html?teamid=" + teamid;
+}
+function navigateToNewRace(teamid) {
+    window.location.href = "addRace.html?teamid=" + teamid;
+}
+function navigateToNewTraining(teamid) {
+    window.location.href = "addTraining.html?teamid=" + teamid;
+}
+

@@ -5,22 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Contact Us - Brand</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
-    <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
 </head>
 
 <body>
     <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
-        <div class="container"><a class="navbar-brand logo" href="#">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><a class="navbar-brand logo" href="./index.html">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse"
                 id="navcol-1">
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="about-us.html">Skupine</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="team.html">Account</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="./account.html">Account</a></li>
                 </ul>
             </div>
         </div>
@@ -33,66 +33,33 @@
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <h2 class="d-inline-block">Tekmovalci</h2>
+                        <h2 class="d-inline-block" id="racersLabel">Tekmovalci</h2>
                     </div>
-                    <div class="col d-flex align-items-center"><button class="btn btn-primary d-inline-block d-xl-flex flex-row justify-content-xl-center" type="button">+</button></div>
+                    <div class="col d-flex align-items-center"><button class="btn btn-primary d-inline-block d-xl-flex flex-row justify-content-xl-center" type="button" onclick="navigateToNewRacer()">+</button></div>
                 </div>
-                <div class="card-group">
-                    <div class="card"><img class="card-img-top w-100 d-block">
-                        <div class="card-body">
-                            <h4 class="card-title">Title</h4>
-                            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p><button class="btn btn-secondary" type="button">Button</button></div>
-                    </div>
-                    <div class="card"><img class="card-img-top w-100 d-block">
-                        <div class="card-body">
-                            <h4 class="card-title">Title</h4>
-                            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p><button class="btn btn-secondary" type="button">Button</button></div>
-                    </div>
-                </div>
+                <div class="card-group" id="racersList"></div>
             </div>
         </section>
         <section class="clean-block clean-form dark">
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <h2 class="d-inline-block">Treningi</h2>
+                        <h2 class="d-inline-block" id="trainingsLabel">Treningi</h2>
                     </div>
                     <div class="col d-flex align-items-center"><button class="btn btn-primary d-inline-block d-xl-flex flex-row justify-content-xl-center" type="button">+</button></div>
                 </div>
-                <div class="card-group">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Title</h4>
-                            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p><button class="btn btn-secondary" type="button">Button</button></div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Title</h4>
-                            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p><button class="btn btn-secondary" type="button">Button</button></div>
-                    </div>
-                </div>
+                <div class="card-group" id="trainingsList"></div>
             </div>
         </section>
         <section class="clean-block clean-form dark">
             <div class="container">
                 <div class="row">
                     <div class="col">
-                        <h2 class="d-inline-block">Tekme</h2>
+                        <h2 class="d-inline-block" id="racesLabel">Tekme</h2>
                     </div>
                     <div class="col d-flex align-items-center"><button class="btn btn-primary d-inline-block float-right d-xl-flex flex-row justify-content-xl-end align-items-xl-center" type="button">+</button></div>
                 </div>
-                <div class="card-group">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Title</h4>
-                            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p><button class="btn btn-secondary" type="button">Button</button></div>
-                    </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Title</h4>
-                            <p class="card-text">Nullam id dolor id nibh ultricies vehicula ut id elit. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus.</p><button class="btn btn-secondary" type="button">Button</button></div>
-                    </div>
-                </div>
+                <div class="card-group" id="racesList"></div>
             </div>
         </section>
     </main>
@@ -101,10 +68,154 @@
             <p>Matej Kalc © 2019</p>
         </div>
     </footer>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
-    <script src="assets/js/script.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
 </body>
+
+<script>
+
+var teamid;
+var trainings;
+var racers;
+
+$(document).ready(function () {
+
+  //Get teamid from url as parameter
+  var url_string = window.location.href;
+  var url = new URL(url_string);
+  teamid = url.searchParams.get("teamid");
+
+  checkIfTeamExists(teamid, function(exists) {
+    if(exists) {
+      getUser(function() {
+        //Load user data
+        loadTrainings();
+        loadRacers();
+        loadTemaData();
+        loadRaces();
+      });
+    } else {
+      navigateToNotFound();
+    }
+    
+  });
+});
+
+//This function loads the trainings in the page
+function loadTrainings() {
+  $.get("/team/trainings", {id: teamid}, function(trainingsArray) {
+    trainings = trainingsArray;
+    displayTrainings();
+  });
+}
+
+function displayTrainings() {
+  var trainingsLabel = document.getElementById("trainingsLabel");
+  trainingsLabel.innerHTML = "Treningi(" + trainings.length + ")";
+  var trainingsList = document.getElementById("trainingsList");
+  trainingsList.innerHTML = "<br>";
+  trainings.forEach(training => {
+        trainingsList.innerHTML += '<div class="card" id="listItem' + training.id + '"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title">' + training.name + '</h4> \
+                            <p class="card-text">' + training.location + ' - ' + parseDate(training.startdate) + '</p> \
+                            <button class="btn btn-secondary" type="button" onclick="navigateToRacer(' + training.id + ')">Odpri</button></div> \
+                            <button class="btn btn-danger" type="button" onclick="removeRacer(' + training.id + ')">Izbriši</button></div> \
+                    </div>';
+  });
+}
+
+//This function loads data of the team
+function loadTemaData() {
+  $.get("/team/data", {id: teamid}, function(data) {
+    var teamName = document.getElementById("teamName");
+    teamName.innerHTML = data["name"];
+  });
+}
+
+function removeRacer(racerid) {
+    $.post("/racer/delete", {id: racerid}, function(err){
+        if(err){
+            alert(err);
+        } else {
+            loadRacers();
+        }
+    });
+}
+
+function removeRace(raceid) {
+    $.post("/race/delete", {id: raceid}, function(err){
+        if(err){
+            alert(err);
+        } else {
+            loadRaces();
+        }
+    });
+}
+
+function removeTraining(trainingid) {
+  $.post("/training/delete", {id: trainingid}, function(err){
+    if(err){
+      alert(err);
+      return;
+    } else {
+      loadTrainings();
+    }
+  });
+}
+
+function loadRacers() {
+  $.get("/team/racers", {id: teamid}, function(racersArray){
+    racers = racersArray;
+    
+    displayRacers();
+  }); 
+}
+
+function displayRacers() {
+  var racersLabel = document.getElementById("racersLabel");
+  racersLabel.innerHTML = "Tekmovalci(" + racers.length + ")";
+  var racersList = document.getElementById("racersList");
+  racersList.innerHTML = "<br>";
+  racers.forEach(racer => {
+    var gender = racer.gender == 1 ? "M" : "F";
+    racersList.innerHTML += '<div class="card" id="racersListItem' + racer.id + '"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title">' + racer.firstname + " " + racer.lastname + '</h4> \
+                            <p class="card-text">' + gender + ' - ' + parseDate(racer.birth) + '</p> \
+                            <button class="btn btn-secondary" type="button" onclick="navigateToRacer(' + racer.id + ')">Odpri</button></div> \
+                            <button class="btn btn-danger" type="button" onclick="removeRacer(' + racer.id + ')">Izbriši</button></div> \
+                    </div>';
+  });
+}
+
+function loadRaces() {
+  $.get("/team/races", {id: teamid}, function(racesArray) {
+    races = racesArray;
+    displayRaces();
+  });
+}
+
+function displayRaces() {
+  var racesLabel = document.getElementById("racesLabel");
+  racesLabel.innerHTML = "Tekme(" + races.length + ")";
+  var racesList = document.getElementById("racesList");
+  racesList.innerHTML = "<br>";
+  races.forEach(race => {
+        racesList.innerHTML += '<div class="card" id="racersListItem' + race.id + '"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title">' + race.name + '</h4> \
+                            <p class="card-text">' + (race.location ? (race.location + " - ") : "") + parseDate(race.date) + '</p> \
+                            <button class="btn btn-secondary" type="button" onclick="navigateToRacer(' + race.id + ')">Odpri</button></div> \
+                            <button class="btn btn-danger" type="button" onclick="removeRacer(' + race.id + ')">Izbriši</button></div> \
+                    </div>';
+  });
+}
+
+</script>
+
 
 </html>

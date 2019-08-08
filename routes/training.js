@@ -51,8 +51,7 @@ router.get("/apperances", function(req, res){
 router.post("/save", function(req, res){
     var name = req.body.name;
     var location = req.body.location;
-    var startDate = req.body.startDate;
-    var endDate = req.body.endDate;
+    var date = req.body.date;
     var description = req.body.description;
     var teamid = req.body.teamid;
     var weather = req.body.weather;
@@ -65,10 +64,10 @@ router.post("/save", function(req, res){
     var presenceOfTraining = req.body['presenceOfTraining[]'];
     var numberOfElementsInPresenceOfTraining = req.body.numberOfElementsInPresenceOfTraining;
 
-    clientDB.client.query("INSERT INTO public.training(name, location, startdate, enddate, \
+    clientDB.client.query("INSERT INTO public.training(name, location, date, \
         description, teamid, temperature, weather, type, discipline, numberoftracks, \
-        numberofskigates, isracingtrack, createdby) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING *", [name,
-             location, startDate, endDate, description, teamid, temperature, weather, type, discipline,
+        numberofskigates, isracingtrack, createdby) values($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13) RETURNING *", [name,
+             location, date, description, teamid, temperature, weather, type, discipline,
             numberOfTracks, numberOfSkiGates, isRacingTrack, req.session.user.id])
     .then(res2 => {
 

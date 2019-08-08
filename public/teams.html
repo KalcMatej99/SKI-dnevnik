@@ -6,142 +6,161 @@
   It can navigate to home.html, account.html and team.html.
 
 -->
-
 <!DOCTYPE html>
-<head lang="en">
-    <title>SKI Dnevnik</title>
+<html>
+
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="./javascripts/base.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Register - Brand</title>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
 </head>
-<body style="background-size: cover;" onLoad = "onLoad()">
-  <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">SKI Dnevnik</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li><a href="home.html">Koledar</a></li>
-        <li class="active"><a>Skupine</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-          <li><a href="account.html"><span class="glyphicon glyphicon-user"></span> Account</a></li>
-        </ul>
-    </div>
-  </nav>
-  <div class="container">
-    <div class="row">
-        <h1>Skupine</h1>
-        <button id="newTeamButton" type="button" class="btn btn-info btn-lg" data-toggle="modal" 
-        data-target="#newTeamModal">Nova skupina</button>
-    </div>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="./home.html">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./account.html">Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page registration-page">
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h1>Skupine</h1>
+                    </div>
+                    <div class="col d-flex align-items-lg-center">
+                      <button id="newTeamButton" class="btn btn-primary d-lg-flex" type="button" data-toggle="modal" data-target="#newTeamModal">+</button>
+                    </div>
+                </div>
+                <div class="card-group" id="teamsList"></div>
+            </div>
+        </section>
+    </main>
     <div class="modal fade" id="newTeamModal" role="dialog">
         <div class="modal-dialog">
         
-          <!-- Modal content-->
-          <div class="modal-content">
+            <!-- Modal content-->
+            <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Nova skupina</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Nova skupina</h4>
             </div>
             <div class="modal-body">
 
                 <form class="form-horizontal">
-                  <div class="form-group">
+                    <div class="form-group">
                     <label class="control-label col-sm-2" for="team">Ime Skupine:</label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="teamName" placeholder="Napisi ime Skupine" name="teamName">
+                        <input type="text" class="form-control" id="teamName" placeholder="Napisi ime Skupine" name="teamName">
                     </div>
-                  </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" onclick="saveNewTeam()" data-dismiss="modal">Shrani</button>
+                <button type="button" class="btn btn-default" onclick="saveNewTeam()" data-dismiss="modal">Shrani</button>
             </div>
-          </div>
-          
+            </div>
+            
         </div>
-      </div>
-    <br>
-    <div id="teamsList"class="list-group">
     </div>
-    </div>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
+        </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
 </body>
+
 
 <script>
 
 //This function is called every time the page appears
-function onLoad() {
-  
-  getUser(function(){
-  //Get teams of current user and load
-    getTeams();
-  });
-}
+
+$(document).ready(function () {
+    
+    getUser(function(){
+        //Get teams of current user and load
+        getTeams();
+    });
+});
 
 //This function gets teams of current user and displays
 function getTeams() {
-  var list = document.getElementById("teamsList");
-  list.innerHTML = "";
-  $.get("/user/teams", function(teams) {
-    teams.forEach(team => {
-      $.get("/team/trainings", {id: team.id}, function(trainings) {
-         var list = document.getElementById("teamsList");
-        list.innerHTML += '<a id="listItem' + team.id + '" href="#" onclick="navigateToTeam(' + team.id + ')" class="clearfix list-group-item">\
-            <h2 class="list-group-item-heading"> ' + team.name + ' </h2>\
-            <br> \
-            <span class="pull-right"> \
-              <button type="button" class="btn btn-danger" onclick="removeTeam(' + team.id + '); event.stopPropagation();">Zbriši</button>\
-              </span>\
-            <h4 class="list-group-item-text">Treningi: ' + trainings.length + '</h4> \
-          </a>\
-          <br>';
-      });
+    var list = document.getElementById("teamsList");
+    list.innerHTML = "";
+    $.get("/user/teams", function(teams) {
+        teams.forEach(team => {
+            $.get("/team/trainings", {id: team.id}, function(trainings) {
+                list.innerHTML += '<div class="card" id="listItem' + team.id + '"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title"> ' + team.name + ' </h4> \
+                            <p class="card-text"></p> \
+                            <button class="btn btn-primary" type="button" onclick="navigateToTeam(' + team.id + ')">Odpri</button> \
+                            <button class="btn btn-danger" type="button" onclick="removeTeam(' + team.id + ')">Izbriši</button> \
+                            </div> \
+                    </div>';
+            
+            });
+        });
     });
-  });
 }
 
 //This function is needed to navigate to team.ejs
 function navigateToTeam(teamid) {
-  window.location.href = "team.html?teamid=" + teamid;
+    window.location.href = "team.html?teamid=" + teamid;
 }
 
 //This function saves a new team
 function saveNewTeam() {
-  var teamName = document.getElementById("teamName").value;
-  document.getElementById("teamName").value = "";
+    var teamName = document.getElementById("teamName").value;
+    document.getElementById("teamName").value = "";
 
-  //Check if data is missing
-  if(teamName == "") {
-    alert("Prosim izpopolni vse zazeljene podatke");
-    return;
-  }
-
-  //Post server save new team
-  $.post("/team/save", {name: teamName, userid: user.id}, function(err) {
-    if(err) {
-      alert(err);
-    } else {
-      //Load teams
-      getTeams();
+    //Check if data is missing
+    if(teamName == "") {
+        alert("Prosim izpopolni vse zazeljene podatke");
+        return;
     }
-  });
+
+    //Post server save new team
+    $.post("/team/save", {name: teamName, userid: user.id}, function(err) {
+        if(err) {
+            alert(err);
+        } else {
+            //Load teams
+            getTeams();
+        }
+    });
 }
 
 //This function delete the team and removes it from the list
 function removeTeam(teamid){
-  $.post("/team/delete", {id: teamid}, function(err){
-    if(err){
-      alert(err);
-      return;
-    } else {
-      var listItem = document.getElementById("listItem" + teamid);
-      listItem.parentNode.removeChild(listItem);
-    }
-  });
+    $.post("/team/delete", {id: teamid}, function(err){
+        if(err){
+            alert(err);
+            return;
+        } else {
+            var listItem = document.getElementById("listItem" + teamid);
+            listItem.parentNode.removeChild(listItem);
+
+            getTeams();
+        }
+    });
 }
 
 </script>

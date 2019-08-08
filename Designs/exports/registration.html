@@ -5,12 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Register - Brand</title>
-    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
-    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
-    <link rel="stylesheet" href="./stylesheets/styles.min.css">
+    <link rel="stylesheet" href="assets/css/styles.min.css">
 </head>
 
 <body>
@@ -19,7 +19,8 @@
             <div class="collapse navbar-collapse"
                 id="navcol-1">
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="login.html">Log In</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="account.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="team.html">Account</a></li>
                 </ul>
             </div>
         </div>
@@ -32,12 +33,10 @@
                     <p></p>
                 </div>
                 <form>
-                    <div class="form-group"><label for="name">Ime</label><input class="form-control item" type="text" id="usrName"></div>
-                    <div class="form-group"><label for="name">Priimek</label><input class="form-control item" type="text" id="usrSurname"></div>
-                    <div class="form-group"><label for="password">Password</label><input class="form-control item" type="password" id="pwd"></div>
-                    <div class="form-group"><label for="email">Email</label><input class="form-control item" type="email" id="usrEmail"></div>
-                    <button class="btn btn-primary btn-block" type="submit" onclick="registerNewUser()">Registracija</button>
-                </form>
+                    <div class="form-group"><label for="name">Ime</label><input class="form-control item" type="text" id="name"></div>
+                    <div class="form-group"><label for="name">Priimek</label><input class="form-control item" type="text" id="name"></div>
+                    <div class="form-group"><label for="password">Password</label><input class="form-control item" type="password" id="password"></div>
+                    <div class="form-group"><label for="email">Email</label><input class="form-control item" type="email" id="email"></div><button class="btn btn-primary btn-block" type="submit">Registracija</button></form>
             </div>
         </section>
     </main>
@@ -46,60 +45,10 @@
             <p>Matej Kalc © 2019</p>
         </div>
     </footer>
-    <script src="./javascripts/jquery.min.js"></script>
-    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
-    <script src="./javascripts/script.min.js"></script>
+    <script src="assets/js/script.min.js"></script>
 </body>
-<script>
-
-//This function is called every time the page appears
-function onLoad() {
-    //When register button is clicked a new user is registered
-    document.getElementById("registrationButton").addEventListener("click", registerNewUser);
-}
-
-    //This function registers a new user
-function registerNewUser() {
-    var usrNameInput = document.getElementById("usrName");
-    var usrSurnameInput = document.getElementById("usrSurname");
-    var usrEmailInput = document.getElementById("usrEmail");
-    var passwordInput = document.getElementById("pwd");
-
-    //If data is missing it is alerted
-    if(usrNameInput.value == "" || usrSurnameInput.value == "" || usrEmailInput.value == "" || passwordInput.value == "") {
-        alert("Mankajo podatki.");
-        return;
-    }
-    var username = usrNameInput.value;
-    var usersurname = usrSurnameInput.value;
-    var password = passwordInput.value;
-    var email = usrEmailInput.value;
-
-    //Check if password is valid
-    if(!isPasswordValid(password)) {
-        alert("Geslo mora biti dolgo najmanj 8 črk in največ 20 črk.");
-        return;
-    }
-
-    //Check if email is valid
-    if(!isEmailValid(email)) {
-        alert("Nepravilen email.");
-        return;
-    }
-
-    $.post('/user/register', {username: username, usersurname: usersurname, email:email, password: password}, function(err) {
-        if(err) {
-            alert(err);
-        } else {
-            location.href = "home.html";
-        }
-});
-    
-}
-    
-    
-    
-</script>
 
 </html>
