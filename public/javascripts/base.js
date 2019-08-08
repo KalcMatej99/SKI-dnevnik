@@ -170,6 +170,9 @@ function navigateToNewMistake(racerid) {
 function navigateToNewRaceApperance(racerid) {
     window.location.href = "addApperanceRace.html?racerid=" + racerid;
 }
+function navigateToNewTrainingApperance(racerid) {
+    window.location.href = "addApperanceTraining.html?racerid=" + racerid;
+}
 function navigateToTeam(teamid) {
     window.location.href = "team.html?teamid=" + teamid;
 }

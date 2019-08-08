@@ -65,6 +65,10 @@ module.exports.getTeam = function(teamid, useridAccess, callback) {
   
   client.query("SELECT * FROM public.team WHERE id = $1", [teamid])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -108,6 +112,10 @@ module.exports.getTraining = function(id, useridAccess, callback) {
   
   client.query("SELECT * FROM public.training WHERE id = $1", [id])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -128,6 +136,10 @@ module.exports.getRace = function(id, useridAccess, callback) {
 
   client.query("SELECT * FROM public.race WHERE id = $1", [id])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -148,6 +160,10 @@ module.exports.getRacer = function(id, useridAccess, callback) {
 
   client.query("SELECT * FROM public.racer WHERE id = $1", [id])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -168,6 +184,10 @@ module.exports.getMistake = function(id, useridAccess, callback) {
 
   client.query("SELECT * FROM public.mistake WHERE id = $1", [id])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -211,19 +231,15 @@ module.exports.getRacesOfTeam = function(id, useridAccess, callback) {
   client.query("SELECT * FROM public.race WHERE teamid = $1", [id])
   .then(res2 => {
     var objects = res2.rows;
-    console.log(objects);
     if(objects.length == 0) {
       callback(null, []);
       return;
     }
-    console.log(2);
     objects.forEach(object => {
       if(!checkIfAccessToData(object, useridAccess)) {
         objects.splice(objects.indexOf(object), 1);
       }
     });
-
-    console.log(3);
     callback((objects.length == 0 && res2.rows.length > 0) ? "No access to data" : null, objects);
     })
   .catch(e => {

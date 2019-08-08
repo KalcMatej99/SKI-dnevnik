@@ -21,7 +21,7 @@
         <a class="navbar-brand" href="#">SKI Dnevnik</a>
       </div>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="index.html"><span class="glyphicon"></span> Home</a></li>
+        <li><a href="./index.html"><span class="glyphicon"></span> Home</a></li>
       </ul>
     </div>
   </nav>
@@ -30,4 +30,12 @@
       <h1 align="center" style="color:black"><strong>Stran ne obstaja!</strong></h1>
     </div>
 </body>
+
+<script>
+
+$(document).ready(function () {
+  $.get("/user/logout");
+});
+
+</script>
 </html>
