@@ -68,8 +68,8 @@ function getTypeStringFromIndex(index) {
 function parsePlacementTypeToText(type) {
     switch(type){
         case 1: return "FIN";
-        case 1: return "DNF";
-        case 1: return "DNS";
+        case 2: return "DNF";
+        case 3: return "DNS";
         default: return "Neznano";
     }
 }
@@ -163,5 +163,14 @@ function navigateToNewRace(teamid) {
 }
 function navigateToNewTraining(teamid) {
     window.location.href = "addTraining.html?teamid=" + teamid;
+}
+function navigateToNewMistake(racerid) {
+    window.location.href = "addMistake.html?racerid=" + racerid;
+}
+function navigateToNewRaceApperance(racerid) {
+    window.location.href = "addApperanceRace.html?racerid=" + racerid;
+}
+function navigateToTeam(teamid) {
+    window.location.href = "team.html?teamid=" + teamid;
 }
 

@@ -96,19 +96,18 @@ $(document).ready(function () {
   var url = new URL(url_string);
   teamid = url.searchParams.get("teamid");
 
-  checkIfTeamExists(teamid, function(exists) {
-    if(exists) {
-      getUser(function() {
-        //Load user data
-        loadTrainings();
-        loadRacers();
-        loadTemaData();
-        loadRaces();
-      });
-    } else {
-      navigateToNotFound();
-    }
-    
+  getUser(function() {
+    checkIfTeamExists(teamid, function(exists) {
+      if(exists) {
+          //Load user data
+          loadTrainings();
+          loadRacers();
+          loadTemaData();
+          loadRaces();
+      } else {
+        navigateToNotFound();
+      }
+    });
   });
 });
 

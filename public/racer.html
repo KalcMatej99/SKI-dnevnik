@@ -6,166 +6,86 @@
   It can navigate to home.html, account.html and teams.html.
 
 -->
-
 <!DOCTYPE html>
-<head lang="en">
-    <title>SKI Dnevnik</title>
+<html>
+
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="./javascripts/base.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Contact Us - Brand</title>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
 </head>
-<body style="background-size: cover;">
-  <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">SKI Dnevnik</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li><a href="home.html">Koledar</a></li>
-        <li class="active"><a href="teams.html">Skupine</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-          <li><a href="account.html"><span class="glyphicon glyphicon-user"></span> Account</a></li>
-        </ul>
-    </div>
-  </nav>
-  <div class="container">
-    <h1 id="racerName">Ime tekmovalca</h1>
-    <div id="racerList"class="list-group">
-        <a class="list-group-item">
-          <h4 class="list-group-item-text"><h4 id="racerGenderAndBirth"></h4></h4> 
-        </a>
-        <a class="list-group-item">
-            <h4 class="list-group-item-text"><h4 id="racerTeam"></h4></h4> 
-        </a>
-        <br>
-    </div>
-    <h3 id="trainingsLabel">Treningi</h3>
-    <div id="trainingsList"class="list-group">
-      <br>
-    </div>
-    <h3 id="racesApperancesLabel">Tekme</h3>
-    <div class="row">
-      <button onclick="newRaceApperanceButtonClicked()" data-toggle="modal" data-target="#newRaceApperanceModal"
-      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
-    </div>
-    <div id="racesApperancesList"class="list-group">
-      <br>
-    </div>
-    <div class="modal fade" id="newRaceApperanceModal" role="dialog">
-      <div class="modal-dialog">
-      
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Udeležba na tekmo</h4>
-          </div>
-          <div class="modal-body">
-              <form class="form-horizontal">
-                  
-                <div class="form-group">
-                    <label class="control-label col-sm-2">Tekma</label>
-                    <div class="col-sm-10">
-                        <select id="selectRace"></select>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="./home.html">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./account.html">Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page contact-us-page">
+        <div class="container">
+            <h1 id="racerName">Tekmovalec</h1>
+        </div>
+        <section>
+            <div class="container">
+                <ul class="list-group">
+                    <li class="list-group-item"><span id="racerGenderAndBirth"></span></li>
+                    <li class="list-group-item"><span id="racerTeam"></span></li>
+                </ul>
+            </div>
+        </section>
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <h2 class="d-inline-block" id="trainingsLabel">Treningi</h2>
+                <div class="card-group" id="trainingsList"></div>
+            </div>
+        </section>
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="d-inline-block" id="racesApperancesLabel">Tekme</h2>
                     </div>
-                  </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Kako je šla tekma?</label>
-                  <div class="col-sm-10">
-                      <select id="racePlacementType" onchange="typeOfRacePlacementChanged()">
-                        <option value="1">FIN</option>
-                        <option value="2">DNF</option>
-                        <option value="3">DNS</option>
-                      </select>
-                  </div>
+                    <div class="col d-flex align-items-center"><button class="btn btn-primary d-inline-block float-right d-xl-flex flex-row justify-content-xl-end align-items-xl-center" type="button" onclick="newRaceApperanceButtonClicked()">+</button></div>
                 </div>
-                <div class="form-group" id="racePlacementFormGroup">
-                  <label class="control-label col-sm-2">Uvrstitev:</label>
-                  <div class="col-sm-10">
-                    <input type="number" id="racePlacement">
-                  </div>
+                <div class="card-group" id="racesApperancesList"></div>
+            </div>
+        </section>
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="d-inline-block" id="misatkesLabel">Tehnične napake</h2>
+                    </div>
+                    <div class="col d-flex align-items-center"><button class="btn btn-primary d-inline-block float-right d-xl-flex flex-row justify-content-xl-end align-items-xl-center" type="button" onclick="newMistakeButtonClicked()">+</button></div>
                 </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="saveNewRaceApperance()" data-dismiss="modal">Shrani</button>
-          </div>
+                <div class="card-group" id="mistakesList"></div>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
         </div>
-        
-      </div>
-    </div>
-    <h3 id="misatkesLabel">Tehnične napake</h3>
-    <div class="row">
-      <button onclick="newMistakeButtonClicked()" data-toggle="modal" data-target="#newMistakeModal"
-      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
-    </div>
-    <div class="modal fade" id="newMistakeModal" role="dialog">
-      <div class="modal-dialog">
-      
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Nova tehnična napaka</h4>
-          </div>
-          <div class="modal-body">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="team">Ime/opis napake:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="mistakeName">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Datum začetka:</label>
-                  <div class="col-sm-10">
-                    <input type="date" id="mistakeStartDate">
-                  </div>
-                </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="saveNewMistake()" data-dismiss="modal">Shrani</button>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-    <div id="mistakesList"class="list-group">
-      <br>
-    </div>
-    <div class="modal fade" id="endMistakeModal" role="dialog">
-      <div class="modal-dialog">
-      
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Tekmovalec je odpravil napako</h4>
-          </div>
-          <div class="modal-body">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Datum:</label>
-                  <div class="col-sm-10">
-                    <input type="date" id="mistakeEndDate">
-                  </div>
-                </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="endMistake()" data-dismiss="modal">Shrani</button>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-  </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
 </body>
+
 
 <script>
 
@@ -181,25 +101,24 @@ var currentEndMistakeid;
 
 $(document).ready(function () {
 
-  //Get teamid from url as parameter
-  var url_string = window.location.href;
-  var url = new URL(url_string);
-  racerid = url.searchParams.get("racerid");
+    //Get teamid from url as parameter
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    racerid = url.searchParams.get("racerid");
 
-  getUser(function() {
-    checkIfRacerExists(racerid, function(exists) {
-      if(exists) {
-          //Load user data
-          loadRacer();
-          loadTrainings();
-          loadRaces();
-          loadMistakes();
-      } else {
-        navigateToNotFound();
-      }
+    getUser(function() {
+        checkIfRacerExists(racerid, function(exists) {
+            if(exists) {
+                //Load user data
+                loadRacer();
+                loadTrainings();
+                loadRaces();
+                loadMistakes();
+            } else {
+                navigateToNotFound();
+            }
+        });
     });
-  });
-  
 });
 
 function loadRacer() {
@@ -215,187 +134,130 @@ function loadRacer() {
     });
 }
 
+function newRaceApperanceButtonClicked() {
+  navigateToNewRaceApperance(racerid);
+}
+
 //This function loads the trainings in the page
 function loadTrainings() {
-  trainings = [];
-  $.get("/racer/trainings/apperances", {id: racerid}, function(apperances) {
-    var trainingsLabel = document.getElementById("trainingsLabel");
-    trainingsLabel.innerHTML = "Treningi(" + apperances.length + ")";
+    trainings = [];
+    $.get("/racer/trainings/apperances", {id: racerid}, function(apperances) {
+        var trainingsLabel = document.getElementById("trainingsLabel");
+        trainingsLabel.innerHTML = "Treningi(" + apperances.length + ")";
 
-    apperances.forEach(apperance => {
-      $.get("/training/data", {id: apperance.trainingid}, function(data) {
-        trainings.push(data);
-        displayTrainings();
-      });
+        apperances.forEach(apperance => {
+            $.get("/training/data", {id: apperance.trainingid}, function(data) {
+                trainings.push(data);
+                displayTrainings();
+            });
+        });
     });
-  });
 }
 
 function loadRaces() {
-  $.get("/racer/races/apperances", {id: racerid}, function(apperancesArray) {
-    apperances = apperancesArray;
-    var racesApperancesLabel = document.getElementById("racesApperancesLabel");
-    racesApperancesLabel.innerHTML = "Tekme(" + apperances.length + ")";
-    
-    races = [];
-    apperances.forEach(apperance => {
-      $.get("/race/data", {id: apperance.raceid}, function(data) {
-        races.push(data);
-        displayRaces();
-      });
+    $.get("/racer/races/apperances", {id: racerid}, function(apperancesArray) {
+        apperances = apperancesArray;
+        var racesApperancesLabel = document.getElementById("racesApperancesLabel");
+        racesApperancesLabel.innerHTML = "Tekme(" + apperances.length + ")";
+        
+        races = [];
+        apperances.forEach(apperance => {
+            $.get("/race/data", {id: apperance.raceid}, function(data) {
+                races.push(data);
+                displayRaces();
+            });
+        });
     });
-  });
 }
 
 function displayTrainings() {
-  var trainingsList = document.getElementById("trainingsList");
-  trainingsList.innerHTML = "<br>";
-  trainings.forEach(training => {
-      trainingsList.innerHTML += '<a id="listItem' + training.id + '" class="clearfix list-group-item">\
-          <h2 class="list-group-item-heading"> ' + training.name + ' </h2>\
-          <h4 class="list-group-item-text">' + training.location + ' - ' + parseDate(training.startdate) + '</h4> \
-        </a>\
-        <br>';
-  });
+    var trainingsList = document.getElementById("trainingsList");
+    trainingsList.innerHTML = "<br>";
+    trainings.forEach(training => {
+        trainingsList.innerHTML += '<div class="card"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title">' + training.name + '</h4> \
+                            <p class="card-text">' + training.location + ' - ' + parseDate(training.date) + '</p> \
+                            <button class="btn btn-danger" type="button" onclick="removeTrainingApperance(' + training.id + ')">Izbriši prisotnost</button> \
+                            </div> \
+                    </div>';
+    });
 }
 function displayRaces() {
-  var racesApperancesList = document.getElementById("racesApperancesList");
-  racesApperancesList.innerHTML = "<br>";
-  races.forEach(race => {
-    var apperancesOfRacer = apperances.filter(function(apperance) {
-      return apperance.raceid == race.id;
+    var racesApperancesList = document.getElementById("racesApperancesList");
+    racesApperancesList.innerHTML = "<br>";
+    races.forEach(race => {
+        var apperancesOfRacer = apperances.filter(function(apperance) {
+            return apperance.raceid == race.id;
+        });
+        var apperanceOfRacer = apperancesOfRacer[0];
+        var placemenetText = (apperanceOfRacer.placementtype == 1) ? apperanceOfRacer.placement : parsePlacementTypeToText(apperanceOfRacer.placementType);
+        racesApperancesList.innerHTML += '<div class="card" id="listItem' + race.id + '"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title">' + race.name + '</h4> \
+                            <p class="card-text">' + placemenetText + '. mesto</p> \
+                            <p class="card-text">' + race.location + ' - ' + parseDate(race.date) + '</p> \
+                            <button class="btn btn-danger" type="button" onclick="removeRaceApperance(' + apperanceOfRacer.id + ')">Izbriši udeležbo</button> \
+                            </div> \
+                    </div>';
     });
-    var apperanceOfRacer = apperancesOfRacer[0];
-    var placemenetText = (apperanceOfRacer.placementtype == 1) ? apperanceOfRacer.placement : parsePlacementTypeToText(apperanceOfRacer.placementType);
-    racesApperancesList.innerHTML += '<a id="listItem' + race.id + '" class="clearfix list-group-item">\
-          <h2 class="list-group-item-heading"> ' + race.name + ' </h2>\
-          <h4 class="list-group-item-text">' + placemenetText + '. mesto</h4> \
-          <h4 class="list-group-item-text">' + race.location + ' - ' + parseDate(race.date) + '</h4> \
-        </a>\
-        <br>';
-  });
 }
 
 function loadMistakes() {
-  $.get("/racer/mistakes", {id: racerid}, function(mistakesArray) {
-    mistakes = mistakesArray;
-    displayMistakes();
-  });
+    $.get("/racer/mistakes", {id: racerid}, function(mistakesArray) {
+        mistakes = mistakesArray;
+        displayMistakes();
+    });
 }
 
 function displayMistakes() {
-  
-  var misatkesLabel = document.getElementById("misatkesLabel");
-  misatkesLabel.innerHTML = "Tehnične napake(" + mistakes.length + ")";
-  var mistakesList = document.getElementById("mistakesList");
-  mistakesList.innerHTML = "<br>";
-  
-  mistakes.forEach(mistake => {
-    mistakesList.innerHTML += '<a id="listItem' + mistake.id + '" ' + (mistake.enddate ? "" : ('data-toggle="modal" data-target="#endMistakeModal" onclick="endMistakeClicked(' + mistake.id + ')"')) + ' \
-          class="clearfix list-group-item">\
-          <h2 class="list-group-item-heading"> ' + mistake.name + ' </h2>\
-          <span class="pull-right"> \
-            <button type="button" class="btn btn-danger" onclick="removeMistake(' + mistake.id + '); event.stopPropagation();">Zbriši</button>\
-            </span>\
-          <h4 class="list-group-item-text"> Start: ' + parseDate(mistake.creationdate) + '</h4> \
-          <h4 class="list-group-item-text"> Konec: ' + (mistake.enddate ? parseDate(mistake.enddate) : "Napaka ni bila še odpravljena") + '</h4> \
-        </a>\
-        <br>';
-  });
+    
+    var misatkesLabel = document.getElementById("misatkesLabel");
+    misatkesLabel.innerHTML = "Tehnične napake(" + mistakes.length + ")";
+    var mistakesList = document.getElementById("mistakesList");
+    mistakesList.innerHTML = "<br>";
+    
+    mistakes.forEach(mistake => {
+        mistakesList.innerHTML += '<div class="card" id="listItem' + mistake.id + '"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title">' + mistake.name + '</h4> \
+                            <p class="card-text">Start: ' + parseDate(mistake.creationdate) + '</p> \
+                            <p class="card-text">Konec: ' + (mistake.enddate ? parseDate(mistake.enddate) : "Napaka ni bila še odpravljena") + '</p> \
+                            <button class="btn btn-secondary" type="button" onclick="editMistake(' + mistake.id + ')">Uredi</button> \
+                            <button class="btn btn-danger" type="button" onclick="removeMistake(' + mistake.id + ')">Izbriši</button> \
+                            </div> \
+                    </div>';
+    });
 }
 
-
-
-function saveNewMistake() {
-  var mistakeName = document.getElementById("mistakeName").value;
-  var mistakeStartDate = document.getElementById("mistakeStartDate").value;
-  
-  document.getElementById("mistakeName").value = "";
-  document.getElementById("mistakeStartDate").value = new Date();
-
-  //Check if data is missing
-  if(mistakeName == "") {
-    alert("Prosim izpopolni vse zazeljene podatke");
-    return;
-  }
-
-  //Post server save new team
-  $.post("/mistake/save", {name: mistakeName, startDate: mistakeStartDate, racerid:racerid}, function(err) {
-    if(err) {
-      alert(err);
-    } else {
-      loadMistakes();
-    }
-  });
-}
-
-function removeMistake(mistakeid) {
-  $.post("/mistake/delete", {id: mistakeid}, function(err){
+function removeRaceApperance(apperanceid) {
+  $.post("/raceApperance/delete", {id: apperanceid}, function(err){
       if(err){
           alert(err);
       } else {
-          loadMistakes();
+          loadRaces();
       }
   });
 }
 
-function newMistakeButtonClicked() {
-  document.getElementById("mistakeStartDate").value = new Date().toDateInputValue();
+function editMistake(mistakeid) {
+    navigateToNewMistake(mistakeid);
 }
 
-function endMistake() {
-  var mistakeEndDate = document.getElementById("mistakeEndDate").value;
-
-  console.log(currentEndMistakeid + " " + mistakeEndDate);
-
-  $.post("/mistake/addEndDate", {id: currentEndMistakeid, endDate: mistakeEndDate}, function(err) {
-    if(err) {
-      alert(err);
-    } else {
-      loadMistakes();
-    }
-  });
-
-  currentEndMistakeid = null;
-}
-function endMistakeClicked(mistakeid) {
-  currentEndMistakeid = mistakeid;
-}
-
-function newRaceApperanceButtonClicked() {
-  var selectRace = document.getElementById("selectRace");
-  selectRace.options = [];
-
-  $.get("/team/races", {id: racer.teamid}, function(races){
-    races.forEach(race => {
-      selectRace.options[selectRace.options.length] = new Option(race.name, race.id);
+function removeMistake(mistakeid) {
+    $.post("/mistake/delete", {id: mistakeid}, function(err){
+        if(err){
+            alert(err);
+        } else {
+            loadMistakes();
+        }
     });
-  })
 }
 
-function typeOfRacePlacementChanged() {
-  var selectPlacementType = document.getElementById("racePlacementType");
-  document.getElementById("racePlacementFormGroup").hidden = selectPlacementType.options[selectPlacementType.selectedIndex].value != 1;
-}
-
-function saveNewRaceApperance() {
-  var raceid = document.getElementById("selectRace").options[document.getElementById("selectRace").selectedIndex].value;
-  var racePlacementType = document.getElementById("racePlacementType").options[document.getElementById("racePlacementType").selectedIndex].value;
-  var racePlacement = document.getElementById("racePlacement").value;
-  
-  document.getElementById("selectRace").selectedIndex = 0;
-  document.getElementById("racePlacementType").selectedIndex = 0;
-  document.getElementById("racePlacement").value = "";
-
-  //Post server save new team
-  $.post("/raceApperance/save", {raceid: raceid, racerid: racerid, placement: racePlacement, placementType: racePlacementType}, function(err) {
-    if(err) {
-      alert(err);
-    } else {
-      loadRaces();
-    }
-  });
+function newMistakeButtonClicked() {
+    navigateToNewMistake(racerid);
 }
 
 </script>
+
 </html>

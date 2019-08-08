@@ -5,22 +5,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>About Us - Brand</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
-    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="assets/fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
-    <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
 </head>
 
 <body>
     <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
-        <div class="container"><a class="navbar-brand logo" href="#">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="container"><a class="navbar-brand logo" href="./home.html">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse"
                 id="navcol-1">
                 <ul class="nav navbar-nav ml-auto">
-                    <li class="nav-item" role="presentation"><a class="nav-link active" href="account.html">Skupine</a></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="team.html">Account</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="./teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./account.html">Account</a></li>
                 </ul>
             </div>
         </div>
@@ -30,10 +30,11 @@
             <div class="container">
                 <h2 class="text-info">Account</h2>
                 <ul class="list-group">
-                    <li class="list-group-item"><span>List Group Item 1</span></li>
-                    <li class="list-group-item"><span>List Group Item 2</span></li>
-                    <li class="list-group-item"><span>List Group Item 3</span></li>
-                </ul><button class="btn btn-danger" type="button">Log Out</button></div>
+                    <li class="list-group-item"><span id="fullname">List Group Item 1</span></li>
+                    <li class="list-group-item"><span id="email">List Group Item 2</span></li>
+                    <li class="list-group-item"><span id="teamsCount">List Group Item 3</span></li>
+                    <li class="list-group-item"><span id="trainingsCount">List Group Item 2</span></li>
+                </ul><button class="btn btn-danger" type="button" onclick="logOut()">Log Out</button></div>
         </section>
     </main>
     <footer class="page-footer dark">
@@ -41,10 +42,47 @@
             <p>Matej Kalc © 2019</p>
         </div>
     </footer>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
-    <script src="assets/js/script.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
 </body>
+
+
+<script>
+
+//This functions runs every time the document loads
+$(document).ready(function () {
+    getUser(function() {
+        //Load user data into view
+        loadUserData();
+    });
+    
+});
+
+//This function loads user data
+function loadUserData() {
+    var fullname = document.getElementById("fullname");
+    fullname.innerHTML = user.firstname + " " + user.lastname;
+    var email = document.getElementById("email");
+    email.innerHTML = "Email: "+ user.email;
+
+    $.get("/user/teams", function(teams) {
+        var teamsCount = document.getElementById("teamsCount");
+        teamsCount.innerHTML = "Teams: " + teams.length;
+    });
+    $.get("/user/trainings", function(trainings) {
+        var trainingsCount = document.getElementById("trainingsCount");
+        trainingsCount.innerHTML = "Trainings: " + trainings.length;
+    });
+}
+//This function navigates to index.html and logs out the user
+function logOut() {
+    $.get("/user/logout");
+    window.location.href = "/";
+}
+
+</script>
 
 </html>

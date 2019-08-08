@@ -43,6 +43,7 @@ var racerRouter =  require('./routes/racer');
 var mistakeRouter =  require('./routes/mistake');
 var raceRouter =  require('./routes/race');
 var raceApperanceRouter =  require('./routes/raceApperance');
+var trainingApperanceRouter =  require('./routes/trainingApperance');
 
 //App uses expressSession to store session data
 app.use(
@@ -70,6 +71,7 @@ app.use('/racer', racerRouter);
 app.use('/mistake', mistakeRouter);
 app.use('/race', raceRouter);
 app.use('/raceApperance', raceApperanceRouter);
+app.use('/trainingApperance', trainingApperanceRouter);
 
 
 module.exports = app;

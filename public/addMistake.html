@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Contact Us - Brand</title>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="./home.html">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./account.html">Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page contact-us-page">
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <h2 class="text-center text-info">Napaka tekmovalca</h2>
+                <form>
+                    <div class="form-group"><label>Naziv</label><input class="form-control" type="text" id="mistakeName"></div>
+                    <div class="form-group"><label>Začetek</label><input class="form-control" type="date" id="mistakeStartDate"></div>
+                    <div class="form-group"><label>Konec</label><input class="form-control" type="date" id="mistakeEndDate"></div>
+                    <div class="form-group"><input class="btn btn-success btn-block" type="button" value="Shrani" onclick="saveNewMistake()"></div>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
+        </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
+</body>
+
+<script>
+
+var racerid;
+var canSave = false;
+
+$(document).ready(function () {
+
+    //Get teamid from url as parameter
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    racerid = url.searchParams.get("racerid");
+    document.getElementById("mistakeStartDate").value = new Date().toDateInputValue();
+
+    getUser(function() {
+        checkIfRacerExists(racerid, function(exists) {
+            if(exists) {
+                canSave = true;
+            } else {
+                navigateToNotFound();
+            }
+        });
+    });
+});
+
+function saveNewMistake() {
+    if(!canSave) {
+        return;
+    }
+
+    var mistakeName = document.getElementById("mistakeName").value;
+    var mistakeStartDate = document.getElementById("mistakeStartDate").value;
+    var mistakeEndDate = document.getElementById("mistakeEndDate").value;
+    
+    document.getElementById("mistakeName").value = "";
+
+    //Check if data is missing
+    if(mistakeName == "") {
+        alert("Prosim izpopolni vse zazeljene podatke");
+        return;
+    }
+
+    //Post server save new team
+    $.post("/mistake/save", {name: mistakeName, startDate: mistakeStartDate, endDate:mistakeEndDate, racerid:racerid}, function(err) {
+        if(err) {
+            alert(err);
+        } else {
+            navigateToRacer(racerid);
+        }
+    });
+}
+
+</script>
+
+</html>

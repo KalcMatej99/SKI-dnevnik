@@ -27,7 +27,7 @@ router.get("/data", function(req, res){
     clientDB.getTraining(id, req.session.user.id, function(err, training) {
         if(err) {
             console.log(err);
-            res.status(500).send(null);
+            res.send(null);
         } else {
             res.send(training);
         }

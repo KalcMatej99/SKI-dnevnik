@@ -8,6 +8,7 @@ get:
   /data - Sends user in session data
   /teams - Sends all teams data of user in session
   /trainings - Sends all trainings data of all teams of user in session
+  /races - Sends all races data of all teams of user in session
   /logout - Destroys session
 
 post:
@@ -65,18 +66,24 @@ router.get("/races", function(req, res) {
   var userid = req.session.user.id;
   var races = [];
   clientDB.getTeamsOfUser(userid, req.session.user.id, function(err, teams) {
+    console.log(teams);
     if(err) {
       console.log(err);
       res.status(500).send(null);
     } else {
       var count = teams.length;
+      if(count == 0) {
+        res.send([]);
+        return;
+      }
       teams.forEach(team => {
-        clientDB.getRacesOfTeam(team.id, function(err, racesOfTeam) {
+        clientDB.getRacesOfTeam(team.id, req.session.user.id, function(err, racesOfTeam) {
+          console.log(racesOfTeam);
           if(err) {
             res.status(500).send(null);
           } else {
-            racesOfTeam.forEach( tr => {
-              races.push(tr);
+            racesOfTeam.forEach( rT => {
+              races.push(rT);
             });
             count -= 1;
             if(count == 0) {
