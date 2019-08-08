@@ -7,6 +7,8 @@ var router = express.Router();
 get:
   /data(body: id) - Sends racer data
   /mistakes(body: id) - Sends all racers misatkes (open and closed)
+  /trainings/apperances(body:id)
+  /races/apperances(body:id)
 
 post:
   /save(body: firstname, lastname, gender, birth, description, teamid) - Saves racer, sends error if occures

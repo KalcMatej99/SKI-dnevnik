@@ -7,46 +7,60 @@
 
 -->
 
-
 <!DOCTYPE html>
-<head lang="en">
-    <title>SKI Dnevnik</title>
+<html>
+
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - SKIDNEVNIK</title>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
     <link type="text/css" href='../fullcalendar/packages/core/main.css' rel='stylesheet' />
     <link type="text/css" href='../fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="#">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="account.html">Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page landing-page">
+        <section class="clean-block clean-info dark">
+            <div class="container">
+              <h1>Koledar</h1>
+                <form>
+                    <input type="checkbox" onclick="showTrainingsAndRacesChecked()" id="showTrainings" checked> Prikaži treninge<br>
+                    <input type="checkbox" onclick="showTrainingsAndRacesChecked()" id="showRaces" checked> Prikaži tekme<br>
+                </form>
+                <br>
+                <div id='calendar'></div>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
+        </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
     <script src="./fullcalendar/packages/core/main.js"></script>
     <script src="./fullcalendar/packages/daygrid/main.js"></script>
-    <script src="./javascripts/base.js"></script>
-
-</head>
-<body style="background-size: cover;" onLoad = "onLoad()">
-  <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">SKI Dnevnik</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="home.html">Koledar</a></li>
-        <li><a href="teams.html">Skupine</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-          <li><a href="account.html"><span class="glyphicon glyphicon-user"></span> Account</a></li>
-        </ul>
-    </div>
-  </nav>
-  <div class="container">
-      <div class="row">
-          <form>
-            <input type="checkbox" onclick="showTrainingsAndRacesChecked()" id="showTrainings" checked> Prikaži treninge<br>
-            <input type="checkbox" onclick="showTrainingsAndRacesChecked()" id="showRaces" checked> Prikaži tekme<br>
-          </form>
-          <div id='calendar'></div>
-      </div>
-    </div>
 </body>
 
 <script>
@@ -56,74 +70,75 @@ var canLoadTrainings = true;
 var canLoadRaces = true;
 
 //This function is called every time the page appears
-function onLoad() {
-  //Get current user
-  getUser(function() {
-    //Prepare calendar
-    prepareCalendar();
 
-    //Load data in calendar
-    loadTrainingsAndRacesinCalendar();
-  });
-}
+$(document).ready(function () {
+    //Get current user
+    getUser(function() {
+        //Prepare calendar
+        prepareCalendar();
+
+        //Load data in calendar
+        loadTrainingsAndRacesinCalendar();
+    });
+});
 
 //This function prepares the calendar
 function prepareCalendar() {
-  var calendarEl = document.getElementById('calendar');
+    var calendarEl = document.getElementById('calendar');
 
-  calendar = new FullCalendar.Calendar(calendarEl, {
-    plugins: [ 'dayGrid' ]
-  });
+    calendar = new FullCalendar.Calendar(calendarEl, {
+        plugins: [ 'dayGrid' ]
+    });
 
-  calendar.render();
+    calendar.render();
 }
 
 //This function loads data (trainings and races) for the calendar
 function loadTrainingsAndRacesinCalendar() {
 
-  var events = calendar.getEvents();
-  var len = events.length;
-  for (var i = 0; i < len; i++) { 
-    events[i].remove(); 
-  } 
+    var events = calendar.getEvents();
+    var len = events.length;
+    for (var i = 0; i < len; i++) { 
+        events[i].remove(); 
+    } 
 
-  if(canLoadTrainings) {
+    if(canLoadTrainings) {
     $.get("/user/trainings", function(trainings) {
 
-      trainings.forEach(training => {
+        trainings.forEach(training => {
         var event = {
                 title: training.name,
                 start: training.startdate,
                 end: training.endate,
                 url: '/training.html?trainingid=' + training.id
-              };
+                };
         calendar.addEvent(event);
-      });
+        });
 
     });
-  }
-  
-  if(canLoadRaces) {
+    }
+    
+    if(canLoadRaces) {
     $.get("/user/races", function(races) {
 
-      races.forEach(race => {
+        races.forEach(race => {
         var event = {
                 title: race.name,
                 start: race.date,
                 url: '/race.html?raceid=' + race.id
-              };
+                };
         calendar.addEvent(event);
-      });
+        });
     });
-  }
+    }
 }
 
 function showTrainingsAndRacesChecked() {
-  var isCheckedTr = document.getElementById("showTrainings").checked;
-  canLoadTrainings = isCheckedTr;
-  var isCheckedRc = document.getElementById("showRaces").checked;
-  canLoadRaces = isCheckedRc;
-  loadTrainingsAndRacesinCalendar();
+    var isCheckedTr = document.getElementById("showTrainings").checked;
+    canLoadTrainings = isCheckedTr;
+    var isCheckedRc = document.getElementById("showRaces").checked;
+    canLoadRaces = isCheckedRc;
+    loadTrainingsAndRacesinCalendar();
 }
 
 </script>

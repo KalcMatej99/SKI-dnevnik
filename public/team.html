@@ -6,320 +6,81 @@
   It can navigate to home.html, account.html and teams.html.
 
 -->
-
 <!DOCTYPE html>
-<head lang="en">
-    <title>SKI Dnevnik</title>
+<html>
+
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="./javascripts/base.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>TEAM - SKIDNEVNIK</title>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
 </head>
-<body style="background-size: cover;">
-  <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <a class="navbar-brand" href="#">SKI Dnevnik</a>
-      </div>
-      <ul class="nav navbar-nav">
-        <li><a href="home.html">Koledar</a></li>
-        <li class="active"><a href="teams.html">Skupine</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-          <li><a href="account.html"><span class="glyphicon glyphicon-user"></span> Account</a></li>
-        </ul>
-    </div>
-  </nav>
-  <div class="container">
-    <h1 id="teamName">Ime skupine</h1>
-    <h3 id="racersLabel">Tekmovalci</h3>
-    <div class="row">
-      <button onclick="newRacerButtonClicked()" data-toggle="modal" data-target="#newRacerModal"
-      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
-    </div>
-    <div class="modal fade" id="newRacerModal" role="dialog">
-      <div class="modal-dialog">
-      
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Nov tekmovalec</h4>
-          </div>
-          <div class="modal-body">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="team">Ime tekmovalca:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="racerFirstname">
-                  </div>
-                </div>
-                <br>
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="team">Priimek tekmovalca:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="racerLastname">
-                  </div>
-                </div>
-                <br>
-                <div class="form-group">
-                    <label class="control-label col-sm-2">Spol:</label>
-                    <div class="col-sm-10">
-                      <select id="racerGender">
-                        <option value="1">M</option>
-                        <option value="2">F</option>
-                      </select>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="./home.html">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link active" href="./account.html">Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page contact-us-page">
+        <div class="container">
+            <h1 id="teamName">Skupina</h1>
+        </div>
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="d-inline-block" id="racersLabel">Tekmovalci</h2>
                     </div>
-                  </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Datum rojstva:</label>
-                  <div class="col-sm-10">
-                    <input type="date" id="racerBirth">
-                  </div>
+                    <div class="col d-flex align-items-center"><button class="btn btn-primary d-inline-block d-xl-flex flex-row justify-content-xl-center" type="button" onclick="navigateToNewRacerOfTeam()">+</button></div>
                 </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Opis:</label>
-                  <div class="col-sm-10">
-                    <textarea rows="4" cols="50" id="racerDescription" placeholder="Napisi napake tekmovalca, opis je opcijski"></textarea>
-                  </div>
-                </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="saveNewRacer()" data-dismiss="modal">Shrani</button>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-    <div id="racersList"class="list-group">
-      <br>
-    </div>
-    <h3 id="trainingsLabel">Treningi</h3>
-    <div class="row">
-      <button onclick="newTrainingButtonClicked()" data-toggle="modal" data-target="#newTrainingModal"
-      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
-    </div>
-    <div class="modal fade" id="newTrainingModal" role="dialog">
-      <div class="modal-dialog">
-      
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Nov trening</h4>
-          </div>
-          <div class="modal-body">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="team">Ime treninga:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="trainingName" name="trainingName">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Disciplina:</label>
-                  <div class="col-sm-10">
-                    <select id="trainingDiscipline">
-                      <option value="1">Slalom</option>
-                      <option value="2">Veleslalom</option>
-                      <option value="3">SuperG</option>
-                      <option value="4">Smuk</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Lokacija:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="trainingLocation" placeholder="" name="trainingLocation">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Ura začetka:</label>
-                  <div class="col-sm-10">
-                    <input type="datetime-local" name="trainingStartDate" id="trainingStartDate">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Ura konca:</label>
-                  <div class="col-sm-10">
-                    <input type="datetime-local" name="trainingEndDate" id="trainingEndDate">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Temperatura:</label>
-                  <div class="col-sm-10">
-                    <input type="number" class="form-control" id="trainingTemperature" value="0" name="trainingTemperature">
-                    °C</div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Vreme:</label>
-                  <div class="col-sm-10">
-                    <select id="trainingWeather">
-                      <option value="1">Sončno</option>
-                      <option value="2">Oblačno</option>
-                      <option value="3">Deževno</option>
-                      <option value="4">Vetrovno</option>
-                      <option value="5">Snežno</option>
-                      <option value="6">Megleno</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Tip:</label>
-                  <div class="col-sm-10">
-                    <select id="trainingType" onchange="typeOfTrainingChanged()">
-                      <option value="1">Prosto</option>
-                      <option value="2">Postavitve</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group" hidden="true" id="formGroupNumberofTracks">
-                  <label class="control-label col-sm-2">Št vrat:</label>
-                  <div class="col-sm-10">
-                      <input type="number" class="form-control" id="trainingNumberOfSkiGates" value="0">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Št prog:</label>
-                  <div class="col-sm-10">
-                      <input type="number" class="form-control" id="trainingNumberOfTracks" value="0">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Opis:</label>
-                  <div class="col-sm-10">
-                    <textarea rows="4" cols="50" id="trainingDescription"></textarea>
-                  </div>
-                </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#newTrainingPresenceModal" onclick="nextbuttonNewTrainingClicked()" data-dismiss="modal">Naprej</button>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-    <div id="trainingsList"class="list-group">
-      <br>
-    </div>
-    <div class="modal fade" id="newTrainingPresenceModal" role="dialog">
-        <div class="modal-dialog">
-        
-          <!-- Modal content-->
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Nov trening</h4>
+                <div class="card-group" id="racersList"></div>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div id="racersPresenceList"class="list-group">
-                        <a class="list-group-item">
-                          <input type="checkbox"> Matej <br>
-                        </a>
+        </section>
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="d-inline-block" id="trainingsLabel">Treningi</h2>
                     </div>
-                </form>
+                    <div class="col d-flex align-items-center"><button class="btn btn-primary d-inline-block d-xl-flex flex-row justify-content-xl-center" type="button" onclick="navigateToNewTrainingOfTeam()">+</button></div>
+                </div>
+                <div class="card-group" id="trainingsList"></div>
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" onclick="saveNewTraining()" data-dismiss="modal">Shrani</button>
+        </section>
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="d-inline-block" id="racesLabel">Tekme</h2>
+                    </div>
+                    <div class="col d-flex align-items-center"><button class="btn btn-primary d-inline-block float-right d-xl-flex flex-row justify-content-xl-end align-items-xl-center" type="button" onclick="navigateToNewRaceOfTeam()">+</button></div>
+                </div>
+                <div class="card-group" id="racesList"></div>
             </div>
-          </div>
-          
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
         </div>
-      </div>
-    <h3 id="racesLabel">Tekme</h3>
-    <div class="row">
-      <button onclick="newRaceButtonClicked()" data-toggle="modal" data-target="#newRaceModal"
-      class="col-sm-1 btn btn-primary" style="margin-right: 10px; margin-left: 10px">+</button>
-    </div>
-    <div class="modal fade" id="newRaceModal" role="dialog">
-      <div class="modal-dialog">
-      
-        <!-- Modal content-->
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Nova tekma</h4>
-          </div>
-          <div class="modal-body">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="control-label col-sm-2" for="team">Ime tekme:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="raceName" name="raceName">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Disciplina:</label>
-                  <div class="col-sm-10">
-                    <select id="raceDiscipline">
-                      <option value="1">Slalom</option>
-                      <option value="2">Veleslalom</option>
-                      <option value="3">SuperG</option>
-                      <option value="4">Smuk</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Lokacija:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="raceLocation" placeholder="" name="raceLocation">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Datum:</label>
-                  <div class="col-sm-10">
-                    <input type="date" id="raceDate">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Temperatura:</label>
-                  <div class="col-sm-10">
-                    <input type="number" class="form-control" id="raceTemperature" value="0" name="raceTemperature">
-                    °C</div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Vreme:</label>
-                  <div class="col-sm-10">
-                    <select id="raceWeather">
-                      <option value="1">Sončno</option>
-                      <option value="2">Oblačno</option>
-                      <option value="3">Deževno</option>
-                      <option value="4">Vetrovno</option>
-                      <option value="5">Snežno</option>
-                      <option value="6">Megleno</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="form-group" hidden="true" id="formGroupNumberofTracks">
-                  <label class="control-label col-sm-2">Št vrat:</label>
-                  <div class="col-sm-10">
-                      <input type="number" class="form-control" id="raceNumberOfSkiGates" value="0">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="control-label col-sm-2">Opis:</label>
-                  <div class="col-sm-10">
-                    <textarea rows="4" cols="50" id="raceDescription"></textarea>
-                  </div>
-                </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" onclick="saveNewRace()" data-dismiss="modal">Shrani</button>
-          </div>
-        </div>
-        
-      </div>
-    </div>
-    <div id="racesList"class="list-group">
-      <br>
-    </div>
-  </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
 </body>
 
 <script>
@@ -335,30 +96,31 @@ $(document).ready(function () {
   var url = new URL(url_string);
   teamid = url.searchParams.get("teamid");
 
-  checkIfTeamExists(teamid, function(exists) {
-    if(exists) {
-      getUser(function() {
-        //Load user data
-        loadTrainings();
-        loadRacers();
-        loadNumberOfRacers();
-        loadRaces();
-      });
-    } else {
-      navigateToNotFound();
-    }
-    
+  getUser(function() {
+    checkIfTeamExists(teamid, function(exists) {
+      if(exists) {
+          //Load user data
+          loadTrainings();
+          loadRacers();
+          loadTemaData();
+          loadRaces();
+      } else {
+        navigateToNotFound();
+      }
+    });
   });
 });
 
+function navigateToNewRacerOfTeam() {
+  navigateToNewRacer(teamid);
+}
 
+function navigateToNewRaceOfTeam() {
+  navigateToNewRace(teamid);
+}
 
-//This function loads the trainings in the page
-function loadTrainings() {
-  $.get("/team/trainings", {id: teamid}, function(trainingsArray) {
-    trainings = trainingsArray;
-    displayTrainings();
-  });
+function navigateToNewTrainingOfTeam() {
+  navigateToNewTraining(teamid);
 }
 
 function displayTrainings() {
@@ -367,20 +129,18 @@ function displayTrainings() {
   var trainingsList = document.getElementById("trainingsList");
   trainingsList.innerHTML = "<br>";
   trainings.forEach(training => {
-      trainingsList.innerHTML += '<a id="listItem' + training.id + '" href="#" onclick="navigateToTraining(' + training.id + ')" class="clearfix list-group-item">\
-          <h2 class="list-group-item-heading"> ' + training.name + ' </h2>\
-          <span class="pull-right"> \
-            <button type="button" class="btn btn-danger" onclick="removeTraining(' + training.id + '); event.stopPropagation();">Zbriši</button>\
-            </span>\
-          <h4 class="list-group-item-text">' + training.location + ' - ' + parseDate(training.startdate) + '</h4> \
-          <h4 class="list-group-item-text">' + training.description + '</h4> \
-        </a>\
-        <br>';
+        trainingsList.innerHTML += '<div class="card" id="listItem' + training.id + '"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title">' + training.name + '</h4> \
+                            <p class="card-text">' + training.location + ' - ' + parseDate(training.date) + '</p> \
+                            <button class="btn btn-secondary" type="button" onclick="navigateToTraining(' + training.id + ')">Odpri</button> \
+                            <button class="btn btn-danger" type="button" onclick="removeTraining(' + training.id + ')">Izbriši</button></div></div> \
+                    </div>';
   });
 }
 
-//This function writes the number of racers in the page
-function loadNumberOfRacers() {
+//This function loads data of the team
+function loadTemaData() {
   $.get("/team/data", {id: teamid}, function(data) {
     var teamName = document.getElementById("teamName");
     teamName.innerHTML = data["name"];
@@ -407,14 +167,6 @@ function removeRace(raceid) {
     });
 }
 
-function removeAllTrainings(trainings) {
-    trainings.forEach(training => {
-        removeTraining(training.id);
-    });
-    trainings = [];
-    displayTrainings();
-}
-
 function removeTraining(trainingid) {
   $.post("/training/delete", {id: trainingid}, function(err){
     if(err){
@@ -422,82 +174,6 @@ function removeTraining(trainingid) {
       return;
     } else {
       loadTrainings();
-    }
-  });
-}
-
-//This function saves new trainings in db and displays them
-function saveNewTraining() {
-  var trainingName = document.getElementById("trainingName").value;
-  var trainingLocation = document.getElementById("trainingLocation").value;
-  var trainingStartDate = document.getElementById("trainingStartDate").value;
-  var trainingEndDate = document.getElementById("trainingEndDate").value;
-  var trainingTemperature = document.getElementById("trainingTemperature").value;
-  var trainingWeather = document.getElementById("trainingWeather").options[document.getElementById("trainingWeather").selectedIndex].value;
-  var trainingDescription = document.getElementById("trainingDescription").value;
-  var trainingType = document.getElementById("trainingType").options[document.getElementById("trainingType").selectedIndex].value;
-  var trainingNumberOfTracks = document.getElementById("trainingNumberOfTracks").value;
-  var trainingNumberOfSkiGates = document.getElementById("trainingNumberOfSkiGates").value;
-  var trainingType = document.getElementById("trainingDiscipline").options[document.getElementById("trainingDiscipline").selectedIndex].value;
-  
-  document.getElementById("trainingName").value = "";
-  document.getElementById("trainingLocation").value = "";
-  document.getElementById("trainingStartDate").value = new Date();
-  document.getElementById("trainingEndDate").value = new Date();
-  document.getElementById("trainingTemperature").value = 0;
-  document.getElementById("trainingWeather").selectedIndex = 0;
-  document.getElementById("trainingDescription").value = "";
-  document.getElementById("trainingDiscipline").selectedIndex = 0;
-  document.getElementById("trainingNumberOfSkiGates").value = 0;
-  document.getElementById("trainingNumberOfTracks").value = 0;
-  document.getElementById("trainingType").selectedIndex = 0;
-
-  //Check if data is missing
-  if(trainingName == "" || trainingLocation == "") {
-    alert("Prosim izpopolni vse zazeljene podatke");
-    return;
-  }
-
-  //Post server save new team
-  $.post("/training/save", {name: trainingName, location: trainingLocation, startDate: trainingStartDate, endDate:trainingEndDate,
-    description: trainingDescription, teamid: teamid, weather:trainingWeather, type: trainingType, numberOfTracks: trainingNumberOfTracks,
-    numberOfSkiGates: trainingNumberOfSkiGates, temperature: trainingTemperature, presenceOfTraining: presenceOnNewTraining, numberOfElementsInPresenceOfTraining: presenceOnNewTraining.length}, function(err) {
-    if(err) {
-      alert(err);
-    } else {
-      //Load teams
-      loadTrainings();
-    }
-  });
-}
-
-function saveNewRacer() {
-  var racerFirstname = document.getElementById("racerFirstname").value;
-  var racerLastname = document.getElementById("racerLastname").value;
-  var racerBirth = document.getElementById("racerBirth").value;
-  var racerDescription = document.getElementById("racerDescription").value;
-  var racerGender = document.getElementById("racerGender").options[document.getElementById("racerGender").selectedIndex].name;
-  document.getElementById("racerFirstname").value = "";
-  document.getElementById("racerLastname").value = "";
-  document.getElementById("racerBirth").value = new Date();
-  document.getElementById("racerDescription").value = "";
-  document.getElementById("racerGender").selected = document.getElementById("racerGender").options[0];
-
-  //Check if data is missing
-  if(racerFirstname == "" || racerLastname == "" || racerBirth == "" || racerGender == "") {
-    alert("Prosim izpopolni vse zazeljene podatke");
-    return;
-  }
-
-  //Post server save new team
-  $.post("/racer/save", {firstname: racerFirstname, lastname: racerLastname, 
-    birth: racerBirth, description: racerDescription, 
-    gender: racerGender, teamid: teamid}, function(err) {
-    if(err) {
-      alert(err);
-    } else {
-      //Load teams
-      loadRacers();
     }
   });
 }
@@ -510,6 +186,14 @@ function loadRacers() {
   }); 
 }
 
+//This function loads the trainings in the page
+function loadTrainings() {
+  $.get("/team/trainings", {id: teamid}, function(trainingsArray) {
+    trainings = trainingsArray;
+    displayTrainings();
+  });
+}
+
 function displayRacers() {
   var racersLabel = document.getElementById("racersLabel");
   racersLabel.innerHTML = "Tekmovalci(" + racers.length + ")";
@@ -517,30 +201,14 @@ function displayRacers() {
   racersList.innerHTML = "<br>";
   racers.forEach(racer => {
     var gender = racer.gender == 1 ? "M" : "F";
-    racersList.innerHTML += '<a id="racersListItem' + racer.id + '" href="#" onclick="navigateToRacer(' + racer.id + ')" class="clearfix list-group-item">\
-          <h2 class="list-group-item-heading"> ' + racer.firstname + " " + racer.lastname + ' </h2>\
-          <span class="pull-right"> \
-            <button type="button" class="btn btn-danger" onclick="removeRacer(' + racer.id + '); event.stopPropagation();">Zbriši</button>\
-            </span>\
-          <h4 class="list-group-item-text">' + gender + ' - ' + parseDate(racer.birth) + '</h4> \
-          <h4 class="list-group-item-text">' + racer.description + '</h4> \
-        </a>\
-        <br>';
+    racersList.innerHTML += '<div class="card" id="racersListItem' + racer.id + '"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title">' + racer.firstname + " " + racer.lastname + '</h4> \
+                            <p class="card-text">' + gender + ' - ' + parseDate(racer.birth) + '</p> \
+                            <button class="btn btn-secondary" type="button" onclick="navigateToRacer(' + racer.id + ')">Odpri</button> \
+                            <button class="btn btn-danger" type="button" onclick="removeRacer(' + racer.id + ')">Izbriši</button></div></div> \
+                    </div>';
   });
-}
-
-function typeOfTrainingChanged() {
-  document.getElementById("formGroupNumberofTracks").hidden = (document.getElementById("trainingType").selectedIndex != 1);
-}
-
-function newTrainingButtonClicked() {
-  document.getElementById("trainingName").value = "Trening " + (trainings.length + 1);
-  document.getElementById("trainingStartDate").value = new Date().toJSON().slice(0,19);
-  document.getElementById("trainingEndDate").value = new Date().toJSON().slice(0,19);
-}
-
-function newRacerButtonClicked() {
-  document.getElementById("racerBirth").value = new Date().toDateInputValue();
 }
 
 function loadRaces() {
@@ -550,86 +218,22 @@ function loadRaces() {
   });
 }
 
-function newRaceButtonClicked() {
-  document.getElementById("raceName").value = "Tekma " + (races.length + 1);
-  document.getElementById("raceDate").value = new Date().toDateInputValue();
-}
-
 function displayRaces() {
   var racesLabel = document.getElementById("racesLabel");
   racesLabel.innerHTML = "Tekme(" + races.length + ")";
   var racesList = document.getElementById("racesList");
   racesList.innerHTML = "<br>";
   races.forEach(race => {
-      racesList.innerHTML += '<a id="listItem' + race.id + '" href="#" onclick="navigateToRace(' + race.id + ')" class="clearfix list-group-item">\
-          <h2 class="list-group-item-heading"> ' + race.name + ' </h2>\
-          <span class="pull-right"> \
-            <button type="button" class="btn btn-danger" onclick="removeRace(' + race.id + '); event.stopPropagation();">Zbriši</button>\
-            </span>\
-          <h4 class="list-group-item-text">' + (race.location ? (race.location + " - ") : "") + parseDate(race.date) + '</h4> \
-        </a>\
-        <br>';
-  });
-}
-
-function saveNewRace() {
-  var raceName = document.getElementById("raceName").value;
-  var raceLocation = document.getElementById("raceLocation").value;
-  var raceDate = document.getElementById("raceDate").value;
-  var raceTemperature = document.getElementById("raceTemperature").value;
-  var raceWeather = document.getElementById("raceWeather").options[document.getElementById("raceWeather").selectedIndex].value;
-  var raceDescription = document.getElementById("raceDescription").value;
-  var raceNumberOfSkiGates = document.getElementById("raceNumberOfSkiGates").value;
-  var raceDiscipline = document.getElementById("raceDiscipline").options[document.getElementById("raceDiscipline").selectedIndex].value;
-  
-  document.getElementById("raceName").value = "";
-  document.getElementById("raceLocation").value = "";
-  document.getElementById("raceDate").value = new Date();
-  document.getElementById("raceTemperature").value = 0;
-  document.getElementById("raceWeather").selectedIndex = 0;
-  document.getElementById("raceDescription").value = "";
-  document.getElementById("raceDiscipline").selectedIndex = 0;
-  document.getElementById("raceNumberOfSkiGates").value = 0;
-
-  //Check if data is missing
-  if(raceName == "") {
-    alert("Prosim izpopolni vse zazeljene podatke");
-    return;
-  }
-
-  //Post server save new team
-  $.post("/race/save", {name: raceName, location: raceLocation, date: raceDate, description: raceDescription, teamid: teamid, 
-    weather:raceWeather, numberOfSkiGates: raceNumberOfSkiGates, temperature: raceTemperature, discipline: raceDiscipline}, function(err) {
-    if(err) {
-      alert(err);
-    } else {
-      //Load teams
-      loadRaces();
-    }
-  });
-}
-
-var presenceOnNewTraining = [];
-
-function nextbuttonNewTrainingClicked() {
-  presenceOnNewTraining = [];
-  var racersList = document.getElementById("racersPresenceList");
-  racersList.innerHTML = "";
-  racers.forEach(racer => {
-    racersList.innerHTML += '<a class="list-group-item"> \
-                          <input type="checkbox" onclick="checkPresencesForNewTraining()" id="racerPresenceCheckboxId' + racer.id + '"> ' + racer.firstname + " " + racer.lastname + ' <br> \
-                        </a>';
-  });
-}
-
-function checkPresencesForNewTraining() {
-  presenceOnNewTraining = [];
-  racers.forEach(racer => {
-    if(document.getElementById("racerPresenceCheckboxId" + racer.id).checked) {
-      presenceOnNewTraining.push(racer.id);
-    }
+        racesList.innerHTML += '<div class="card" id="racersListItem' + race.id + '"> \
+                        <div class="card-body"> \
+                            <h4 class="card-title">' + race.name + '</h4> \
+                            <p class="card-text">' + (race.location ? (race.location + " - ") : "") + parseDate(race.date) + '</p> \
+                            <button class="btn btn-secondary" type="button" onclick="navigateToRace(' + race.id + ')">Odpri</button> \
+                            <button class="btn btn-danger" type="button" onclick="removeRace(' + race.id + ')">Izbriši</button></div></div> \
+                    </div>';
   });
 }
 
 </script>
+
 </html>

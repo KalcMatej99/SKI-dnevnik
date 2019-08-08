@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Contact Us - Brand</title>
+    
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="#">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="account.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="team.html">Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page contact-us-page">
+        <div class="container">
+            <h1>Trening</h1>
+            <h4>Ime skupine</h4>
+        </div>
+        <section>
+            <div class="container">
+                <ul class="list-group">
+                    <li class="list-group-item"><span id="trainingStartAndEndDate">Podatki 1</span></li>
+                    <li class="list-group-item"><span id="trainingTypeAndDiscipline">Podatki 2</span></li>
+                    <li class="list-group-item"><span id="trainingNumberOfTracks">Podatki 3</span></li>
+                    <li class="list-group-item"><span id="trainingNumberOfSkiGates">Podatki 3</span></li>
+                </ul>
+            </div>
+        </section>
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <h2 class="d-inline-block">Prisotni na treningu</h2>
+                <ul class="list-group"></ul>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
+        </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
+</body>
+
+
+<script>
+
+var teamid;
+var trainingid;
+var training;
+
+$(document).ready(function () {
+
+    //Get teamid from url as parameter
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    trainingid = url.searchParams.get("trainingid");
+
+    checkIfTrainingExists(trainingid, function(exists) {
+        if(exists) {
+            getUser(function() {
+            //Load user data
+            loadTraining();
+            loadTrainingApperances();
+            });
+        } else {
+            navigateToNotFound();
+        }
+    });
+});
+
+function loadTraining() {
+    $.get("/training/data", {id: trainingid}, function(data) {
+        training = data;
+
+        $.get("/team/data", {id: training.teamid}, function(data) {
+            document.getElementById("teamName").innerHTML = data.name;
+        });
+        
+        document.getElementById("trainingName").innerHTML = training.name;
+        var locWeathTempText = training.location;
+        if(training.weather) {
+            locWeathTempText += " - " + getWeatherStringFromIndex(training.weather);
+        }
+        if(training.temperature) {
+            locWeathTempText += " - " + training.temperature + "C";
+        }
+        document.getElementById("trainingLocation-Weather-Temperature").innerHTML = locWeathTempText;
+
+        document.getElementById("trainingStartAndEndDate").innerHTML = training.startdate + " - " + training.enddate;
+        document.getElementById("trainingTypeAndDiscipline").innerHTML = getTypeStringFromIndex(training.type) + " - " + getDisciplineStringFromIndex(training.discipline);
+        document.getElementById("trainingNumberOfTracks").innerHTML = "Število prog: " + (training.tracks ? training.tracks : "Ne znan podatek");
+        document.getElementById("trainingNumberOfSkiGates").innerHTML = "Število količkov: " + (training.skigates ? training.skigates : "Ne znan podatek");
+    });
+}
+
+function loadTrainingApperances() {
+    $.get("/training/apperances", {id: trainingid}, function(data) {
+        apperances = data;
+        var racersList = document.getElementById("racersList");
+        racersList.innerHTML = "";
+        
+        var racersLabel = document.getElementById("racersLabel");
+        racersLabel.innerHTML = "Prisotni na treningu(" + apperances.length + ")";
+
+        apperances.forEach(apperance => {
+            $.get("/racer/data", {id: apperance.racerid}, function(racer){
+                
+                racersList.innerHTML += '<li class="list-group-item"> \
+                            <div class="row"> \
+                                <div class="col"><span class="d-flex d-lg-flex" style="height: 30px;">' + racer.firstname + " " + racer.lastname + '</span></div> \
+                                <div class="col"><button class="btn btn-primary float-right d-lg-flex" type="button"  \
+                                onclick="removeTrainingApperance(' + apperance.id + ')">Izbriši prisotnost</button></div> \
+                            </div> \
+                        </li>';
+            });
+        });
+    });
+}
+
+function removeTrainingApperance(apperanceid) {
+    $.post("/trainingApperance/delete", {id: apperanceid}, function(err){
+      if(err){
+          alert(err);
+      } else {
+          loadRaces();
+      }
+    });
+}
+
+
+</script>
+
+</html>

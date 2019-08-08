@@ -23,6 +23,8 @@ function getUser(callback) {
             callback();
         });
     } else {
+        location.href = "/";
+        alert("Uporabnik ni bil najden");
         callback();
     }
 }
@@ -66,8 +68,8 @@ function getTypeStringFromIndex(index) {
 function parsePlacementTypeToText(type) {
     switch(type){
         case 1: return "FIN";
-        case 1: return "DNF";
-        case 1: return "DNS";
+        case 2: return "DNF";
+        case 3: return "DNS";
         default: return "Neznano";
     }
 }
@@ -152,3 +154,26 @@ function navigateToRacer(racerid) {
 function navigateToRace(raceid) {
     window.location.href = "race.html?raceid=" + raceid;
 }
+
+function navigateToNewRacer(teamid) {
+    window.location.href = "addRacer.html?teamid=" + teamid;
+}
+function navigateToNewRace(teamid) {
+    window.location.href = "addRace.html?teamid=" + teamid;
+}
+function navigateToNewTraining(teamid) {
+    window.location.href = "addTraining.html?teamid=" + teamid;
+}
+function navigateToNewMistake(racerid) {
+    window.location.href = "addMistake.html?racerid=" + racerid;
+}
+function navigateToNewRaceApperance(racerid) {
+    window.location.href = "addApperanceRace.html?racerid=" + racerid;
+}
+function navigateToNewTrainingApperance(racerid) {
+    window.location.href = "addApperanceTraining.html?racerid=" + racerid;
+}
+function navigateToTeam(teamid) {
+    window.location.href = "team.html?teamid=" + teamid;
+}
+

@@ -7,30 +7,86 @@
 
 -->
 <!DOCTYPE html>
-<head lang="en">
-    <title>SKI Dnevnik</title>
+<html>
+
+<head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>SKIDNEVNIK</title>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
 </head>
+
 <body>
-  <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="registration.html"><span class="glyphicon glyphicon-user"></span> Registracija</a></li>
-        <li><a href="login.html"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-      </ul>
-    </div>
-  </nav>
-  <div class="container">
-    <img src="./images/skidnevnik-logo.png" class="img-responsive center-block">
-      <h2 class="text-center">Dnevnik namenjen za trenerje in učitelje alpskega smučanja</h2>
-      </div>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="#">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="registration.html">Registracija</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="login.html">Log In</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page landing-page">
+        <section class="clean-block clean-hero" style="background-image:url(&quot;./images/tech/image4.jpg&quot;);color:rgba(9, 162, 255, 0.85);">
+            <div class="text"><img class="img-fluid" src="./images/skidnevnik-logo-white.png">
+                <p>Dnevnik namenjen za trenerje in učitelje alpskega smučanja.</p>
+            </div>
+        </section>
+        <section class="clean-block clean-info dark">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Info</h2>
+                    <p>Z aplikacijo je možno shraniti podatke o svojih smučarskih skupinah, tekmovalcev, tekem in treningov.</p>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-md-6"><img class="img-thumbnail" src="./images/victoire-joncheray-EF0UG0xFgnA-unsplash.jpg"></div>
+                    <div class="col-md-6">
+                        <h3>Postani Trener</h3>
+                        <div class="getting-started-info">
+                            <p></p>
+                        </div><button class="btn btn-primary btn-lg" type="button" onclick="window.location.href='registration.html'">Registracija</button></div>
+                </div>
+            </div>
+        </section>
+        <section class="clean-block about-us">
+            <div class="container">
+                <div class="block-heading">
+                    <h2 class="text-info">Kdo sem?</h2>
+                    <p></p>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-sm-6 col-lg-4">
+                        <div class="card clean-card text-center"><img class="card-img-top w-100 d-block" src="./images/matej_kalc_image_1.jpeg">
+                            <div class="card-body info">
+                                <h4 class="card-title">Matej Kalc</h4>
+                                <p class="card-text">Učitelj alpskega smučanja</p>
+                                <div class="icons">
+                                    <a href="https://www.facebook.com/matej.kalc.58"><i class="icon-social-facebook"></i></a>
+                                    <a href="https://www.linkedin.com/in/matej-kalc-8122b5164/?lipi=urn%3Ali%3Apage%3Ad_flagship3_search_srp_top%3BNdspYWcaTgS16uUFfmC5xg%3D%3D&licu=urn%3Ali%3Acontrol%3Ad_flagship3_search_srp_top-search_srp_result&lici=ZcoqobZ%2FSHyfCopkYY1c%2Fw%3D%3D"><i class="fa fa-linkedin"></i></a>
+                                    <a href="https://github.com/KalcMatej99?tab=repositories"><i class="icon-social-github"></i></a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
+        </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
 </body>
+
 </html>

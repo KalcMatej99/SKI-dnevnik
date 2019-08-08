@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Contact Us - Brand</title>
+    <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
+    <link rel="stylesheet" href="./fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/simple-line-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.css">
+    <link rel="stylesheet" href="./stylesheets/styles.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-white clean-navbar">
+        <div class="container"><a class="navbar-brand logo" href="./home.html">SKIDNEVNIK</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./teams.html">Skupine</a></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="./account.html">Account</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="page contact-us-page">
+        <div class="container">
+            <h1 id="raceName">Tekma</h1>
+        </div>
+        <section>
+            <div class="container">
+                <ul class="list-group">
+                    <li class="list-group-item"><span id="raceLocationAndDate"></span></li>
+                    <li class="list-group-item"><span id="raceWeatherAndTemperature"></span></li>
+                    <li class="list-group-item"><span id="raceDiscipline"></span></li>
+                    <li class="list-group-item"><span id="raceNumberOfSkiGates"></span></li>
+                </ul>
+            </div>
+        </section>
+        <section class="clean-block clean-form dark">
+            <div class="container">
+                <h2 class="d-inline-block" id="racersLabel">Prisotni na tekmi</h2>
+                <ul class="list-group" id="racersList"></ul>
+            </div>
+        </section>
+    </main>
+    <footer class="page-footer dark">
+        <div class="footer-copyright">
+            <p>Matej Kalc © 2019</p>
+        </div>
+    </footer>
+    <script src="./javascripts/jquery.min.js"></script>
+    <script src="./javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
+    <script src="./javascripts/script.min.js"></script>
+    <script src="./javascripts/base.js"></script>
+</body>
+
+
+<script>
+
+var teamid;
+var raceid;
+var race;
+
+$(document).ready(function () {
+
+    //Get teamid from url as parameter
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    raceid = url.searchParams.get("raceid");
+
+    getUser(function() {
+        checkIfRaceExists(raceid, function(exists) {
+            if(exists) {
+                //Load user data
+                loadRace();
+            } else {
+                navigateToNotFound();
+            }
+        });
+    });
+});
+
+function loadRace() {
+    $.get("/race/data", {id: raceid}, function(data) {
+        race = data;
+        
+        document.getElementById("raceName").innerHTML = race.name;
+        var locWeathTempText = "";
+        if(race.weather) {
+            locWeathTempText += getWeatherStringFromIndex(race.weather);
+        }
+        if(race.temperature) {
+            locWeathTempText += " - " + race.temperature + "°C";
+        }
+        document.getElementById("raceWeatherAndTemperature").innerHTML = locWeathTempText;
+        document.getElementById("raceLocationAndDate").innerHTML = race.location + " - " + parseDate(race.date);
+        document.getElementById("raceDiscipline").innerHTML = getDisciplineStringFromIndex(race.discipline);
+        document.getElementById("raceNumberOfSkiGates").innerHTML = "Število količkov: " + (race.skigates ? race.skigates : "Ne znan podatek");
+    });
+}
+
+function loadRacersApperances() {
+    $.get("/race/apperances", {id: raceid}, function(data) {
+        apperances = data;
+        var racersList = document.getElementById("racersList");
+        racersList.innerHTML = "";
+        
+        var racersLabel = document.getElementById("racersLabel");
+        racersLabel.innerHTML = "Prisotni na tekmi(" + apperances.length + ")";
+
+        apperances.forEach(apperance => {
+            $.get("/racer/data", {id: apperance.racerid}, function(racer){
+                racersList.innerHTML += '<li class="list-group-item"> \
+                        <div class="row"> \
+                            <div class="col"><span class="d-flex d-lg-flex" style="height: 30px;">' + racer.firstname + " " + racer.lastname + '</span> \
+                                <p>' + apperance.placementType + ((apperance.placementType == 1) ? (" - " + apperance.placement + ". mesto"): "" +'</p> \
+                            </div> \
+                            <div class="col"><button class="btn btn-danger float-right d-lg-flex" type="button">Izbriši udeležbo</button> \
+                                </div> \
+                        </div> \
+                    </li>';
+            });
+        });
+    });
+}
+
+function removeRaceApperance(apperanceid) {
+    $.post("/raceApperance/delete", {id: apperanceid}, function(err){
+        if(err){
+            alert(err);
+        } else {
+            loadRacersApperances();
+        }
+    });
+}
+
+</script>
+
+</html>

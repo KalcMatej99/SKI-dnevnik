@@ -12,23 +12,38 @@ router.get('/', function(req, res, next) {
   /race
 
 get:
-  /data(body: id) - Sends data of a specific training
+  /data(body: id) - Sends data of a specific race
+  /apperances(body: id) - Sends data of apperances of a specific race
 
 post:
-  /save(body: name, location, date, description, teamid, weather) - Saves new training, sends error if occures
-  /delete(body: id) - Delete the training from db, sends error if occures
+  /save(body: name, location, date, description, teamid, weather) - Saves new race, sends error if occures
+  /delete(body: id) - Delete the race from db, sends error if occures
 */
 
 router.get("/data", function(req, res){
 
     var id = req.query.id;
 
-    clientDB.getRace(id, req.session.user.id, function(err, training) {
+    clientDB.getRace(id, req.session.user.id, function(err, race) {
         if(err) {
             console.log(err);
             res.status(500).send(null);
         } else {
-            res.send(training);
+            res.send(race);
+        }
+    });
+});
+
+router.get("/apperances", function(req, res){
+
+    var id = req.query.id;
+
+    clientDB.getApperancesOfRace(id, req.session.user.id, function(err, apperances) {
+        if(err) {
+            console.log(err);
+            res.status(500).send(null);
+        } else {
+            res.send(apperances);
         }
     });
 });

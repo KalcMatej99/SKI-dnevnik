@@ -58,9 +58,17 @@ module.exports.getTeamsOfUser = function(userID, useridAccess, callback) {
 
 //This function callbacks team data
 module.exports.getTeam = function(teamid, useridAccess, callback) {
+  if(teamid == null) {
+    callback("Id is null", null);
+    return;
+  }
   
   client.query("SELECT * FROM public.team WHERE id = $1", [teamid])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -74,6 +82,11 @@ module.exports.getTeam = function(teamid, useridAccess, callback) {
 
 //This function callbacks all trainings of a specific team
 module.exports.getTrainingsOfTeam = function(teamID, useridAccess, callback) {
+
+  if(teamID == null) {
+    callback("Id is null", null);
+    return;
+  }
   
   client.query("SELECT * FROM public.training WHERE teamid = $1", [teamID])
   .then(res2 => {
@@ -90,28 +103,19 @@ module.exports.getTrainingsOfTeam = function(teamID, useridAccess, callback) {
   });
 };
 
-module.exports.getRacesOfTeam = function(teamID, useridAccess, callback) {
-  
-  client.query("SELECT * FROM public.race WHERE teamid = $1", [teamID])
-  .then(res2 => {
-    var objects = res2.rows;
-    objects.forEach(object => {
-      if(!checkIfAccessToData(object, useridAccess)) {
-        objects.splice(objects.indexOf(object), 1);
-      }
-    });
-    callback((objects.length == 0 && res2.rows.length > 0) ? "No access to data" : null, objects);
-    })
-  .catch(e => {
-    callback(e, null);
-  });
-};
-
-
 module.exports.getTraining = function(id, useridAccess, callback) {
+
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
   
   client.query("SELECT * FROM public.training WHERE id = $1", [id])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -125,8 +129,17 @@ module.exports.getTraining = function(id, useridAccess, callback) {
 
 module.exports.getRace = function(id, useridAccess, callback) {
   
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
   client.query("SELECT * FROM public.race WHERE id = $1", [id])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -140,8 +153,17 @@ module.exports.getRace = function(id, useridAccess, callback) {
 
 module.exports.getRacer = function(id, useridAccess, callback) {
   
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
   client.query("SELECT * FROM public.racer WHERE id = $1", [id])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -155,8 +177,17 @@ module.exports.getRacer = function(id, useridAccess, callback) {
 
 module.exports.getMistake = function(id, useridAccess, callback) {
   
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
   client.query("SELECT * FROM public.mistake WHERE id = $1", [id])
   .then(res2 => {
+    if(res2.rows.length == 0) {
+      callback(null, null);
+      return;
+    }
     if(checkIfAccessToData(res2.rows[0], useridAccess)){
       callback(null, res2.rows[0]);
     } else {
@@ -169,6 +200,12 @@ module.exports.getMistake = function(id, useridAccess, callback) {
 };
 
 module.exports.getRacersOfTeam = function(id, useridAccess, callback) {
+
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
   client.query("SELECT * FROM public.racer WHERE teamid = $1", [id])
   .then(res2 => {
     var objects = res2.rows;
@@ -185,9 +222,19 @@ module.exports.getRacersOfTeam = function(id, useridAccess, callback) {
 };
 
 module.exports.getRacesOfTeam = function(id, useridAccess, callback) {
+
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
   client.query("SELECT * FROM public.race WHERE teamid = $1", [id])
   .then(res2 => {
     var objects = res2.rows;
+    if(objects.length == 0) {
+      callback(null, []);
+      return;
+    }
     objects.forEach(object => {
       if(!checkIfAccessToData(object, useridAccess)) {
         objects.splice(objects.indexOf(object), 1);
@@ -196,11 +243,18 @@ module.exports.getRacesOfTeam = function(id, useridAccess, callback) {
     callback((objects.length == 0 && res2.rows.length > 0) ? "No access to data" : null, objects);
     })
   .catch(e => {
+    console.log(1);
     callback(e, null);
   });
 };
 
 module.exports.getMistakesOfRacer = function(id, useridAccess, callback) {
+
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
   client.query("SELECT * FROM public.mistake WHERE racerid = $1", [id])
   .then(res2 => {
     var objects = res2.rows;
@@ -217,6 +271,12 @@ module.exports.getMistakesOfRacer = function(id, useridAccess, callback) {
 };
 
 module.exports.getApperancesOfTraining = function(id, useridAccess, callback) {
+
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
   client.query("SELECT * FROM public.trainingapperance WHERE trainingid = $1", [id])
   .then(res2 => {
     var objects = res2.rows;
@@ -232,7 +292,35 @@ module.exports.getApperancesOfTraining = function(id, useridAccess, callback) {
   });
 };
 
+module.exports.getApperancesOfRace = function(id, useridAccess, callback) {
+
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
+  client.query("SELECT * FROM public.raceapperance WHERE raceid = $1", [id])
+  .then(res2 => {
+    var objects = res2.rows;
+    objects.forEach(object => {
+      if(!checkIfAccessToData(object, useridAccess)) {
+        objects.splice(objects.indexOf(object), 1);
+      }
+    });
+    callback((objects.length == 0 && res2.rows.length > 0) ? "No access to data" : null, objects);
+    })
+  .catch(e => {
+    callback(e, null);
+  });
+};
+
 module.exports.getTrainingApperancesOfRacer = function(id, useridAccess, callback) {
+
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
   client.query("SELECT * FROM public.trainingapperance WHERE racerid = $1", [id])
   .then(res2 => {
     var objects = res2.rows;
@@ -249,6 +337,12 @@ module.exports.getTrainingApperancesOfRacer = function(id, useridAccess, callbac
 };
 
 module.exports.getRaceApperancesOfRacer = function(id, useridAccess, callback) {
+
+  if(id == null) {
+    callback("Id is null", null);
+    return;
+  }
+
   client.query("SELECT * FROM public.raceapperance WHERE racerid = $1", [id])
   .then(res2 => {
     var objects = res2.rows;
