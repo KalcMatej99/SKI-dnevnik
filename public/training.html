@@ -38,6 +38,8 @@
         <div class="container">
             <h1 id="trainingName">Trening</h1>
             <h4 id="teamName">Ime skupine</h4>
+            <br>
+            <input type="button" class="btn btn-primary" value="Uredi" onclick="editTraining()">
         </div>
         <section>
             <div class="container">
@@ -158,6 +160,9 @@ function removeTrainingApperance(apperanceid) {
     });
 }
 
+function editTraining() {
+  navigateToEditTraining(trainingid);
+}
 
 </script>
 

@@ -94,6 +94,35 @@ router.post("/save", function(req, res){
     });
 });
 
+router.post("/update", function(req, res){
+    var id = req.body.id;
+    var name = req.body.name;
+    var location = req.body.location;
+    var date = req.body.date;
+    var description = req.body.description;
+    var teamid = req.body.teamid;
+    var weather = req.body.weather;
+    var temperature = req.body.temperature;
+    var type = req.body.type;
+    var discipline = req.body.discipline;
+    var numberOfTracks = req.body.numberOfTracks;
+    var numberOfSkiGates = req.body.numberOfSkiGates;
+    var isRacingTrack = req.body.isRacingTrack;
+
+    console.log(req.body);
+
+    clientDB.client.query("UPDATE public.training SET name=$1, location=$2, date=$3, description=$4, teamid=$5, temperature=$6, weather=$7, type=$8, \
+        discipline=$9, numberoftracks=$10, numberofskigates=$11, isracingtrack=$12 WHERE id=$13", [name, location, date, description, teamid,
+        temperature, weather, type, discipline, numberOfTracks, numberOfSkiGates, isRacingTrack, id])
+    .then(() => {
+        res.send(null);
+        res.end();   
+    }).catch(e => {
+        console.log(e);
+        res.sendStatus(500);
+    });
+});
+
 router.post("/delete", function(req, res){
     var id = req.body.id;
 
