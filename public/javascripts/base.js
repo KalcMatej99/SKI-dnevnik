@@ -182,6 +182,9 @@ function navigateToEditTeam(teamid) {
 function navigateToEditRacer(racerid) {
     window.location.href = "editRacer.html?racerid=" + racerid;
 }
+function navigateToEditRace(raceid) {
+    window.location.href = "editRace.html?raceid=" + raceid;
+}
 function navigateToEditTraining(trainingid) {
     window.location.href = "editTraining.html?trainingid=" + trainingid;
 }

@@ -72,6 +72,29 @@ router.post("/save", function(req, res){
     });
 });
 
+router.post("/update", function(req, res){
+    var id = req.body.id;
+    var name = req.body.name;
+    var location = req.body.location;
+    var date = req.body.date;
+    var description = req.body.description;
+    var teamid = req.body.teamid;
+    var weather = req.body.weather;
+    var temperature = req.body.temperature;
+    var discipline = req.body.discipline;
+    var numberOfSkiGates = req.body.numberOfSkiGates;
+
+    clientDB.client.query("UPDATE public.race SET name=$1, location=$2, date=$3, description=$4, teamid=$5, temperature=$6, weather=$7, discipline=$8, \
+        numberofskigates=$9 WHERE id=$10", [name, location, date, description, teamid, temperature, weather, discipline, numberOfSkiGates, id])
+    .then(() => {
+        res.send(null);
+        })
+    .catch(e => {
+        console.log(e.stack);
+        res.sendStatus(500);
+    });
+});
+
 router.post("/delete", function(req, res){
     var id = req.body.id;
 

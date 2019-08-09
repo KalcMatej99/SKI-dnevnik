@@ -36,6 +36,8 @@
     <main class="page contact-us-page">
         <div class="container">
             <h1 id="raceName">Tekma</h1>
+            <br>
+            <input type="button" class="btn btn-primary" value="Uredi" onclick="editRace()">
         </div>
         <section>
             <div class="container">
@@ -108,7 +110,7 @@ function loadRace() {
         document.getElementById("raceWeatherAndTemperature").innerHTML = locWeathTempText;
         document.getElementById("raceLocationAndDate").innerHTML = race.location + " - " + parseDate(race.date);
         document.getElementById("raceDiscipline").innerHTML = getDisciplineStringFromIndex(race.discipline);
-        document.getElementById("raceNumberOfSkiGates").innerHTML = "Število količkov: " + (race.skigates ? race.skigates : "Ne znan podatek");
+        document.getElementById("raceNumberOfSkiGates").innerHTML = "Število količkov: " + (race.numberofskigates ? race.numberofskigates : "Ne znan podatek");
     });
 }
 
@@ -145,6 +147,10 @@ function removeRaceApperance(apperanceid) {
             loadRacersApperances();
         }
     });
+}
+
+function editRace() {
+  navigateToEditRace(raceid);
 }
 
 </script>
