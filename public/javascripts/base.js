@@ -179,4 +179,7 @@ function navigateToTeam(teamid) {
 function navigateToEditTeam(teamid) {
     window.location.href = "editTeam.html?teamid=" + teamid;
 }
+function navigateToEditRacer(racerid) {
+    window.location.href = "editRacer.html?racerid=" + racerid;
+}
 

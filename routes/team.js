@@ -94,9 +94,9 @@ router.post("/save", function(req, res){
 router.post("/update", function(req, res){
     var id = req.body.id;
     var name = req.body.name;
-    var trainerid = req.body.userid;
+    var userid = req.body.userid;
 
-    clientDB.client.query("UPDATE public.team SET name=$1, userid=$2 WHERE id=$3", [name, trainerid, id])
+    clientDB.client.query("UPDATE public.team SET name=$1, userid=$2 WHERE id=$3", [name, userid, id])
     .then(() => {
         res.send(null);
         })

@@ -12,6 +12,7 @@ get:
 
 post:
   /save(body: firstname, lastname, gender, birth, description, teamid) - Saves racer, sends error if occures
+  /update(body: id, firstname, lastname, gender, birth, description, teamid) - Updates racer, sends error if occures
   /delete(body: id) - Deletes racer, if exists
 */
 
@@ -80,7 +81,26 @@ router.post("/save", function(req, res) {
     clientDB.client.query("INSERT INTO public.racer(firstname, lastname, gender, \
          description, teamid, birth, createdby) values($1, $2, $3, $4, $5, $6, $7)", [firstname, lastname, gender,
         description, teamid, birth, req.session.user.id])
-    .then(res2 => {
+    .then(() => {
+        res.end();
+    })
+    .catch(e => {
+        res.send(e);
+    });
+});
+
+router.post("/update", function(req, res) {
+    var id = req.body.id;
+    var firstname = req.body.firstname;
+    var lastname = req.body.lastname;
+    var gender = req.body.gender;
+    var description = req.body.description;
+    var teamid = req.body.teamid;
+    var birth = req.body.birth;
+
+    clientDB.client.query("UPDATE public.racer SET firstname = $1, lastname=$2, gender=$3, description=$4, teamid=$5, birth=$6 WHERE id=$7", 
+    [firstname, lastname, gender, description, teamid, birth, id])
+    .then(() => {
         res.end();
     })
     .catch(e => {

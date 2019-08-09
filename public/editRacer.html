@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>NEW RACER - SKIDNEVNIK</title>
+    <title>EDIT RACER - SKIDNEVNIK</title>
     <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
     <link rel="stylesheet" href="./fonts/font-awesome.min.css">
@@ -29,7 +29,7 @@
         <section class="clean-block clean-form dark">
             <div class="container">
                 <div class="block-heading">
-                    <h2 class="text-info">Nov tekmovalec</h2>
+                    <h2 class="text-info">Tekmovalec</h2>
                 </div>
                 <form>
                     <div class="form-group"><label>Ime</label><input class="form-control" type="text" id="racerFirstname"></div>
@@ -37,7 +37,7 @@
                     <div class="form-group"><label>Spol</label><select class="form-control" id="racerGender"><option value="1" selected="">Moški</option><option value="2">Ženska</option></select></div>
                     <div class="form-group"><label>Datum rojstva</label><input class="form-control" type="date" required="" id="racerBirth"></div>
                     <div class="form-group">
-                        <input class="btn btn-success btn-block" type="button" onclick="saveNewRacer()" value="Shrani">
+                        <input class="btn btn-success btn-block" type="button" onclick="updateRacer()" value="Shrani">
                     </div>
                 </form>
             </div>
@@ -57,7 +57,8 @@
 
 <script>
 
-var teamid;
+var racerid;
+var racer;
 var canSaveRacer = false;
 
 $(document).ready(function () {
@@ -65,13 +66,16 @@ $(document).ready(function () {
     //Get teamid from url as parameter
     var url_string = window.location.href;
     var url = new URL(url_string);
-    teamid = url.searchParams.get("teamid");
-    document.getElementById("racerBirth").value = new Date().toDateInputValue();
+    racerid = url.searchParams.get("racerid");
 
     getUser(function() {
-        checkIfTeamExists(teamid, function(exists) {
+        checkIfRacerExists(racerid, function(exists) {
             if(exists) {
-                canSaveRacer = true;
+                $.get("/racer/data", {id: racerid}, function(data) {
+                    racer = data;
+                    loadRacerData();
+                    canSaveRacer = true;
+                });
             } else {
                 navigateToNotFound();
             }
@@ -80,7 +84,14 @@ $(document).ready(function () {
 
 });
 
-function saveNewRacer() {
+function loadRacerData() {
+    document.getElementById("racerFirstname").value = racer.firstname;
+    document.getElementById("racerLastname").value = racer.lastname;
+    document.getElementById("racerBirth").value = new Date(racer.birth).toDateInputValue();
+    document.getElementById("racerGender").selected = document.getElementById("racerGender").options[racer.gender - 1];
+}
+
+function updateRacer() {
 
     if(!canSaveRacer) {
         return;
@@ -89,10 +100,8 @@ function saveNewRacer() {
   var racerLastname = document.getElementById("racerLastname").value;
   var racerBirth = document.getElementById("racerBirth").value;
   var racerGender = document.getElementById("racerGender").options[document.getElementById("racerGender").selectedIndex].value;
-  document.getElementById("racerFirstname").value = "";
-  document.getElementById("racerLastname").value = "";
-  document.getElementById("racerBirth").value = new Date();
-  document.getElementById("racerGender").selected = document.getElementById("racerGender").options[0];
+  
+  loadRacerData();
 
   //Check if data is missing
   if(racerFirstname == "" || racerLastname == "" || racerBirth == "" || racerGender == "") {
@@ -101,13 +110,12 @@ function saveNewRacer() {
   }
 
   //Post server save new team
-  $.post("/racer/save", {firstname: racerFirstname, lastname: racerLastname, 
-    birth: racerBirth, description: null, 
-    gender: racerGender, teamid: teamid}, function(err) {
+  $.post("/racer/update", {firstname: racerFirstname, lastname: racerLastname, birth: racerBirth, description: null, 
+    gender: racerGender, teamid: racer.teamid, id: racer.id}, function(err) {
     if(err) {
       alert(err);
     } else {
-        window.location.href = "team.html?teamid=" + teamid;
+        navigateToRacer(racerid);
     }
   });
 }

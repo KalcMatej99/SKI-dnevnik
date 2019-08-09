@@ -36,6 +36,8 @@
     <main class="page contact-us-page">
         <div class="container">
             <h1 id="racerName">Tekmovalec</h1>
+            <br>
+            <input type="button" class="btn btn-primary" value="Uredi" onclick="editRacer()">
         </div>
         <section>
             <div class="container">
@@ -281,6 +283,10 @@ function removeMistake(mistakeid) {
 
 function newMistakeButtonClicked() {
     navigateToNewMistake(racerid);
+}
+
+function editRacer() {
+  navigateToEditRacer(racerid);
 }
 
 </script>
