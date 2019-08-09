@@ -28,10 +28,10 @@ router.get("/data", function(req, res) {
 
 router.post("/save", function(req, res) {
     var name = req.body.name;
-    var startDate = req.body.startDate;
+    var creationdate = req.body.creationdate;
     var racerid = req.body.racerid;
 
-    clientDB.client.query("INSERT INTO public.mistake(name, creationdate, racerid, createdby) values($1, $2, $3, $4)", [name, startDate, racerid, req.session.user.id])
+    clientDB.client.query("INSERT INTO public.mistake(name, creationdate, racerid, createdby) values($1, $2, $3, $4)", [name, creationdate, racerid, req.session.user.id])
     .then(res2 => {
         res.end();
     })
@@ -56,11 +56,10 @@ router.post("/delete", function(req, res){
 router.post("/update", function(req, res){
     var id = req.body.id;
     var name = req.body.name;
-    var startDate = req.body.startDate;
-    var endDate = req.body.endDate;
-    var racerid = req.body.racerid;
+    var creationdate = req.body.creationdate ? req.body.creationdate : null;
+    var endDate = req.body.endDate ? req.body.endDate : null;
 
-    clientDB.client.query("UPDATE public.mistake SET name = $1, creationdate = $2, enddate = $3, racerid = $4 WHERE id = $5", [name, startDate, endDate, racerid, id])
+    clientDB.client.query("UPDATE public.mistake SET name = $1, creationdate = $2, enddate = $3 WHERE id = $4", [name, creationdate, endDate, id])
     .then(() => {
         res.send(null);
         })

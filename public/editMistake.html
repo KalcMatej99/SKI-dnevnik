@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>NEW MISTAKE - SKIDNEVNIK</title>
+    <title>EDIT MISTAKE - SKIDNEVNIK</title>
     <link rel="stylesheet" href="./stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i,600,600i">
     <link rel="stylesheet" href="./fonts/font-awesome.min.css">
@@ -33,7 +33,7 @@
                     <div class="form-group"><label>Naziv</label><input class="form-control" type="text" id="mistakeName"></div>
                     <div class="form-group"><label>Začetek</label><input class="form-control" type="date" id="mistakeStartDate"></div>
                     <div class="form-group"><label>Konec</label><input class="form-control" type="date" id="mistakeEndDate"></div>
-                    <div class="form-group"><input class="btn btn-success btn-block" type="button" value="Shrani" onclick="saveNewMistake()"></div>
+                    <div class="form-group"><input class="btn btn-success btn-block" type="button" value="Shrani" onclick="updateMistake()"></div>
                 </form>
             </div>
         </section>
@@ -52,7 +52,8 @@
 
 <script>
 
-var racerid;
+var mistakeid;
+var mistake;
 var canSave = false;
 
 $(document).ready(function () {
@@ -60,13 +61,16 @@ $(document).ready(function () {
     //Get teamid from url as parameter
     var url_string = window.location.href;
     var url = new URL(url_string);
-    racerid = url.searchParams.get("racerid");
-    document.getElementById("mistakeStartDate").value = new Date().toDateInputValue();
+    mistakeid = url.searchParams.get("mistakeid");
 
     getUser(function() {
-        checkIfRacerExists(racerid, function(exists) {
+        checkIfMistakeExists(mistakeid, function(exists) {
             if(exists) {
-                canSave = true;
+                $.get("/mistake/data", {id: mistakeid}, function(data){
+                    mistake = data;
+                    loadMistakeData();
+                    canSave = true;
+                });
             } else {
                 navigateToNotFound();
             }
@@ -74,7 +78,7 @@ $(document).ready(function () {
     });
 });
 
-function saveNewMistake() {
+function updateMistake() {
     if(!canSave) {
         return;
     }
@@ -83,7 +87,7 @@ function saveNewMistake() {
     var mistakeStartDate = document.getElementById("mistakeStartDate").value;
     var mistakeEndDate = document.getElementById("mistakeEndDate").value;
     
-    document.getElementById("mistakeName").value = "";
+    loadMistakeData();
 
     //Check if data is missing
     if(mistakeName == "") {
@@ -92,13 +96,25 @@ function saveNewMistake() {
     }
 
     //Post server save new team
-    $.post("/mistake/save", {name: mistakeName, creationdate: mistakeStartDate, endDate:mistakeEndDate, racerid:racerid}, function(err) {
+    $.post("/mistake/update", {name: mistakeName, creationdate: mistakeStartDate, endDate:mistakeEndDate, id:mistake.id}, function(err) {
         if(err) {
             alert(err);
         } else {
-            navigateToRacer(racerid);
+            navigateToRacer(mistake.racerid);
         }
     });
+}
+
+function loadMistakeData() {
+
+    document.getElementById("mistakeName").value = mistake.name;
+    
+    if(mistake.creationdate) {
+        document.getElementById("mistakeStartDate").value = new Date(mistake.creationdate).toDateInputValue();
+    }
+    if(mistake.enddate) {
+        document.getElementById("mistakeEndDate").value = new Date(mistake.enddate).toDateInputValue();
+    }
 }
 
 </script>

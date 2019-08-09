@@ -126,6 +126,16 @@ function checkIfRacerExists(id, callback) {
     });
 }
 
+function checkIfMistakeExists(id, callback) {
+    $.get("/mistake/data", {id: id}, function(tr) {
+        if(tr){
+            callback(true);
+        } else {
+            callback(false);
+        }
+    });
+}
+
 /*
 
     NAVIGATION
@@ -187,5 +197,8 @@ function navigateToEditRace(raceid) {
 }
 function navigateToEditTraining(trainingid) {
     window.location.href = "editTraining.html?trainingid=" + trainingid;
+}
+function navigateToEditMistake(mistakeid) {
+    window.location.href = "editMistake.html?mistakeid=" + mistakeid;
 }
 
