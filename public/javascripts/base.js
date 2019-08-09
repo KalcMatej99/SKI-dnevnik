@@ -176,4 +176,7 @@ function navigateToNewTrainingApperance(racerid) {
 function navigateToTeam(teamid) {
     window.location.href = "team.html?teamid=" + teamid;
 }
+function navigateToEditTeam(teamid) {
+    window.location.href = "editTeam.html?teamid=" + teamid;
+}
 

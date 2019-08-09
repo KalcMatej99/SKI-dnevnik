@@ -36,6 +36,8 @@
     <main class="page contact-us-page">
         <div class="container">
             <h1 id="teamName">Skupina</h1>
+            <br>
+            <input type="button" class="btn btn-primary" value="Uredi" onclick="editTeam()">
         </div>
         <section class="clean-block clean-form dark">
             <div class="container">
@@ -232,6 +234,10 @@ function displayRaces() {
                             <button class="btn btn-danger" type="button" onclick="removeRace(' + race.id + ')">Izbriši</button></div></div> \
                     </div>';
   });
+}
+
+function editTeam() {
+  navigateToEditTeam(teamid);
 }
 
 </script>
