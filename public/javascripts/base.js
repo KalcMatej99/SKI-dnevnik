@@ -156,7 +156,9 @@ function navigateToTraining(trainingid) {
 function navigateToTraining(trainingid) {
     window.location.href = "training.html?trainingid=" + trainingid;
 }
-
+function navigateToTeams() {
+    window.location.href = "teams.html";
+}
 function navigateToRacer(racerid) {
     window.location.href = "racer.html?racerid=" + racerid;
 }
@@ -170,6 +172,9 @@ function navigateToNewRacer(teamid) {
 }
 function navigateToNewRace(teamid) {
     window.location.href = "addRace.html?teamid=" + teamid;
+}
+function navigateToNewTeam() {
+    window.location.href = "addTeam.html";
 }
 function navigateToNewTraining(teamid) {
     window.location.href = "addTraining.html?teamid=" + teamid;

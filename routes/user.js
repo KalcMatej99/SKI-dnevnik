@@ -24,7 +24,7 @@ router.get("/data", function(req, res) {
 router.get("/teams", function(req, res) {
   var user = req.session.user;
 
-  clientDB.getTeamsOfUser(user.id, req.session.user.id, function(err, teams) {
+  clientDB.getTeamsOfUser(user.id, user.id, function(err, teams) {
     if(err) {
       console.log(err);
       res.status(500).send(err);

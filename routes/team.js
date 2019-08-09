@@ -78,7 +78,7 @@ router.get("/races", function(req, res){
 router.post("/save", function(req, res){
     var name = req.body.name;
     var numberOfRacers = req.body.numberOfRacers;
-    var trainerid = req.body.userid;
+    var trainerid = req.session.user.id;
 
     clientDB.client.query("INSERT INTO public.team(name, userid, numberofracers, createdby) values($1, $2, $3, $4) RETURNING *", [name, trainerid, 
         numberOfRacers, req.session.user.id])

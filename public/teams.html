@@ -41,7 +41,7 @@
                         <h1>Skupine</h1>
                     </div>
                     <div class="col d-flex align-items-center">
-                      <button id="newTeamButton" class="btn btn-primary d-inline-block d-xl-flex flex-row justify-content-xl-center" type="button" data-toggle="modal" data-target="#newTeamModal">+</button>
+                      <button id="newTeamButton" class="btn btn-primary d-inline-block d-xl-flex flex-row justify-content-xl-center" type="button" onclick="newTeamButtonWasClicked()">+</button>
                     </div>
                 </div>
                 <div class="card-group" id="teamsList"></div>
@@ -161,6 +161,10 @@ function removeTeam(teamid){
             getTeams();
         }
     });
+}
+
+function newTeamButtonWasClicked() {
+    navigateToNewTeam();
 }
 
 </script>
