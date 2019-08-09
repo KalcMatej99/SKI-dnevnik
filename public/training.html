@@ -121,8 +121,8 @@ function loadTraining() {
         document.getElementById("trainingLocation-Date").innerHTML = training.location + " - " + parseDate(training.date);
         document.getElementById("trainingWeather-Temperature").innerHTML = locWeathTempText;
         document.getElementById("trainingTypeAndDiscipline").innerHTML = getTypeStringFromIndex(training.type) + " - " + getDisciplineStringFromIndex(training.discipline);
-        document.getElementById("trainingNumberOfTracks").innerHTML = "Število prog: " + (training.tracks ? training.tracks : "Ne znan podatek");
-        document.getElementById("trainingNumberOfSkiGates").innerHTML = "Število količkov: " + (training.skigates ? training.skigates : "Ne znan podatek");
+        document.getElementById("trainingNumberOfTracks").innerHTML = "Število prog: " + (training.numberoftracks ? training.numberoftracks : "Ne znan podatek");
+        document.getElementById("trainingNumberOfSkiGates").innerHTML = "Število količkov: " + (training.numberofskigates ? training.numberofskigates : "Ne znan podatek");
     });
 }
 
