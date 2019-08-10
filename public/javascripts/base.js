@@ -146,6 +146,9 @@ function checkIfMistakeExists(id, callback) {
 function navigateToNotFound() {
     window.location.href = "notFound.html";
 }
+function navigateToAccount() {
+    window.location.href = "account.html";
+}
 
 //This function is needed to navigate to training.html
 function navigateToTraining(trainingid) {

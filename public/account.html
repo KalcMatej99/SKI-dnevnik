@@ -14,8 +14,8 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-primary">
-        <div class="container"><a class="navbar-brand logo" href="./home.html"><img style="height: 50px;margin: -15px 0 0 0;" src="./images/skidnevnik-logo-white.png"></a>
+    <nav class="navbar navbar-light navbar-expand-sm fixed-top bg-white">
+        <div class="container"><a class="navbar-brand logo" href="./home.html"><img style="height: 50px;margin: -15px 0 0 0;" src="./images/skidnevnik-logo-black.png"></a>
             <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1">
                 <span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span>
             </button>
@@ -25,20 +25,29 @@
                     <li class="nav-item" role="presentation"><a class="nav-link" href="./teams.html"><strong>Skupine</strong></a></li>
                     <li class="nav-item" role="presentation"><a class="nav-link active" href="./account.html"><strong>Account</strong></a></li>
                 </ul>
+                <button class="btn btn-danger navbar-btn pull-right" type="button" onclick="logOut()">Log Out</button></div>
             </div>
         </div>
     </nav>
     <main class="page">
-        <section class="clean-block about-us">
+        <section class="clean-block clean-hero" style="background-image:url(&quot;./images/chris-biron-JVtcrWcbj1c-unsplash.jpg&quot;);color:rgba(9, 162, 255, 0.85);">
+            <div class="text">
+                <img class="img-thumbnail" style="height: 250px" src="./images/blank-profile-picture-973460_1280.png">
+                <br>
+                <br>
+                <p id="fullname"></p>
+            </div>
+        </section>
+        <br>
+        <section class="clean-block clean-form">
             <div class="container">
-                <h2 class="text-info">Account</h2>
-                <ul class="list-group">
-                    <li class="list-group-item"><span id="fullname">List Group Item 1</span></li>
-                    <li class="list-group-item"><span id="email">List Group Item 2</span></li>
-                    <li class="list-group-item"><span id="teamsCount">List Group Item 3</span></li>
-                    <li class="list-group-item"><span id="trainingsCount">List Group Item 2</span></li>
-                    <li class="list-group-item"><span id="racesCount">List Group Item 2</span></li>
-                </ul><button class="btn btn-danger" type="button" onclick="logOut()">Log Out</button></div>
+                <form>
+                    <div class="form-group"><label for="name">Ime</label><input class="form-control item" type="text" id="usrName"></div>
+                    <div class="form-group"><label for="name">Priimek</label><input class="form-control item" type="text" id="usrSurname"></div>
+                    <div class="form-group"><label for="password">Password</label><input class="form-control item" type="password" id="pwd"></div>
+                    <div class="form-group"><label for="email">Email</label><input class="form-control item" type="email" id="usrEmail"></div>
+                    <input class="btn btn-primary btn-block" type="button" onclick="editAccountButtonClicked()" id="editButton" value="Uredi">
+                </form>
         </section>
     </main>
     <footer class="page-footer dark">
@@ -51,6 +60,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/baguettebox.js/1.10.0/baguetteBox.min.js"></script>
     <script src="./javascripts/script.min.js"></script>
     <script src="./javascripts/base.js"></script>
+    <script src="./javascripts/baseUserAuthentication.js"></script>
 </body>
 
 
@@ -61,34 +71,81 @@ $(document).ready(function () {
     getUser(function() {
         //Load user data into view
         loadUserData();
+        editAccountButtonClicked();
     });
     
 });
 
 //This function loads user data
 function loadUserData() {
-    var fullname = document.getElementById("fullname");
-    fullname.innerHTML = user.firstname + " " + user.lastname;
-    var email = document.getElementById("email");
-    email.innerHTML = "Email: " + user.email;
+    document.getElementById("fullname").innerHTML = user.firstname + " " + user.lastname;
+    document.getElementById("usrName").value = user.firstname;
+    document.getElementById("usrSurname").value = user.lastname;
+    document.getElementById("pwd").value = user.password;
+    document.getElementById("usrEmail").value = user.email;
 
-    $.get("/user/teams", function(teams) {
-        var teamsCount = document.getElementById("teamsCount");
-        teamsCount.innerHTML = "Skupine: " + teams.length;
-    });
-    $.get("/user/trainings", function(trainings) {
-        var trainingsCount = document.getElementById("trainingsCount");
-        trainingsCount.innerHTML = "Treningi: " + trainings.length;
-    });
-    $.get("/user/races", function(races) {
-        var racesCount = document.getElementById("racesCount");
-        racesCount.innerHTML = "Tekme: " + races.length;
-    });
 }
 //This function navigates to index.html and logs out the user
 function logOut() {
     $.get("/user/logout");
     window.location.href = "/";
+}
+
+function editAccountButtonClicked() {
+    if(!document.getElementById("usrName").disabled) {
+        updateUserData();
+    }
+
+    document.getElementById("usrName").disabled = !document.getElementById("usrName").disabled;
+    document.getElementById("usrSurname").disabled = !document.getElementById("usrSurname").disabled;
+    document.getElementById("pwd").disabled = !document.getElementById("pwd").disabled;
+    document.getElementById("usrEmail").disabled = !document.getElementById("usrEmail").disabled;
+
+    if(document.getElementById("usrName").disabled) {
+        document.getElementById("editButton").value = "Uredi";
+    } else {
+        document.getElementById("editButton").value = "Shrani";
+    }
+}
+
+function updateUserData() {
+    var usrNameInput = document.getElementById("usrName");
+    var usrSurnameInput = document.getElementById("usrSurname");
+    var usrEmailInput = document.getElementById("usrEmail");
+    var passwordInput = document.getElementById("pwd");
+
+    //If data is missing it is alerted
+    if(usrNameInput.value == "" || usrSurnameInput.value == "" || usrEmailInput.value == "" || passwordInput.value == "") {
+        alert("Mankajo podatki.");
+        return;
+    }
+    var username = usrNameInput.value;
+    var usersurname = usrSurnameInput.value;
+    var password = passwordInput.value;
+    var email = usrEmailInput.value;
+
+    if(username != user.firstname || usersurname != user.lastname || password != user.password || email != user.email) {
+
+        //Check if password is valid
+        if(!isPasswordValid(password)) {
+            alert("Geslo mora biti dolgo najmanj 8 črk in največ 20 črk.");
+            return;
+        }
+
+        //Check if email is valid
+        if(!isEmailValid(email)) {
+            alert("Nepravilen email.");
+            return;
+        }
+
+        $.post('/user/update', {username: username, usersurname: usersurname, email:email, password: password}, function(err) {
+            if(err) {
+                alert(err);
+            } else {
+                navigateToAccount();
+            }
+        });
+    }
 }
 
 </script>

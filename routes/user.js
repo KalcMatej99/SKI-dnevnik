@@ -66,7 +66,6 @@ router.get("/races", function(req, res) {
   var userid = req.session.user.id;
   var races = [];
   clientDB.getTeamsOfUser(userid, req.session.user.id, function(err, teams) {
-    console.log(teams);
     if(err) {
       console.log(err);
       res.status(500).send(null);
@@ -78,7 +77,6 @@ router.get("/races", function(req, res) {
       }
       teams.forEach(team => {
         clientDB.getRacesOfTeam(team.id, req.session.user.id, function(err, racesOfTeam) {
-          console.log(racesOfTeam);
           if(err) {
             res.status(500).send(null);
           } else {
@@ -142,6 +140,42 @@ router.post("/register", function(req, res){
       
 });
   
+router.post("/update", function(req, res){
+  var username = req.body.username;
+  var usersurname = req.body.usersurname;
+  var email = req.body.email;
+  var password = req.body.password;
+
+  if(!isPasswordValid(password) || !isEmailValid(email)) {
+    res.send("Password or email not valid");
+    res.end();
+    return;
+  }
+
+  clientDB.client.query("SELECT * FROM public.user WHERE email = $1", [email]).then(res2 => {
+    if((res2.rows.length == 0) || (res2.rows.length == 1 && res2.rows[0].id == req.session.user.id)) {
+
+      clientDB.client.query("UPDATE public.user SET firstname=$1, lastname=$2, email=$3, password=$4 WHERE id=$5 RETURNING *", [username, usersurname, email, password, req.session.user.id])
+      .then(res3 => {
+          req.session.user = res3.rows[0];
+          res.send(null);
+        })
+      .catch(e => {
+        console.log(e.stack);
+        res.send("Error: " + e);
+      });
+
+    } else {
+      res.send("User with this email already exists");
+    }
+  }).catch(e => {
+    console.log(e.stack);
+    res.send("Error: " + e);
+  });
+    
+});
+
+
 router.post("/login", function(req, res){
   var email = req.body.email;
   var password = req.body.password;
