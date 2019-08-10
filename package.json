@@ -1,7 +1,7 @@
 {
     "name": "skidnevnik",
     "description": "Dnevnik za trenerje in učitelje smučanja",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "author": "Matej Kalc",
     "dependencies": {
         "@fullcalendar/core": "^4.2.0",
