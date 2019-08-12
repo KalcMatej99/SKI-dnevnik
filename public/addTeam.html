@@ -34,6 +34,9 @@
                 <h2 class="text-center text-info">Skupina</h2>
                 <form>
                     <div class="form-group"><label>Ime skupine</label><input class="form-control" type="text" id="teamName"></div>
+                    <div class="form-group"><label>Slika</label><img id="teamImage" class="img-responsive"></div>
+                    <input onchange="openFile(event)" type="file" id="FileUpload" style="display: none" />
+                    <div class="form-group"><input class="btn btn-secondary btn-block" type="button" value="Dodaj sliko" onclick="addTeamImageClicked()"></div>
                     <div class="form-group"><input class="btn btn-success btn-block" type="button" value="Shrani" onclick="saveNewTeam()"></div>
                 </form>
             </div>
@@ -54,6 +57,7 @@
 <script>
 
 var canSave = false;
+var newImage;
 
 $(document).ready(function () {
     getUser(function() {
@@ -73,13 +77,31 @@ function saveNewTeam() {
     }
 
     //Post server save new team
-    $.post("/team/save", {name: teamName}, function(err) {
+    $.post("/team/save", {name: teamName, image: newImage}, function(err) {
         if(err) {
             alert(err);
         } else {
             navigateToTeams();
         }
     });
+}
+
+
+function addTeamImageClicked() {
+    document.getElementById("FileUpload").click();
+}
+
+function openFile(event) {
+
+    var input = event.target;
+    var reader = new FileReader();
+    reader.onload = function() {
+        var base64 = reader.result;
+        document.getElementById("teamImage").src = reader.result;
+        newImage = reader.result;
+    };
+
+    reader.readAsDataURL(input.files[0]);
 }
 
 </script>

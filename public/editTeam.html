@@ -35,11 +35,7 @@
                 <form>
                     <div class="form-group"><label>Ime skupine</label><input class="form-control" type="text" id="teamName"></div>
                     <div class="form-group"><label>Slika</label><img id="teamImage" class="img-responsive"></div>
-
-
-
                     <input onchange="openFile(event)" type="file" id="FileUpload" style="display: none" />
-
                     <div class="form-group"><input class="btn btn-secondary btn-block" type="button" value="Spremeni sliko" onclick="changeTeamImageClicked()"></div>
                     <div class="form-group"><input class="btn btn-success btn-block" type="button" value="Shrani" onclick="saveTeam()"></div>
                 </form>
@@ -90,6 +86,8 @@ $(document).ready(function () {
 
 function loadTeamData() {
     document.getElementById("teamName").value = team.name;
+    document.getElementById("teamImage").src = team.image;
+    console.log(team.image);
 }
 
 function saveTeam() {
