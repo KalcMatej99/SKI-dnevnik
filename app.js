@@ -22,12 +22,10 @@ var app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true, parameterLimit: 1000000}));
 
 //Setup routing
 var indexRouter =  require('./routes/index');
@@ -56,7 +54,6 @@ app.use(
     }
   })
 );
-
 
 app.use('/', indexRouter);
 app.use('/login', loginRouter);

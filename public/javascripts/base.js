@@ -210,3 +210,25 @@ function navigateToEditMistake(mistakeid) {
     window.location.href = "editMistake.html?mistakeid=" + mistakeid;
 }
 
+/* 
+    Image converter
+*/
+
+function base64ToArrayBuffer(base64) {
+    var byteCharacters = atob(base64.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''));
+    var byteNumbers = new Array(byteCharacters.length);
+    for (var i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    return new Uint8Array(byteNumbers);
+}
+
+function arrayBufferToBase64( bytes ) {
+    var binary = '';
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+}

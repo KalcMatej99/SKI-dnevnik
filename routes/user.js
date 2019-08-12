@@ -106,10 +106,10 @@ router.get("/races", function(req, res) {
   });
   
 router.post("/register", function(req, res){
-    var username = req.body.username;
-    var usersurname = req.body.usersurname;
-    var email = req.body.email;
-    var password = req.body.password;
+    var username = req.body.username ? req.body.username : req.session.user.firstname;
+    var usersurname = req.body.usersurname ? req.body.usersurname : req.session.user.lastname;
+    var email = req.body.email ? req.body.email : req.session.user.email;
+    var password = req.body.password ? req.body.password : req.session.user.password;
 
     if(!isPasswordValid(password) || !isEmailValid(email)) {
       res.send("Password or email not valid");
@@ -141,10 +141,11 @@ router.post("/register", function(req, res){
 });
   
 router.post("/update", function(req, res){
-  var username = req.body.username;
-  var usersurname = req.body.usersurname;
-  var email = req.body.email;
-  var password = req.body.password;
+  var username = req.body.username ? req.body.username : req.session.user.firstname;
+  var usersurname = req.body.usersurname ? req.body.usersurname : req.session.user.lastname;
+  var email = req.body.email ? req.body.email : req.session.user.email;
+  var password = req.body.password ? req.body.password : req.session.user.password;
+  var profilePicture = req.body.profilePicture ? req.body.profilePicture : req.session.user.profilepicture;
 
   if(!isPasswordValid(password) || !isEmailValid(email)) {
     res.send("Password or email not valid");
@@ -155,7 +156,8 @@ router.post("/update", function(req, res){
   clientDB.client.query("SELECT * FROM public.user WHERE email = $1", [email]).then(res2 => {
     if((res2.rows.length == 0) || (res2.rows.length == 1 && res2.rows[0].id == req.session.user.id)) {
 
-      clientDB.client.query("UPDATE public.user SET firstname=$1, lastname=$2, email=$3, password=$4 WHERE id=$5 RETURNING *", [username, usersurname, email, password, req.session.user.id])
+      clientDB.client.query("UPDATE public.user SET firstname=$1, lastname=$2, email=$3, password=$4, profileimage=$5 WHERE id=$6 RETURNING *", [username,
+         usersurname, email, password, profilePicture, req.session.user.id])
       .then(res3 => {
           req.session.user = res3.rows[0];
           res.send(null);
@@ -212,6 +214,16 @@ function isPasswordValid(password) {
 //This function checks if the email is in a valid format
 function isEmailValid(email) {
   return (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email));
+}
+
+function base64ToArrayBuffer(base64) {
+  var byteCharacters = Buffer.from(base64.replace(/^data:image\/(png|jpeg|jpg);base64,/, ''), 'base64').toString();
+  var byteNumbers = new Array(byteCharacters.length);
+  for (var i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+
+  return new Uint8Array(byteNumbers);
 }
 
 module.exports = router;

@@ -32,10 +32,13 @@
     <main class="page">
         <section class="clean-block clean-hero" style="background-image:url(&quot;./images/chris-biron-JVtcrWcbj1c-unsplash.jpg&quot;);color:rgba(9, 162, 255, 0.85);">
             <div class="text">
-                <img class="img-thumbnail" style="height: 250px" src="./images/blank-profile-picture-973460_1280.png">
+                <img class="img-thumbnail" id="userProfilePicture" style="height: 250px" src="./images/blank-profile-picture-973460_1280.png">
                 <br>
                 <br>
                 <p id="fullname"></p>
+                <br>
+                <button type="button" class="btn btn-secondary" onclick="changeProfilePictureClicked()">Uredi sliko</button>
+                <input onchange="openFile(event)" type="file" id="FileUpload" style="display: none" />
             </div>
         </section>
         <br>
@@ -83,6 +86,7 @@ function loadUserData() {
     document.getElementById("usrSurname").value = user.lastname;
     document.getElementById("pwd").value = user.password;
     document.getElementById("usrEmail").value = user.email;
+    document.getElementById("userProfilePicture").src = user.profileimage;
 
 }
 //This function navigates to index.html and logs out the user
@@ -146,6 +150,31 @@ function updateUserData() {
             }
         });
     }
+}
+
+function openFile(event) {
+
+    var input = event.target;
+    var reader = new FileReader();
+    reader.onload = function() {
+        var base64 = reader.result;
+        document.getElementById("userProfilePicture").src = reader.result;
+
+        $.post('/user/update', {username: user.firstname, usersurname: user.lastname, email: user.email, password: user.password, profilePicture: base64}, function(err) {
+            if(err) {
+                alert(err);
+            } else {
+                alert("Slika je bila uspešno rešena");
+            }
+        });
+    };
+
+    reader.readAsDataURL(input.files[0]);
+}
+
+
+function changeProfilePictureClicked() {
+    document.getElementById("FileUpload").click();
 }
 
 </script>
