@@ -109,9 +109,11 @@ function getTeams() {
     list.innerHTML = "";
     $.get("/user/teams", function(teams) {
         teams.forEach(team => {
+            var teamImage = team.image ? team.image : "./images/maarten-duineveld-pmfJcN7RGiw-unsplash.jpg";
             $.get("/team/trainings", {id: team.id}, function(trainings) {
                 list.innerHTML += '<div class="card" id="listItem' + team.id + '"> \
                         <div class="card-body"> \
+                            <img class="card-img-top" src=' + teamImage + ' alt="Card image"> \
                             <h4 class="card-title"> ' + team.name + ' </h4> \
                             <p class="card-text"></p> \
                             <button class="btn btn-primary" type="button" onclick="navigateToTeam(' + team.id + ')">Odpri</button> \

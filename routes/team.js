@@ -95,8 +95,37 @@ router.post("/update", function(req, res){
     var id = req.body.id;
     var name = req.body.name;
     var userid = req.body.userid;
+    var image = req.body.image;
 
-    clientDB.client.query("UPDATE public.team SET name=$1, userid=$2 WHERE id=$3", [name, userid, id])
+    clientDB.client.query("UPDATE public.team SET name=$1, userid=$2, image=$3 WHERE id=$4", [name, userid, image, id])
+    .then(() => {
+        res.send(null);
+        })
+    .catch(e => {
+        console.log(e.stack);
+        res.sendStatus(500);
+    });
+});
+
+router.post("/update/image", function(req, res){
+    var id = req.body.id;
+    var image = req.body.image;
+
+    clientDB.client.query("UPDATE public.team SET image=$1 WHERE id=$2", [image, id])
+    .then(() => {
+        res.send(null);
+        })
+    .catch(e => {
+        console.log(e.stack);
+        res.sendStatus(500);
+    });
+});
+
+router.post("/update/name", function(req, res){
+    var id = req.body.id;
+    var name = req.body.name;
+
+    clientDB.client.query("UPDATE public.team SET image=$1 WHERE id=$2", [name, id])
     .then(() => {
         res.send(null);
         })

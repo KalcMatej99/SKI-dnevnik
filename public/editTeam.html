@@ -34,6 +34,13 @@
                 <h2 class="text-center text-info">Skupina</h2>
                 <form>
                     <div class="form-group"><label>Ime skupine</label><input class="form-control" type="text" id="teamName"></div>
+                    <div class="form-group"><label>Slika</label><img id="teamImage" class="img-responsive"></div>
+
+
+
+                    <input onchange="openFile(event)" type="file" id="FileUpload" style="display: none" />
+
+                    <div class="form-group"><input class="btn btn-secondary btn-block" type="button" value="Spremeni sliko" onclick="changeTeamImageClicked()"></div>
                     <div class="form-group"><input class="btn btn-success btn-block" type="button" value="Shrani" onclick="saveTeam()"></div>
                 </form>
             </div>
@@ -55,6 +62,8 @@
 
 var teamid;
 var team;
+var imageChanged = false;
+var newImage;
 var canSave = false;
 
 $(document).ready(function () {
@@ -96,14 +105,48 @@ function saveTeam() {
     }
 
     //Post server save new team
-    $.post("/team/update", {name: teamName, id: teamid, userid: team.userid}, function(err) {
-        if(err) {
-            alert(err);
-            loadTeamData();
-        } else {
-            navigateToTeam(teamid);
-        }
-    });
+    if(imageChanged) {
+        $.post("/team/update/image", {id: team.id, image: newImage}, function(err) {
+            if(err) {
+                alert(err);
+                loadTeamData();
+            } else {
+                if(teamName == team.name) {
+                    navigateToTeam(teamid);
+                }
+            }
+        });
+    }
+
+    if(teamName != team.name) {
+        $.post("/team/update/name", {id: team.id, name: teamName}, function(err) {
+            if(err) {
+                alert(err);
+                loadTeamData();
+            } else {
+                navigateToTeam(teamid);
+            }
+        });
+    }
+}
+
+function changeTeamImageClicked() {
+    document.getElementById("FileUpload").click();
+}
+
+function openFile(event) {
+
+    var input = event.target;
+    var reader = new FileReader();
+    reader.onload = function() {
+        var base64 = reader.result;
+        document.getElementById("teamImage").src = reader.result;
+        imageChanged = true;
+        newImage = reader.result;
+
+    };
+
+    reader.readAsDataURL(input.files[0]);
 }
 
 </script>
